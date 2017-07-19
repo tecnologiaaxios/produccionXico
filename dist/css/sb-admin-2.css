@@ -25,8 +25,21 @@ body {
   top: 0px;
 }
 .login-container{
-  height: 100px !important;
-  width: 100% !important;
+  height: 80% !important;
+  width: 70% !important;
+
+  position: absolute;
+	top:50% !important;
+	left:50% !important;
+	/*indicamos que el margen izquierdo, es la mitad de la anchura*/
+	margin-left:-35% !important;
+	/*determinamos una altura*/
+	/*indicamos que el margen superior, es la mitad de la altura*/
+	margin-top:-20% !important;
+	padding:5px !important;
+  border-radius: 15px !important;
+  background-color: white !important;
+  box-shadow: 0px 5px #000000;
 }
 .navbar{z-index: 1;}
 @media (min-width: 768px) {
