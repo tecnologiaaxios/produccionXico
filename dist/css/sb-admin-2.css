@@ -39,7 +39,6 @@ body {
 	padding:5px !important;
   border-radius: 15px !important;
   background-color: white !important;
-  box-shadow: 0px 5px #000000;
 }
 .navbar{z-index: 1;}
 @media (min-width: 768px) {
@@ -476,4 +475,10 @@ table.dataTable thead .sorting:after {
     border-right-width: 14px;
     border-left-width: 0;
   }
+}
+
+.polaroid {
+  width: 250px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  text-align: center;
 }

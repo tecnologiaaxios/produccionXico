@@ -1,16 +1,15 @@
 const db = firebase.database();
 const auth = firebase.auth();
 
-$('#email').keyup(function () {
-  let email = $('#email').val();
-  console.log("Email");
-  if(email.length < 1) {
-    $('#email').parent().addClass('has-error');
-    $('#helpblockEmail').html("Campo obligatorio").show();
+$('#username').keyup(function () {
+  let username = $('#username').val();
+  if(username.length < 1) {
+    $('#username').parent().addClass('has-error');
+    $('#helpblockUserName').html("Campo obligatorio").show();
   }
   else {
-    $('#email').parent().removeClass('has-error');
-    $('#helpblockEmail').hide();
+    $('#username').parent().removeClass('has-error');
+    $('#helpblockUserName').hide();
   }
 });
 
@@ -27,72 +26,62 @@ $('#contraseña').keyup(function () {
 });
 
 function login() {
-  let email = $('#email').val();
+  let username = $('#username').val();
   let contraseña = $('#contraseña').val();
 
-  if(email.length > 0 && contraseña > 0) {
-    if(validarEmail(email)) {
-      auth.signInWithEmailAndPassword(email, contraseña)
-      .then(function() { //en caso de exito
+  if(username.length > 0 && contraseña.length > 0) {
 
-      })
-      .catch(function(error) { //en caso de error
-        if(error.code === 'auth/user-not-found') { //imprime un error si tu usuario es equivocado
-            $('#email').parent().addClass('has-error');
-            $('#helpblockEmail').empty().html("El usuario es incorrecto").show();
-          }
+    let usuarios = db.ref('usuarios/planta/almacen/');
+    usuarios.orderByChild("username").equalTo(username).on("child_added", function(snapshot) {
+      console.log(snapshot.val());
+      let email = snapshot.val().email;
+      if(snapshot) {
+        auth.signInWithEmailAndPassword(email, contraseña)
+        .then(function() { //en caso de exito
+          obtenerUsuario();
+        })
+        .catch(function(error) { //en caso de error
           if(error.code === 'auth/wrong-password') { //imprime un error si te equivocaste en la contraseña
             $('#contrasena').parent().addClass('has-error');
-            $('#helpblockContraseña').empty().html("La contraseña es incorrecta").show();
+            $('#helpblockContraseña').html("La contraseña es incorrecta").show();
           }
-      });
-    }
+        });
+      }
+      else {
+        $('#username').parent().addClass('has-error');
+        $('#helpblockUserName').html("El nombre de usuario es incorrecto").show();
+      }
+    });
   }
   else {
-      if(email == "") {
-        $('#email').parent().addClass('has-error');
-        $('#helpblockEmail').html("Campo obligatorio").show();
-      }
-      else {
-        $('#email').parent().removeClass('has-error');
-        $('#helpblockEmail').hide();
-      }
-      if(contraseña == "") {
-        $('#contraseña').parent().addClass('has-error');
-        $('#helpblockContraseña').html("Campo obligatorio").show();
-      }
-      else {
-        $('#contraseña').parent().removeClass('has-error');
-        $('#helpblockContraseña').hide();
-      }
+    if(username == "") {
+      $('#username').parent().addClass('has-error');
+      $('#helpblockUserName').html("Campo obligatorio").show();
     }
+    else {
+      $('#username').parent().removeClass('has-error');
+      $('#helpblockUserName').hide();
+    }
+    if(contraseña == "") {
+      $('#contraseña').parent().addClass('has-error');
+      $('#helpblockContraseña').html("Campo obligatorio").show();
+    }
+    else {
+      $('#contraseña').parent().removeClass('has-error');
+      $('#helpblockContraseña').hide();
+    }
+  }
 }
 
 function obtenerUsuario() {
   auth.onAuthStateChanged(function (user) {
     if (user) {
-      var user = auth.currentUser;
-      var uid = user.uid;
-
-      db.ref('usuarios/' + uid).on('value', function(snap) {
-        let usuario = snap.val();
-        var privilegio = usuario.puesto;
-
-        if(privilegio == 'Administrador') {
-          $(location).attr("href", "admin.html");
-        }
-        if(privilegio == 'Usuario') {
-          $(location).attr("href", "usuario.html");
-        }
-      });
-    }
-    else {
-      $('#body').attr('style', 'background-color: #E2ECFB;');
-      $('#head-blog').show();
-      $('#p').show();
+      $(location).attr("href", "panel.html");
     }
   });
 }
+
+obtenerUsuario();
 
 function validarEmail(valor) {
   if(/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(valor)) {
@@ -108,3 +97,12 @@ function validarEmail(valor) {
     return false;
   }
 }
+
+firebase.database().ref('usuarios/planta/almacen').push( {
+  descripcion: "encargado de pedidos de X zonas",
+  email: "leo@gmail.com",
+  foto: "foto1.jpg",
+  nombre: "Leonardo",
+  puesto: "encargado de pedidos en apt",
+  username: "leo123"
+})
