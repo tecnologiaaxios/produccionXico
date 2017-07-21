@@ -97,12 +97,3 @@ function validarEmail(valor) {
     return false;
   }
 }
-
-firebase.database().ref('usuarios/planta/almacen').push( {
-  descripcion: "encargado de pedidos de X zonas",
-  email: "leo@gmail.com",
-  foto: "foto1.jpg",
-  nombre: "Leonardo",
-  puesto: "encargado de pedidos en apt",
-  username: "leo123"
-})
