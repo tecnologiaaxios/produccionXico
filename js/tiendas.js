@@ -4,6 +4,7 @@ function llenarSelectTiendas() {
   let tiendasRef = db.ref('tiendas');
   tiendasRef.on('value', function(snapshot) {
     let tiendas = snapshot.val();
+
     let row = "";
     for(let tienda in tiendas) {
       row += '<option value="'+tienda+'">'+tiendas[tienda].nombre+'</option>'
@@ -38,6 +39,39 @@ function guardarTienda() {
   $('#region').val('');
 }
 
+function limpiarTabla() {
+  $('#listaProductos tbody').empty();
+}
+
+$('#tienda').change(function() {
+  let idTienda = $('#tienda').val();
+  let productos = db.ref('tiendas/'+idTienda+'/productos');
+  console.log(idTienda);
+  productos.on('value', function(snapshot) {
+    let products = snapshot.val();
+    let row = "";
+    for(let product in products) {
+      row += '<tr>' +
+              '<td>'+products[product].clave+'</td>'+
+              '<td>'+products[product].nombre+'</td>'+
+              '<td>'+products[product].empaque+'</td>'+
+             '</tr>';
+    }
+
+    $('#listaProductos tbody').empty().append(row);
+
+  });
+});
+
+function contarProductos() {
+  let idTienda = $('#tienda').val();
+
+  let tiendas = db.ref('tiendas/'+idTienda+'/productos');
+  tiendas.on('value', function(snapshot) {
+    $('#cantidadProductos').val(Object.keys(snapshot.val()).length);
+  });
+}
+
 function agregarProducto() {
   let idTienda = $('#tienda').val();
   let clave = $('#claveProducto').val();
@@ -52,8 +86,9 @@ function agregarProducto() {
   };
   productos.push(producto);
 
-  $('#tienda').val('').focus();
-  $('#claveProducto').val('');
+  //console.log($('#tienda option').last());
+  $('#tienda option').last().attr('selected', true);
+  $('#claveProducto').val('').focus();
   $('#nombreProducto').val('');
   $('#empaque').val('');
 }
