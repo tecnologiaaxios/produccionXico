@@ -7,15 +7,30 @@ function llenarSelectTiendas() {
 
     let row = "";
     for(let tienda in tiendas) {
-      row += '<option value="'+tienda+'">'+tiendas[tienda].nombre+'</option>'
+      row += '<option value="'+tienda+'">'+tiendas[tienda].nombre+'</option>';
     }
     $('#tienda').empty().append('<option value="" disabled selected>Tienda</option>');
     $('#tienda').append(row);
   });
 }
 
+function llenarSelectProductos() {
+  let productosRef = db.ref('productos');
+  productosRef.on('value', function(snapshot) {
+    let productos = snapshot.val();
+
+    let row = "";
+    for(let producto in productos) {
+      row += '<option value="'+producto+'">'+productos[producto].claveInterna + ' ' + productos[producto].nombreProducto +' ' + productos[producto].capEmpaque +'</option>';
+    }
+    $('#productos').empty().append(row);
+    $('#productos').multiselect();
+  });
+}
+
 $(document).ready(function() {
   llenarSelectTiendas();
+  llenarSelectProductos();
 })
 
 function guardarTienda() {
@@ -46,7 +61,7 @@ function limpiarTabla() {
 $('#tienda').change(function() {
   let idTienda = $('#tienda').val();
   let productos = db.ref('tiendas/'+idTienda+'/productos');
-  console.log(idTienda);
+
   productos.on('value', function(snapshot) {
     let products = snapshot.val();
     let row = "";
@@ -91,4 +106,31 @@ function agregarProducto() {
   $('#claveProducto').val('').focus();
   $('#nombreProducto').val('');
   $('#empaque').val('');
+}
+
+function agregarProductos() {
+  let productos = $('#productos').val();
+  let idTienda = $('#tienda').val();
+
+  let productosRef = db.ref('productos');
+
+  for(producto in productos) {
+    productosRef.on('value', function(snapshot) {
+      let products = snapshot.val();
+
+      for(product in products) {
+        if(productos[producto] == product) {
+          let productosTienda = db.ref('tiendas/'+idTienda+'/productos');
+          let datosProducto = {
+            nombre: products[product].nombreProducto,
+            empaque: products[product].capEmpaque,
+            clave: products[product].claveInterna
+          };
+          productosTienda.push(datosProducto);
+        }
+      }
+    });
+  }
+
+  $('#productos').val('').focus();
 }
