@@ -132,5 +132,11 @@ function agregarProductos() {
     });
   }
 
-  $('#productos').val('').focus();
+  $('#productos').multiselect('deselectAll', false).focus();
+  $('#productos').multiselect('updateButtonText');
+}
+
+function deseleccionar() {
+  $('#productos').multiselect('deselectAll', false);
+  $('#productos').multiselect('updateButtonText');
 }
