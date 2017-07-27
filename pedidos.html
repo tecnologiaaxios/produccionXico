@@ -46,79 +46,79 @@
           <div class="well well-sm">
             <form class="form-horizontal">
               <fieldset>
-                <legend class="text-center header">Tienda</legend>
+                <legend class="text-center header">Pedido</legend>
                 <div class="form-group">
                   <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span>
-                  <div class="col-md-6">
-                    <select id="tienda" class="form-control" required></select>
+                  <div class="col-md-8">
+                    <label for="tiendas">Tienda:</label><select id="tiendas" class="form-control" required></select>
                   </div>
                 </div>
-
-                <legend class="text-center header">Producto</legend>
+                <input class="form-control" id="tienda" name="tienda" style="display:none"></input>
                 <div class="form-group">
                   <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span>
-                  <div class="col-md-6">
-                    <select id="productos" class="form-control" required></select>
+                  <div class="col-md-8">
+                    <label for="productos">Productos:</label>
+                    <select id="productos" class="form-control" required>
+                      <option value="" disabled selected>Seleccionar</option>
+                    </select>
                   </div>
                 </div>
-
-
                 <div class="form-group">
                   <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-key" aria-hidden="true"></i></span>
                   <div class="col-md-8">
-                    <input id="pedidoPz" type="number" placeholder="Pedido Pz" class="form-control" required>
+                    <label for="pedidoPz">Pedido Pz:</label><input id="pedidoPz" type="number" placeholder="Pedido Pz" class="form-control" required>
                   </div>
                 </div>
-
                 <div class="form-group">
                   <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-key" aria-hidden="true"></i></span>
                   <div class="col-md-8">
-                    <input id="degusPz" type="number" placeholder="Degustación Pz" class="form-control" required>
+                    <label for="degusPz">Degustación Pz:</label><input id="degusPz" type="number" placeholder="Degustación Pz" class="form-control" required>
                   </div>
                 </div>
-
                 <div class="form-group">
                   <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-key" aria-hidden="true"></i></span>
                   <div class="col-md-8">
-                    <input id="totalPz" type="number" placeholder="Total Pz" class="form-control" required disabled>
+                    <label for="totalPz">Total Pz:</label><input id="totalPz" type="number" placeholder="Total Pz" class="form-control" required disabled>
                   </div>
                 </div>
-
+                <input class="form-control" id="clave" name="clave" style="display:none"></input>
+                <input class="form-control" id="nombre" name="nombre" style="display:none"></input>
                 <input class="form-control" id="empaque" name="empaque" style="display:none"></input>
-
                 <div class="form-group">
                   <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-key" aria-hidden="true"></i></span>
                   <div class="col-md-8">
-                    <input id="totalKg" type="number" placeholder="Total Kg" class="form-control" required disabled>
+                    <label for="totalKg">Total Kg:</label><input id="totalKg" type="number" placeholder="Total Kg" class="form-control" required disabled>
                   </div>
                 </div>
-                <!--<div class="form-group">
-                  <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-key" aria-hidden="true"></i></span>
-                  <div class="col-md-8">
-                    <input id="clave" type="text" placeholder="Clave" class="form-control" required>
-                  </div>
-                </div>-->
-                <!--<div class="form-group">
-                  <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-building" aria-hidden="true"></i></span>
-                  <div class="col-md-8">
-                    <input id="consorcio" type="text" placeholder="Consorcio" class="form-control" required>
-                  </div>
-                </div>-->
-                <!--<div class="form-group">
-                  <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span>
-                  <div class="col-md-8">
-                    <input id="nombre" type="text" placeholder="Nombre" class="form-control" required>
-                  </div>
-                </div>-->
-                <!--<div class="form-group">
-                  <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
-                  <div class="col-md-8">
-                    <input id="region" type="text" placeholder="Región" class="form-control" required>
-                  </div>
-                </div>-->
                 <div class="form-group">
                   <div class="col-md-12 text-center">
-                    <button class="btn btn-primary btn-lg" id="enviar" onclick="guardarTienda()" type="button">Guardar</button>
+                    <button class="btn btn-danger btn-xs" onclick="agregarProducto()" type="button">Agregar Producto</button>
+                  </div>
+                </div>
+                <div class="form-group">
+                <table id="productosPedido" class="table">
+                  <thead>
+                    <th>Clave</th>
+                    <th>Nombre</th>
+                    <th>Pedido Pz</th>
+                    <th>Degustación Pz</th>
+                    <th>Total Pz</th>
+                    <th>Total Kg</th>
+                  </thead>
+                  <tbody>
+
+                  </tbody>
+                </table>
+                </div>
+                <div class="form-group">
+                  <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                  <div class="col-md-8">
+                    <label for="region">Región:</label><input class="form-control" id="region" name="region" placeholder="Región" disabled></input>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-md-12 text-center">
+                    <button class="btn btn-success btn-lg" onclick="guardarPedido()" type="button">Guardar</button>
                   </div>
                 </div>
               </fieldset>
@@ -221,6 +221,7 @@
       };
       firebase.initializeApp(config);
     </script>
+    <script src="js/moment-with-locales.js"></script>
     <script src="js/pedidos.js"></script>
   </body>
 </html>
