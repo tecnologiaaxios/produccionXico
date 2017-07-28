@@ -130,7 +130,8 @@ function guardarPedido() {
       fechaCaptura: fechaCaptura,
       tienda: tienda,
       ruta: ruta,
-      fechaRuta: ""
+      fechaRuta: "",
+      estado: "Pendiente"
     }
   }
 
