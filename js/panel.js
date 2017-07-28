@@ -19,7 +19,6 @@ function haySesion() {
 
 haySesion();
 
-
 function mostrarPedidos() {
   let pedidosEntradaRef = db.ref('pedidoEntrada/');
   pedidosEntradaRef.on('value', function(snapshot) {
@@ -41,7 +40,7 @@ function mostrarPedidos() {
       }
 
       row += '<tr style="padding:0px 0px 0px;" class="no-pading">' +
-               '<th scope="row">' + pedido +'</th>' +
+               '<td>' + pedido +'</td>' +
                '<td>' + pedidos[pedido].encabezado.fechaCaptura + '</td>' +
                '<td>' + pedidos[pedido].encabezado.tienda +'</td>' +
                '<td>' + pedidos[pedido].encabezado.ruta +'</td>' +
@@ -55,3 +54,35 @@ function mostrarPedidos() {
 }
 
 dragula([document.getElementById('tbodyTablaPedidos'), document.getElementById('tbodyTablaPedidoPadre')]);
+
+function generarPedidoPadre() {
+  var pedidos = [];
+
+  $("#tablaPedidoPadre tbody tr").each(function (i)
+  {
+    var clave;
+    $(this).children("td").each(function (j)
+    {
+      if(j == 0) {
+        clave = $(this).text();
+      }
+    });
+
+    if($(this).attr('id') !="vacio"){
+      let pedidoRef = db.ref('pedidoEntrada/'+clave);
+      pedidoRef.once('value', function(snapshot) {
+        let pedido = snapshot.val();
+        pedidos.push(pedido);
+      });
+    }
+  });
+
+  let fechaCreacionPadre = moment().format('DD/MM/YYYY');
+  let pedidoPadreRef = db.ref('pedidoPadre/');
+  let datosPedidoPadre = {
+    fechaCreacionPadre: fechaCreacionPadre
+  }
+  let key = pedidoPadreRef.push(datosPedidoPadre).getKey();
+
+  let pedidoPadreRefKey = db.ref('pedidoPadre/'+key+'/pedidosHijos');
+}
