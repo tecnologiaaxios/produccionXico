@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <link href='logo.ico' rel='shortcut icon' type='image/x-icon'/>
 
-    <title>SB Admin 2 - Bootstrap Admin Theme</title>
+    <title>Recepción de pedidos</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -25,6 +25,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="dist/js/bootstrap-select.js"></script>
+    <link rel="stylesheet" href="css/dragula.min.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -86,7 +87,12 @@
       <div class="barside">
         <img class="navbar-brand" id="logo" src="logo.png"></img>
         <ul style="margin-top:50px; list-style:none; font-size:50px; color:white; padding:28px;">
-          <li><i style="font-size:50px;" class="material-icons">playlist_add</i></li>
+          <li>
+            <a style="color:white; text-decoration: none;" href="#" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+              <span style="font-size:50px;" class="material-icons no-padding">playlist_add</span>
+              <p style="white; font-size:11px; width:200px; margin-left:-14px; margin-top:-15px;">Formar Pedido</p>
+            </a>
+          </li>
         </ul>
       </div>
       <div id="page-wrapper">
@@ -135,11 +141,40 @@
                     <th>Estado</th>
                   </tr>
                 </thead>
-                <tbody>
-        
+                <tbody id="tbodyTablaPedidos">
+
                 </tbody>
               </table>
             </div><!--/.table-responsive-->
+            <div class="collapse" id="collapseExample">
+              <div class="well">
+                <div class="table-responsive">
+                  <table id="tablaPedidoPadre" class="table table-condensed table-bordered" style="padding:0px 0px 0px; ">
+                    <thead>
+                      <th>Clave</th>
+                      <th>Fecha de captura</th>
+                      <th>Tienda</th>
+                      <th>Ruta</th>
+                      <th>Imprimir</th>
+                      <th>Estado</th>
+                    </thead>
+                    <tbody id="tbodyTablaPedidoPadre" style="border: 2px solid grey; border-style: dashed; height:200px; width:100%;"  class="tabla-drag">
+                      <h4>Arrastra los pedidos dentro de las lineas punteadas para agruparlos</h4>
+                      <tr style="padding:0px 0px 0px;" class="no-pading">
+                        <th scope="row" style="border:none;"></th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="no-padding"></td>
+                        <td class="no-padding"> </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <button class="btn btn-success" type="button" onclick="generarPedidoPadre()">Generar pedido</button>
+                </div>
+              </div>
+            </div>
+
           </div><!-- /.col-lg-12 -->
         </div><!-- /.row -->
       </div><!-- /#page-wrapper -->
@@ -189,6 +224,8 @@
       };
       firebase.initializeApp(config);
     </script>
+    <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/$VERSION/dragula.min.js'></script>-->
+    <script src="js/dragula.min.js"></script>
     <script src="js/panel.js"></script>
   </body>
 </html>

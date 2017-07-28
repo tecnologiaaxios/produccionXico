@@ -53,3 +53,5 @@ function mostrarPedidos() {
     $('#tablaPedidos tbody').empty().append(row);
   });
 }
+
+dragula([document.getElementById('tbodyTablaPedidos'), document.getElementById('tbodyTablaPedidoPadre')]);

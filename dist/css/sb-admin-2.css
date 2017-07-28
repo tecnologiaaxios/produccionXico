@@ -15,12 +15,18 @@ body {
   background-color: white;
 }
 
+.tabla-drag{
+  background-color: white;
+  border-style: dotted;
+}
+
+
 #logo{ position: absolute; z-index: 999; width: 105; height: 70px; margin-top: -10px; margin-left: 5px;}
 .barside{
   width: 100px;
   height: 100% !important;
   position: fixed;
-  background-color: #091D60;
+  background-color: #2E46AA;
   z-index: 2;
   top: 0px;
 }
