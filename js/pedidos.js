@@ -10,7 +10,7 @@ function llenarSelectTiendas() {
     for(let tienda in tiendas) {
       row += '<option value="'+tienda+'">'+tiendas[tienda].nombre+'</option>';
     }
-    $('#tiendas').empty().append('<option value="" disabled selected>Tienda</option>');
+    $('#tiendas').empty().append('<option value="Tiendas" disabled selected>Tienda</option>');
     $('#tiendas').append(row);
   });
 }
@@ -26,7 +26,7 @@ function llenarSelectProductos() {
     for(let producto in productos) {
       row += '<option value="'+producto+'">'+productos[producto].clave + ' ' + productos[producto].nombre +' ' + productos[producto].empaque +'</option>';
     }
-    $('#productos').empty().append('<option value="" disabled selected>Productos</option>');
+    $('#productos').empty().append('<option value="Productos" disabled selected>Productos</option>');
     $('#productos').append(row);
     //$('#productos').multiselect();
   });
@@ -143,6 +143,10 @@ function guardarPedido() {
     pedidoDetalleRef.push(listaProductosPedido[producto]);
   }
 
-  $('productosPedido tbody').empty();
+  //$('#tiendas option').first().attr('selected', true);
+  //$('#productos option').first().attr('selected', true);
+  $("#tiendas").val('Tiendas')
+  $("#productos").val('Productos')
+  $('#productosPedido tbody').empty();
   listaProductosPedido.length = 0;
 }
