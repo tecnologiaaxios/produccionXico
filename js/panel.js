@@ -56,7 +56,7 @@ function mostrarPedidos() {
 dragula([document.getElementById('tbodyTablaPedidos'), document.getElementById('tbodyTablaPedidoPadre')]);
 
 function generarPedidoPadre() {
-  var pedidos = [];
+  var pedidos = [], claves = [];
 
   $("#tablaPedidoPadre tbody tr").each(function (i)
   {
@@ -65,6 +65,7 @@ function generarPedidoPadre() {
     {
       if(j == 0) {
         clave = $(this).text();
+        claves.push(clave);
       }
     });
 
@@ -87,8 +88,26 @@ function generarPedidoPadre() {
   let key = pedidoPadreRef.push(datosPedidoPadre).getKey();
 
   let pedidoPadreRefKey = db.ref('pedidoPadre/'+key+'/pedidosHijos');
+  let historialPedidosEntradaRef = db.ref('historialPedidosEntrada');
+  let pedidoEntradaRef = db.ref('pedidoEntrada');
 
+  let datosPedidosHijos = {};
   for(let pedido in pedidos) {
-    pedidoPadreRefKey.push(pedidos[pedido]);
+    //pedidoPadreRefKey.push(pedidos[pedido]);
+    datosPedidosHijos[claves[pedido]] = pedidos[pedido];
+    pedidoEntradaRef.child(claves[pedido]).remove();
   }
+
+  pedidoPadreRefKey.set(datosPedidosHijos);
+  historialPedidosEntradaRef.push(datosPedidosHijos);
+
+  let row = '<tr id="vacio" style="padding:0px 0px 0px;" class="no-pading">' +
+              '<td scope="row" style="border:none;"></td>' +
+              '<td></td>' +
+              '<td></td>' +
+              '<td></td>' +
+              '<td class="no-padding"></td>' +
+              '<td class="no-padding"> </td>' +
+            '</tr>';
+  $('#tbodyTablaPedidoPadre').empty().append(row);
 }
