@@ -80,9 +80,15 @@ function generarPedidoPadre() {
   let fechaCreacionPadre = moment().format('DD/MM/YYYY');
   let pedidoPadreRef = db.ref('pedidoPadre/');
   let datosPedidoPadre = {
-    fechaCreacionPadre: fechaCreacionPadre
+    fechaCreacionPadre: fechaCreacionPadre,
+    fechaRuta: "",
+    ruta: ""
   }
   let key = pedidoPadreRef.push(datosPedidoPadre).getKey();
 
   let pedidoPadreRefKey = db.ref('pedidoPadre/'+key+'/pedidosHijos');
+
+  for(let pedido in pedidos) {
+    pedidoPadreRefKey.push(pedidos[pedido]);
+  }
 }
