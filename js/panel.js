@@ -111,3 +111,21 @@ function generarPedidoPadre() {
             '</tr>';
   $('#tbodyTablaPedidoPadre').empty().append(row);
 }
+
+function pedidosRecibidos() {
+  $('#pedidosEnProceso').hide();
+  $('#historialPedidos').hide();
+  $('#pedidosRecibidos').show();
+}
+
+function pedidosEnProceso() {
+  $('#pedidosRecibidos').hide();
+  $('#historialPedidos').hide();
+  $('#pedidosEnProceso').show();
+}
+
+function historialPedidos() {
+  $('#pedidosRecibidos').hide();
+  $('#pedidosEnProceso').hide();
+  $('#historialPedidos').show();
+}
