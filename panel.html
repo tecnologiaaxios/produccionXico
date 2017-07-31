@@ -98,11 +98,11 @@
       <div id="page-wrapper">
         <div class="row">
           <ul class="nav nav-pills nav-justified" style="padding:30px;">
-            <li class="active"><a id="pills" href="#"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>Pedidos Recibidos</a></li>
-            <li><a id="pills" href="#"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>Pedidos en Proceso</a></li>
-            <li><a id="pills" href="#"><span class="glyphicon glyphicon-folder-open" ></span>Historial de pedidos</a></li>
+            <li class="active"><a onclick="pedidosRecibidos()" id="pills" href="#"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Pedidos Recibidos</a></li>
+            <li class="active"><a onclick="pedidosEnProceso()" id="pills" href="#"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Pedidos en Proceso</a></li>
+            <li class="active"><a onclick="historialPedidos()" id="pills" href="#"><span class="glyphicon glyphicon-folder-open" ></span> Historial de pedidos</a></li>
           </ul>
-          <div class="nav nav-pills nav-justified" data-toggle="buttons" style="padding:30px;">
+          <!--<div class="nav nav-pills nav-justified" data-toggle="buttons" style="padding:30px;">
             <label id="pills" onclick="pedidosRecibidos()" class="btn btn-primary active">
               <input type="radio" name="options" autocomplete="off" checked><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> Pedidos Recibidos
             </label>
@@ -112,7 +112,7 @@
             <label id="pills" onclick="historialPedidos()" class="btn btn-primary">
               <input type="radio" name="options" autocomplete="off"><span class="glyphicon glyphicon-folder-open" ></span> Historial de pedidos
             </label>
-          </div>
+          </div>-->
           <div id="pedidosRecibidos" class="col-lg-12">
             <div class="form-inline">
               <div class="form-group">
