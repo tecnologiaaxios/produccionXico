@@ -15,6 +15,30 @@ body {
   background-color: white;
 }
 
+/*** ESTILOS DEL LOGGIN ***/
+
+#left-login{
+background: url(../../img/bg-home.png) no-repeat top fixed;
+-webkit-background-size: cover;
+-moz-background-size: cover;
+-o-background-size: cover;
+background-size: cover;
+width:50%;
+float:left;
+height:100% !important;
+
+}
+
+#right-login{
+padding: 30px;
+width:50%;
+ float:right;
+ height:300px;
+
+}
+
+/**** ******/
+
 .tabla-drag{
   background-color: white;
   border-style: dotted;
@@ -23,7 +47,7 @@ body {
     border: solid #1a237e;
       border: solid 1px #1a237e;
      margin: 10px;
-      
+
 }
 #pills:active{
   background-color: #1a237e;
@@ -45,20 +69,15 @@ body {
   top: 0px;
 }
 .login-container{
-  height: 80% !important;
+  height: 500px !important;
   width: 70% !important;
-
-  position: absolute;
-	top:50% !important;
-	left:50% !important;
-	/*indicamos que el margen izquierdo, es la mitad de la anchura*/
-	margin-left:-35% !important;
-	/*determinamos una altura*/
-	/*indicamos que el margen superior, es la mitad de la altura*/
-	margin-top:-20% !important;
-	padding:5px !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+  margin-top: 70px !important;
+  overflow: hidden;
   border-radius: 15px !important;
   background-color: white !important;
+
 }
 .navbar{z-index: 1;}
 @media (min-width: 768px) {
