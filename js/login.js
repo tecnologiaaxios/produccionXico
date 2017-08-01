@@ -25,6 +25,18 @@ $('#contraseña').keyup(function () {
   }
 });
 
+$('#username').keypress(function (e) {
+  if (e.which == 13) {
+    login();
+  }
+});
+
+$('#contraseña').keypress(function (e) {
+  if (e.which == 13) {
+    login();
+  }
+});
+
 function login() {
   let username = $('#username').val();
   let contraseña = $('#contraseña').val();

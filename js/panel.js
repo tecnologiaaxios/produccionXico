@@ -39,9 +39,16 @@ function mostrarPedidos() {
           break;
       }
 
+      let diaCaptura = pedidos[pedido].encabezado.fechaCaptura.substr(0,2);
+      let mesCaptura = pedidos[pedido].encabezado.fechaCaptura.substr(3,2);
+      let añoCaptura = pedidos[pedido].encabezado.fechaCaptura.substr(6,4);
+      let fechaCaptura = mesCaptura + '/' + diaCaptura + '/' + añoCaptura;
+      moment.locale('es');
+      let fechaCapturaMostrar = moment(fechaCaptura).format('DD MMMM YYYY');
+
       row += '<tr style="padding:0px 0px 0px;" class="no-pading">' +
                '<td>' + pedido +'</td>' +
-               '<td>' + pedidos[pedido].encabezado.fechaCaptura + '</td>' +
+               '<td>' + fechaCapturaMostrar + '</td>' +
                '<td>' + pedidos[pedido].encabezado.tienda +'</td>' +
                '<td>' + pedidos[pedido].encabezado.ruta +'</td>' +
                '<td class="no-padding"><button type="button" class="btn btn-info btn-sm"><span style="padding-bottom:0px;" class="glyphicon glyphicon-print"></span></button></td>' +
@@ -78,16 +85,15 @@ function mostrarPedidosEnProceso() {
     for(pedidoPadre in pedidosPadre) {
       let tr = $('<tr/>');
       let td = $('<td/>');
-      let div = $('<div/>', {'class': 'input-group', 'style': 'width: 200px;'});
+      let div = $('<div/>', {'class': 'input-group date', 'id':'dtpFechaRuta-'+pedidoPadre, 'style': 'width: 200px;'});
       let input = $('<input/>', {
         'class': 'form-control',
         'type': 'text',
-        'style': '',
         'placeholder': 'Fecha de ruta',
         'id': 'fechaRuta-'+pedidoPadre
       });
 
-      let span = $('<span/>', {'class': 'input-group-btn'});
+      let div1 = '<div class="input-group-addon btn btn-primary"><span class="glyphicon glyphicon-calendar"></span></div>';
 
       let button = $('<button/>', {
         'class': 'btn btn-primary',
@@ -121,12 +127,32 @@ function mostrarPedidosEnProceso() {
               '<td>' + pedidosPadre[pedidoPadre].ruta + '</td>' +
               '<td></td>' +
              '</tr>';*/
+
+      let diaCaptura = pedidosPadre[pedidoPadre].fechaCreacionPadre.substr(0,2);
+      let mesCaptura = pedidosPadre[pedidoPadre].fechaCreacionPadre.substr(3,2);
+      let añoCaptura = pedidosPadre[pedidoPadre].fechaCreacionPadre.substr(6,4);
+      let fechaCaptura = mesCaptura + '/' + diaCaptura + '/' + añoCaptura;
+      moment.locale('es');
+      let fechaCapturaMostrar = moment(fechaCaptura).format('DD MMMM YYYY');
+
+      let fechaRutaMostrar;
+      if(pedidosPadre[pedidoPadre].fechaRuta.length > 0) {
+        let diaRuta = pedidosPadre[pedidoPadre].fechaRuta.substr(0,2);
+        let mesRuta = pedidosPadre[pedidoPadre].fechaRuta.substr(3,2);
+        let añoRuta = pedidosPadre[pedidoPadre].fechaRuta.substr(6,4);
+        let fechaRuta = mesRuta + '/' + diaRuta + '/' + añoRuta;
+
+        fechaRutaMostrar = moment(fechaRuta).format('DD MMMM YYYY');
+      } else {
+        fechaRutaMostrar = "Fecha pendiente";
+      }
+
       row = '<td>' + pedidoPadre + '</td>' +
-            '<td>' + pedidosPadre[pedidoPadre].fechaCreacionPadre + '</td>' +
-            '<td>' + pedidosPadre[pedidoPadre].fechaRuta + '</td>';
+            '<td>' + fechaCapturaMostrar + '</td>' +
+            '<td>' + fechaRutaMostrar + '</td>';
+
       div.append(input);
-      span.append(button);
-      div.append(span);
+      div.append(div1);
       td.append(div);
       //td.append(button);
       tr.append(row);
@@ -137,8 +163,16 @@ function mostrarPedidosEnProceso() {
       div2.append(span2);
       td2.append(div2);
       tr.append(td2);
+      tr.append('<td><a class="btn btn-info" href="pedidoPadre.html?='+pedidoPadre+'">Ver más</a></td>');
 
       $('#tablaPedidosEnProceso tbody').append(tr);
+
+      $('#dtpFechaRuta-'+pedidoPadre).datepicker({
+        startDate: "Today",
+        format: "dd/mm/yyyy",
+        autoclose: true,
+        todayHighlight: true
+      });
     }
   });
 }
@@ -154,8 +188,10 @@ function generarPedidoPadre() {
     $(this).children("td").each(function (j)
     {
       if(j == 0) {
-        clave = $(this).text();
-        claves.push(clave);
+        if($(this).text().length > 0) {
+          clave = $(this).text();
+          claves.push(clave);
+        }
       }
     });
 
@@ -185,6 +221,7 @@ function generarPedidoPadre() {
   for(let pedido in pedidos) {
     //pedidoPadreRefKey.push(pedidos[pedido]);
     datosPedidosHijos[claves[pedido]] = pedidos[pedido];
+    console.log(claves[pedido]);
     pedidoEntradaRef.child(claves[pedido]).remove();
   }
 
@@ -214,6 +251,8 @@ function pedidosRecibidos() {
   $('#pedidosEnProceso').hide();
   $('#historialPedidos').hide();
   $('#pedidosRecibidos').show();
+
+  mostrarPedidos();
 }
 
 function pedidosEnProceso() {

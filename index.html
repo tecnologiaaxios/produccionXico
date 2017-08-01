@@ -39,32 +39,25 @@
   </head>
   <body>
     <div class="login-container">
-
-
-          <div id="left-login">
-
-         <img src="assets/logo.svg" width="200px" style="margin:0 auto; margin-top:150px;" class="img-responsive" alt="Responsive image">
-         <h1 style="color:white;">Bienvenido</h1>
+      <div id="left-login">
+        <img src="assets/logo.svg" width="200px" style="margin:0 auto; margin-top:150px;" class="img-responsive" alt="Responsive image">
+        <h1 style="color:white;">Bienvenido</h1>
+      </div>
+      <div id="right-login">
+        <div role="form" style="margin-top:150px;">
+          <div class="form-group">
+            <input id="username" class="form-control input-lg input-login" placeholder="Nombre de usuario" type="text" required>
+            <span style="display: none;" id="helpblockUserName" class="help-block">Campo obligatorio</span>
           </div>
-          <div id="right-login">
-
-            <div role="form" style="margin-top:150px;">
-
-              <div class="form-group">
-                <input id="username" class="form-control input-lg input-login" placeholder="Nombre de usuario" type="text" required>
-                <span style="display: none;" id="helpblockUserName" class="help-block">Campo obligatorio</span>
-              </div>
-              <div class="form-group">
-                <input id="contraseña" class="form-control input-lg input-login" placeholder="Contraseña" type="password" required>
-                <span style="display: none;" id="helpblockContraseña" class="help-block">Campo obligatorio</span>
-              </div>
-              <div class="form-group" style="width:100%;">
-                <button style="width:100%;" class="btn btn-primary btn-lg btn-login" id="entrar" onclick="login()" type="button">Entrar</button>
-              </div>
-            </div>
+          <div class="form-group">
+            <input id="contraseña" class="form-control input-lg input-login" placeholder="Contraseña" type="password" required>
+            <span style="display: none;" id="helpblockContraseña" class="help-block">Campo obligatorio</span>
           </div>
-
-
+          <div class="form-group" style="width:100%;">
+            <button style="width:100%;" class="btn btn-primary btn-lg btn-login" id="entrar" onclick="login()" type="button">Entrar</button>
+          </div>
+        </div>
+      </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
