@@ -85,7 +85,7 @@ function mostrarPedidosEnProceso() {
     for(pedidoPadre in pedidosPadre) {
       let tr = $('<tr/>');
       let td = $('<td/>');
-      let div = $('<div/>', {'class': 'input-group date', 'id':'dtpFechaRuta-'+pedidoPadre, 'style': 'width: 200px;'});
+      let div = $('<div/>', {'class': 'input-group date', 'style': 'width: 200px;'});
       let input = $('<input/>', {
         'class': 'form-control',
         'type': 'text',
@@ -93,7 +93,7 @@ function mostrarPedidosEnProceso() {
         'id': 'fechaRuta-'+pedidoPadre
       });
 
-      let div1 = '<div class="input-group-addon btn btn-primary"><span class="glyphicon glyphicon-calendar"></span></div>';
+      //let div1 = '<div class="input-group-addon btn btn-primary"><span class="glyphicon glyphicon-calendar"></span></div>';
 
       let button = $('<button/>', {
         'class': 'btn btn-primary',
@@ -152,9 +152,10 @@ function mostrarPedidosEnProceso() {
             '<td>' + fechaRutaMostrar + '</td>';
 
       div.append(input);
-      div.append(div1);
+      div.append('<span class="input-group-addon btn-primary"><i class="glyphicon glyphicon-calendar"></i></span>');
+      //div.append(button);
       td.append(div);
-      //td.append(button);
+      td.append(button);
       tr.append(row);
       tr.append(td);
       tr.append('<td>' + pedidosPadre[pedidoPadre].ruta + '</td>');
@@ -163,15 +164,14 @@ function mostrarPedidosEnProceso() {
       div2.append(span2);
       td2.append(div2);
       tr.append(td2);
-      tr.append('<td><a class="btn btn-info" href="pedidoPadre.html?='+pedidoPadre+'">Ver más</a></td>');
+      tr.append('<td><a class="btn btn-info" href="pedidoPadre.html?id='+pedidoPadre+'">Ver más</a></td>');
 
       $('#tablaPedidosEnProceso tbody').append(tr);
 
-      $('#dtpFechaRuta-'+pedidoPadre).datepicker({
-        startDate: "Today",
+      $('.input-group.date').datepicker({
         format: "dd/mm/yyyy",
-        autoclose: true,
-        todayHighlight: true
+        startDate: "today",
+        language: "es"
       });
     }
   });
