@@ -61,6 +61,14 @@ function guardarFechaRuta(idPedidoPadre) {
   });
 }
 
+function guardarRuta(idPedidoPadre) {
+  let pedidoPadreRef = db.ref('pedidoPadre/');
+  let nuevaRuta = $('#ruta-'+idPedidoPadre).val();
+  pedidoPadreRef.child(idPedidoPadre).update({
+    ruta: nuevaRuta
+  });
+}
+
 function mostrarPedidosEnProceso() {
   let pedidosPadreRef = db.ref('pedidoPadre');
   pedidosPadreRef.on('value', function(snapshot) {
@@ -70,17 +78,38 @@ function mostrarPedidosEnProceso() {
     for(pedidoPadre in pedidosPadre) {
       let tr = $('<tr/>');
       let td = $('<td/>');
+      let div = $('<div/>', {'class': 'input-group', 'style': 'width: 200px;'});
       let input = $('<input/>', {
         'class': 'form-control',
         'type': 'text',
-        'style': 'width: 150px; display:inline-block',
+        'style': '',
         'placeholder': 'Fecha de ruta',
         'id': 'fechaRuta-'+pedidoPadre
       });
 
+      let span = $('<span/>', {'class': 'input-group-btn'});
+
       let button = $('<button/>', {
         'class': 'btn btn-primary',
         'onclick': 'guardarFechaRuta("'+pedidoPadre+'")',
+        'html': '<i class="fa fa-floppy-o" aria-hidden="true"></i>'
+      });
+
+      let td2 = $('<td/>');
+      let div2 = $('<div/>', {'class': 'input-group', 'style': 'width: 200px;'});
+      let input2 = $('<input/>', {
+        'class': 'form-control',
+        'type': 'text',
+        'style': '',
+        'placeholder': 'Ruta',
+        'id': 'ruta-'+pedidoPadre
+      });
+
+      let span2 = $('<span/>', {'class': 'input-group-btn'});
+
+      let button2 = $('<button/>', {
+        'class': 'btn btn-primary',
+        'onclick': 'guardarRuta("'+pedidoPadre+'")',
         'html': '<i class="fa fa-floppy-o" aria-hidden="true"></i>'
       });
 
@@ -95,12 +124,19 @@ function mostrarPedidosEnProceso() {
       row = '<td>' + pedidoPadre + '</td>' +
             '<td>' + pedidosPadre[pedidoPadre].fechaCreacionPadre + '</td>' +
             '<td>' + pedidosPadre[pedidoPadre].fechaRuta + '</td>';
-
-      td.append(input);
-      td.append(button);
+      div.append(input);
+      span.append(button);
+      div.append(span);
+      td.append(div);
+      //td.append(button);
       tr.append(row);
       tr.append(td);
-      tr.append('<td>' + pedidosPadre[pedidoPadre].ruta + '</td><td></td>');
+      tr.append('<td>' + pedidosPadre[pedidoPadre].ruta + '</td>');
+      div2.append(input2);
+      span2.append(button2);
+      div2.append(span2);
+      td2.append(div2);
+      tr.append(td2);
 
       $('#tablaPedidosEnProceso tbody').append(tr);
     }
@@ -164,6 +200,14 @@ function generarPedidoPadre() {
               '<td class="no-padding"> </td>' +
             '</tr>';
   $('#tbodyTablaPedidoPadre').empty().append(row);
+
+  let notificacionesRef = db.ref('notificaciones/promotoras');
+  let notificacion = {
+    leida: false,
+    mensaje: "Los siguientes pedidos: [] se han integrado en almacen."
+  }
+
+  notificacionesRef.push(notificacion);
 }
 
 function pedidosRecibidos() {
