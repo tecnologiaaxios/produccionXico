@@ -53,6 +53,60 @@ function mostrarPedidos() {
   });
 }
 
+function guardarFechaRuta(idPedidoPadre) {
+  let pedidoPadreRef = db.ref('pedidoPadre/');
+  let nuevaFechaRuta = $('#fechaRuta-'+idPedidoPadre).val();
+  pedidoPadreRef.child(idPedidoPadre).update({
+    fechaRuta: nuevaFechaRuta
+  });
+}
+
+function mostrarPedidosEnProceso() {
+  let pedidosPadreRef = db.ref('pedidoPadre');
+  pedidosPadreRef.on('value', function(snapshot) {
+    let pedidosPadre = snapshot.val();
+    let row = "";
+    $('#tablaPedidosEnProceso tbody').empty();
+    for(pedidoPadre in pedidosPadre) {
+      let tr = $('<tr/>');
+      let td = $('<td/>');
+      let input = $('<input/>', {
+        'class': 'form-control',
+        'type': 'text',
+        'style': 'width: 150px; display:inline-block',
+        'placeholder': 'Fecha de ruta',
+        'id': 'fechaRuta-'+pedidoPadre
+      });
+
+      let button = $('<button/>', {
+        'class': 'btn btn-primary',
+        'onclick': 'guardarFechaRuta("'+pedidoPadre+'")',
+        'html': '<i class="fa fa-floppy-o" aria-hidden="true"></i>'
+      });
+
+      /*row += '<tr>' +
+              '<td>' + pedidoPadre + '</td>' +
+              '<td>' + pedidosPadre[pedidoPadre].fechaCreacionPadre + '</td>' +
+              '<td>' + pedidosPadre[pedidoPadre].fechaRuta + '</td>' +
+              '<td><input type="text" class="form-control" style="width: 100px; display:inline-block padding-right: 10px;" placeholder="Nueva fecha de ruta"><button class="btn btn-primary" type="button"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></td>' +
+              '<td>' + pedidosPadre[pedidoPadre].ruta + '</td>' +
+              '<td></td>' +
+             '</tr>';*/
+      row = '<td>' + pedidoPadre + '</td>' +
+            '<td>' + pedidosPadre[pedidoPadre].fechaCreacionPadre + '</td>' +
+            '<td>' + pedidosPadre[pedidoPadre].fechaRuta + '</td>';
+
+      td.append(input);
+      td.append(button);
+      tr.append(row);
+      tr.append(td);
+      tr.append('<td>' + pedidosPadre[pedidoPadre].ruta + '</td><td></td>');
+
+      $('#tablaPedidosEnProceso tbody').append(tr);
+    }
+  });
+}
+
 dragula([document.getElementById('tbodyTablaPedidos'), document.getElementById('tbodyTablaPedidoPadre')]);
 
 function generarPedidoPadre() {
@@ -122,6 +176,8 @@ function pedidosEnProceso() {
   $('#pedidosRecibidos').hide();
   $('#historialPedidos').hide();
   $('#pedidosEnProceso').show();
+
+  mostrarPedidosEnProceso();
 }
 
 function historialPedidos() {
