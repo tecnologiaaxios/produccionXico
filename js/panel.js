@@ -153,7 +153,6 @@ function mostrarPedidosEnProceso() {
 
       div.append(input);
       div.append('<span class="input-group-addon btn-primary"><i class="glyphicon glyphicon-calendar"></i></span>');
-      //div.append(button);
       td.append(div);
       td.append(button);
       tr.append(row);
