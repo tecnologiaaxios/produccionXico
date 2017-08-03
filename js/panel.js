@@ -29,13 +29,13 @@ function mostrarPedidos() {
       let estado = "";
       switch(pedidos[pedido].encabezado.estado) {
         case "Pendiente":
-          estado = '<td class="no-padding">  <i style="color:#d50000; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>';
+          estado = '<td class="no-padding"><i style="color:#d50000; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>';
           break;
         case "En proceso":
-          estado = '<td class="no-padding">  <i style="color:#FF8000; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>';
+          estado = '<td class="no-padding"><i style="color:#FF8000; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>';
           break;
         case "Lista":
-          estado = '<td class="no-padding">  <i style="color:#70E707; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>';
+          estado = '<td class="no-padding"><i style="color:#70E707; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>';
           break;
       }
 
@@ -180,6 +180,7 @@ dragula([document.getElementById('tbodyTablaPedidos'), document.getElementById('
 
 function generarPedidoPadre() {
   var pedidos = [], claves = [];
+  var productosRepetidos = [], productosNoRepetidos = [];
 
   $("#tablaPedidoPadre tbody tr").each(function (i)
   {
@@ -199,16 +200,55 @@ function generarPedidoPadre() {
       pedidoRef.once('value', function(snapshot) {
         let pedido = snapshot.val();
         pedidos.push(pedido);
+
+        let detalle = pedido.detalle;
+        for(let producto in detalle) {
+          datosProducto = {
+            clave: detalle[producto].clave,
+            nombre: detalle[producto].nombre,
+            degusPz: detalle[producto].degusPz,
+            pedidoPz: detalle[producto].pedidoPz,
+            totalKg: detalle[producto].totalKg,
+            totalPz: detalle[producto].totalPz
+          };
+
+          productosRepetidos.push(datosProducto);
+        }
       });
     }
   });
+
+  for(let i in productosRepetidos) {
+    if(productosNoRepetidos.length == 0) {
+      productosNoRepetidos.push(productosRepetidos[i]);
+    }
+    else {
+      let bandera = false;
+      for(let j in productosNoRepetidos) {
+
+        if(productosRepetidos[i].clave == productosNoRepetidos[j].clave) {
+          bandera = true;
+
+          let productoNoRepetido = productosNoRepetidos[j];
+          let productoRepetido = productosRepetidos[i];
+
+          productoNoRepetido.totalKg = productoNoRepetido.totalKg + productoRepetido.totalKg;
+          productoNoRepetido.totalPz = productoNoRepetido.totalPz + productoRepetido.totalPz;
+        }
+      }
+      if(bandera == false) {
+        productosNoRepetidos.push(productosRepetidos[i]);
+      }
+    }
+  }
 
   let fechaCreacionPadre = moment().format('DD/MM/YYYY');
   let pedidoPadreRef = db.ref('pedidoPadre/');
   let datosPedidoPadre = {
     fechaCreacionPadre: fechaCreacionPadre,
     fechaRuta: "",
-    ruta: ""
+    ruta: "",
+    productos: productosNoRepetidos
   }
   let key = pedidoPadreRef.push(datosPedidoPadre).getKey();
 
