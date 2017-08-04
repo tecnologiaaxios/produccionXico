@@ -31,36 +31,25 @@ llenarSelectTiendas();
 
 function mostrarTodas() {
   let idPedidoPadre = getQueryVariable('id');
-  let tiendasRef = db.ref('pedidoPadre/'+idPedidoPadre+'/pedidosHijos');
+  let tiendasRef = db.ref('pedidoPadre/'+idPedidoPadre+'/productos');
   tiendasRef.on('value', function(snapshot) {
-    let pedidosHijos = snapshot.val();
+    let productos = snapshot.val();
     let row = "";
-    let TotalPz = 0, TotalKg = 0;
+    let TotalPz, TotalKg;
 
-    for(pedidoHijo in pedidosHijos) {
-      let length = Object.keys(pedidosHijos[pedidoHijo].detalle).length;
-      let detalle = pedidosHijos[pedidoHijo].detalle;
+    for(producto in productos) {
 
-      for(let d in detalle) {
-        row += '<tr>' +
-                '<td>' + detalle[d].clave + '</td>' +
-                '<td>' + detalle[d].nombre + '</td>' +
-                '<td>' + detalle[d].totalPz + '</td>' +
-                '<td>' + detalle[d].totalKg + '</td>' +
-                '<td class="TotalPz"></td>' +
-                '<td class="TotalKg"></td>' +
-               '</tr>';
-
-        TotalPz += detalle[d].totalPz;
-        TotalKg += detalle[d].totalKg;
-
-      }
+      row += '<tr>' +
+              '<td>' + productos[producto].clave + '</td>' +
+              '<td>' + productos[producto].nombre + '</td>' +
+              //'<td></td>' +
+              //'<td></td>' +
+              '<td class="TotalPz">'+productos[producto].totalPz+'</td>' +
+              '<td class="TotalKg">'+productos[producto].totalKg+'</td>' +
+             '</tr>';
     }
-    Tpz = TotalPz;
-    Tkg = TotalKg;
-    $('#tbodyTablaPedidos').empty().append('<tr><td>Clave</td><td>Descripción</td><td>Pieza</td><td>Kg</td><td>Total Pz</td><td>Total Kg</td></tr>').append(row);
-    $('.TotalPz').text(TotalPz);
-    $('.TotalKg').text(TotalKg);
+    $('#theadTablaPedidos').empty().append('<tr><th>Clave</th><th>Descripción</th><th>Total Pz</th><th>Total Kg</th></tr>');
+    $('#tbodyTablaPedidos').empty().append(row);
   });
 }
 
@@ -70,7 +59,6 @@ function mostrarUna(idPedidoHijo) {
   pedidoHijoRef.on('value', function(snapshot) {
     let pedidoHijo = snapshot.val();
     let detalles = pedidoHijo.detalle;
-    
     let row = "";
 
     for(let pedido in detalles) {
@@ -79,11 +67,12 @@ function mostrarUna(idPedidoHijo) {
               '<td>' + detalles[pedido].nombre + '</td>' +
               '<td>' + detalles[pedido].totalPz + '</td>' +
               '<td>' + detalles[pedido].totalKg + '</td>' +
-              '<td class="TotalPz"></td>' +
-              '<td class="TotalKg"></td>' +
+              //'<td class="TotalPz"></td>' +
+              //'<td class="TotalKg"></td>' +
              '</tr>';
     }
-    $('#tbodyTablaPedidos').empty().append('<tr><td>Clave</td><td>Descripción</td><td>Pieza</td><td>Kg</td><td>Total Pz</td><td>Total Kg</td></tr>').append(row);
+    $('#theadTablaPedidos').empty().append('<tr><th>Clave</th><th>Descripción</th><th>Pieza</th><th>Kg</th></tr>');
+    $('#tbodyTablaPedidos').empty().append(row);
     $('.TotalPz').text(Tpz);
     $('.TotalKg').text(Tkg);
   });

@@ -307,3 +307,45 @@ function historialPedidos() {
   $('#pedidosEnProceso').hide();
   $('#historialPedidos').show();
 }
+
+function mostrarNotificaciones() {
+  let usuario = auth.currentUser.uid;
+  let notificacionesRef = db.ref('notificaciones/almacen/'+usuario+'/lista');
+  notificacionesRef.on('value', function(snapshot) {
+    let lista = snapshot.val();
+    let lis = "";
+
+    console.log('notificaciones/almacen/'+usuario+'/lista');
+
+    let arrayNotificaciones = [];
+    for(let notificacion in lista) {
+      arrayNotificaciones.push(lista[notificacion]);
+    }
+
+    console.log(arrayNotificaciones);
+
+    for(let i in arrayNotificaciones) {
+      let date = arrayNotificaciones[i].fecha;
+      moment.locale('es');
+      let fecha = moment(date, "MMMM DD YYYY, HH:mm:ss").fromNow();
+
+      lis += '<li>' +
+               '<a>' +
+                '<div>' +
+                  '<i class="fa fa-comment fa-fw"></i> ' + arrayNotificaciones[i].mensaje +
+                    '<span class="pull-right text-muted small">'+fecha+'</span>' +
+                '</div>' +
+               '</a>' +
+             '</li>';
+    }
+
+    $('#contenedorNotificaciones').empty().append('<li class="dropdown-header">Notificaciones</li><li class="divider"></li>');
+    $('#contenedorNotificaciones').append(lis);
+  });
+}
+
+$('#campana').on('show.bs.dropdown', function () {
+  mostrarNotificaciones();
+
+  console.log("hola");
+})
