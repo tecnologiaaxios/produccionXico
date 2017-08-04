@@ -48,22 +48,14 @@
         </div>
         <!-- /.navbar-header -->
         <ul class="nav navbar-top-links navbar-right no-padding ">
-          <li class="dropdown no-padding">
+          <li id="campana" onclick="mostrarNotificaciones()" class="dropdown no-padding" data-toggle="tooltip" data-placement="bottom" title="Notificaciones">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
               <!--<i class="fa fa-bell fa-fw"></i>-->
-              <i class="fa fa-bell-o" aria-hidden="true"></i>
+              <i class="fa fa-bell-o" style="font-size: 25px;" aria-hidden="true"></i>
               <i class="fa fa-caret-down"></i>
             </a>
-            <ul class="dropdown-menu dropdown-alerts">
-              <li>
-                <a href="#">
-                  <div>
-                    <i class="fa fa-comment fa-fw"></i> New Comment
-                    <span class="pull-right text-muted small">4 minutes ago</span>
-                  </div>
-                </a>
-              </li>
-              <li class="divider"></li>
+            <ul id="contenedorNotificaciones" class="dropdown-menu dropdown-alerts">
+
             </ul>
             <!-- /.dropdown-alerts -->
           </li>
@@ -87,12 +79,12 @@
       <div class="barside">
         <img class="navbar-brand" id="logo" src="logo.png"></img>
         <ul style="margin-top:50px; list-style:none; font-size:50px; color:white; padding:28px;">
-          <li>
+          <!--<li>
             <a style="color:white; text-decoration: none;" href="#" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
               <span style="font-size:50px;" class="material-icons no-padding">playlist_add</span>
               <p style="white; font-size:11px; width:200px; margin-left:-14px; margin-top:-15px;">Formar Pedido</p>
             </a>
-          </li>
+          </li>-->
         </ul>
       </div>
       <div id="page-wrapper">

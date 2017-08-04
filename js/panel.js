@@ -180,7 +180,7 @@ function mostrarPedidosEnProceso() {
 dragula([document.getElementById('tbodyTablaPedidos'), document.getElementById('tbodyTablaPedidoPadre')]);
 
 function generarPedidoPadre() {
-  var pedidos = [], claves = [];
+  var pedidos = [], claves = [], promotoras = [];
   var productosRepetidos = [], productosNoRepetidos = [];
 
   $("#tablaPedidoPadre tbody tr").each(function (i)
@@ -192,6 +192,12 @@ function generarPedidoPadre() {
         if($(this).text().length > 0) {
           clave = $(this).text();
           claves.push(clave);
+
+          let pedidoEntradaRef = db.ref('pedidoEntrada/'+clave+'/encabezado');
+          pedidoEntradaRef.once('value', function(snapshot) {
+            promotora = snapshot.val().promotora;
+            promotoras.push(promotora);
+          });
         }
       }
     });
@@ -261,7 +267,6 @@ function generarPedidoPadre() {
   for(let pedido in pedidos) {
     //pedidoPadreRefKey.push(pedidos[pedido]);
     datosPedidosHijos[claves[pedido]] = pedidos[pedido];
-    console.log(claves[pedido]);
     pedidoEntradaRef.child(claves[pedido]).remove();
   }
 
@@ -278,13 +283,27 @@ function generarPedidoPadre() {
             '</tr>';
   $('#tbodyTablaPedidoPadre').empty().append(row);
 
-  let notificacionesRef = db.ref('notificaciones/promotoras');
-  let notificacion = {
-    leida: false,
-    mensaje: "Los siguientes pedidos: [] se han integrado en almacen."
-  }
+  for(let promotora in promotoras) {
+    let notificacionesListaRef = db.ref('notificaciones/tiendas/'+promotoras[promotora]+'/lista');
+    moment.locale('es');
+    let formato = moment().format("MMMM DD YYYY, HH:mm:ss");
+    let fecha = formato.toString();
+    let notificacion = {
+      fecha: fecha,
+      leida: false,
+      mensaje: "El pedido: " + claves[promotora] + " se ha agrupado."
+    }
 
-  notificacionesRef.push(notificacion);
+    notificacionesListaRef.push(notificacion);
+
+    let notificacionesRef = db.ref('notificaciones/tiendas/'+promotoras[promotora]);
+    notificacionesRef.once('value', function(snapshot) {
+      let notusuario = snapshot.val();
+      let cont = notusuario.cont + 1;
+
+      notificacionesRef.update({cont: cont});
+    });
+  }
 }
 
 function pedidosRecibidos() {
@@ -342,7 +361,6 @@ function mostrarNotificaciones() {
 }
 
 function mostrarContador() {
-  console.log(firebase.auth().currentUser.uid);
   let uid = auth.currentUser.uid;
   let notificacionesRef = db.ref('notificaciones/almacen/'+uid);
   notificacionesRef.on('value', function(snapshot) {
@@ -363,7 +381,10 @@ function verNotificaciones() {
   notificacionesRef.update({cont: 0});
 }
 
-$('#campana').on('click', function(){
-  mostrarNotificaciones();
+$('#campana').click(function() {
   verNotificaciones();
 });
+
+$(document).ready(function() {
+  $('[data-toggle="tooltip"]').tooltip();
+})
