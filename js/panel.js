@@ -10,6 +10,7 @@ function haySesion() {
     //si hay un usuario
     if (user) {
       mostrarPedidos();
+      mostrarContador();
     }
     else {
       $(location).attr("href", "index.html");
@@ -315,14 +316,10 @@ function mostrarNotificaciones() {
     let lista = snapshot.val();
     let lis = "";
 
-    console.log('notificaciones/almacen/'+usuario+'/lista');
-
     let arrayNotificaciones = [];
     for(let notificacion in lista) {
       arrayNotificaciones.push(lista[notificacion]);
     }
-
-    console.log(arrayNotificaciones);
 
     for(let i in arrayNotificaciones) {
       let date = arrayNotificaciones[i].fecha;
@@ -344,8 +341,29 @@ function mostrarNotificaciones() {
   });
 }
 
-$('#campana').on('show.bs.dropdown', function () {
-  mostrarNotificaciones();
+function mostrarContador() {
+  console.log(firebase.auth().currentUser.uid);
+  let uid = auth.currentUser.uid;
+  let notificacionesRef = db.ref('notificaciones/almacen/'+uid);
+  notificacionesRef.on('value', function(snapshot) {
+    let cont = snapshot.val().cont;
 
-  console.log("hola");
-})
+    if(cont > 0) {
+      $('#spanNotificaciones').html(cont).show();
+    }
+    else {
+      $('#spanNotificaciones').hide();
+    }
+  });
+}
+
+function verNotificaciones() {
+  let uid = auth.currentUser.uid;
+  let notificacionesRef = db.ref('notificaciones/almacen/'+uid);
+  notificacionesRef.update({cont: 0});
+}
+
+$('#campana').on('click', function(){
+  mostrarNotificaciones();
+  verNotificaciones();
+});
