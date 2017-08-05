@@ -2,6 +2,24 @@ const db = firebase.database();
 const auth = firebase.auth();
 var Tpz, Tkg;
 
+function logout() {
+  auth.signOut();
+}
+
+function haySesion() {
+  auth.onAuthStateChanged(function (user) {
+    //si hay un usuario
+    if (user) {
+      mostrarContador();
+    }
+    else {
+      $(location).attr("href", "index.html");
+    }
+  });
+}
+
+haySesion();
+
 function getQueryVariable(variable)
 {
        var query = window.location.search.substring(1);
