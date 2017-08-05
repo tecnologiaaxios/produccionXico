@@ -39,6 +39,12 @@ function llenarSelectTiendas() {
     let pedidosHijos = snapshot.val();
     let row = "";
     for(pedidoHijo in pedidosHijos) {
+      /*let option = $('<option/>', {
+        'value': pedidoHijo,
+        'data-content': '<img src="'+imagen+'">',
+        text: pedidosHijos[pedidoHijo].encabezado.tienda
+      });*/
+
       row += '<option value='+pedidoHijo+'>'+pedidosHijos[pedidoHijo].encabezado.tienda+'</option>';
     }
 

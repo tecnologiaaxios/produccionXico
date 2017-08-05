@@ -95,7 +95,7 @@ function obtenerUsuario() {
 
 obtenerUsuario();
 
-function validarEmail(valor) {
+/*function validarEmail(valor) {
   if(/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(valor)) {
     $('#email').parent().removeClass('has-error');
     $('#helpblockEmail').hide();
@@ -108,4 +108,8 @@ function validarEmail(valor) {
 
     return false;
   }
-}
+}*/
+
+$(document).ready(function() {
+  $('[data-toggle="tooltip"]').tooltip();
+});

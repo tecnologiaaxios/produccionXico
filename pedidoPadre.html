@@ -26,6 +26,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="dist/js/bootstrap-select.js"></script>
     <link rel="stylesheet" href="css/dragula.min.css">
+    <link rel="stylesheet" href="css/bootstrap-select.min.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -102,21 +103,23 @@
                 <div class="form-group">
                   <label for="tiendas">Ver</label><select id="tiendas" style="width: 25%;" class="form-control" id="tienda"></select>
                 </div>
-                <table id="tablaPedidos" class="table table-condensed table-bordered" style="margin-top:15px;">
-                  <thead id="theadTablaPedidos">
-                    <tr>
-                      <th>Clave</th>
-                      <th>Descripción</th>
-                      <th>Total Pz</th>
-                      <th>Total Kg</th>
-                    </tr>
-                  </thead>
-                  <tbody id="tbodyTablaPedidos">
-                    <tr>
+                <div class="table-responsive">
+                  <table id="tablaPedidos" class="table table-condensed table-bordered table-striped table-hover" style="margin-top:15px;">
+                    <thead id="theadTablaPedidos">
+                      <tr>
+                        <th>Clave</th>
+                        <th>Descripción</th>
+                        <th>Total Pz</th>
+                        <th>Total Kg</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbodyTablaPedidos">
+                      <tr>
 
-                    </tr>
-                  </tbody>
-                </table>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
             <!--<span style="color: #2C42AD; font-size: 30px; font-style: italic;">Pedido 000001</span><span style="float: right; font-size: 20px;">Recibido Martes 13 de abril</span>
@@ -160,6 +163,7 @@
     <!-- Custom Theme JavaScript -->
     <script src="dist/js/sb-admin-2.js"></script>
     <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/bootstrap-select.min.js"></script>
     <script>
     $(document).ready(function () {
       var mySelect = $('#first-disabled2');
