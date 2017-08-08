@@ -45,7 +45,7 @@ function mostrarPedidos() {
       let añoCaptura = pedidos[pedido].encabezado.fechaCaptura.substr(6,4);
       let fechaCaptura = mesCaptura + '/' + diaCaptura + '/' + añoCaptura;
       moment.locale('es');
-      let fechaCapturaMostrar = moment(fechaCaptura).format('DD MMMM YYYY');
+      let fechaCapturaMostrar = moment(fechaCaptura).format('LL');
 
       row += '<tr style="padding:0px 0px 0px;" class="no-pading">' +
                '<td>' + pedido +'</td>' +
@@ -134,7 +134,8 @@ function mostrarPedidosEnProceso() {
       let añoCaptura = pedidosPadre[pedidoPadre].fechaCreacionPadre.substr(6,4);
       let fechaCaptura = mesCaptura + '/' + diaCaptura + '/' + añoCaptura;
       moment.locale('es');
-      let fechaCapturaMostrar = moment(fechaCaptura).format('DD MMMM YYYY');
+      //let fechaCapturaMostrar = moment(fechaCaptura).format('DD MMMM YYYY');
+      let fechaCapturaMostrar = moment(fechaCaptura).format('LL');
 
       let fechaRutaMostrar;
       if(pedidosPadre[pedidoPadre].fechaRuta.length > 0) {
@@ -267,7 +268,21 @@ function generarPedidoPadre() {
   for(let pedido in pedidos) {
     //pedidoPadreRefKey.push(pedidos[pedido]);
     datosPedidosHijos[claves[pedido]] = pedidos[pedido];
-    pedidoEntradaRef.child(claves[pedido]).remove();
+
+    let promotoraRef = db.ref('usuarios/tiendas/supervisoras/'+pedidos[pedido].encabezado.promotora);
+    promotoraRef.once('value', function(snapshot) {
+      let region = snapshot.val().region;
+
+      let pedidoRef = db.ref('pedidoEntrada/'+claves[pedido]);
+      pedidoRef.once('value', function(snappy) {
+        console.log(snappy.val());
+        let idTienda = snappy.val().encabezado.tienda.split(" ")[0];
+        let regionRef = db.ref('regiones/'+region+'/'+idTienda+'/historialPedidos');
+        regionRef.push(pedidos[pedido]);
+
+        pedidoEntradaRef.child(claves[pedido]).remove();
+      });
+    });
   }
 
   pedidoPadreRefKey.set(datosPedidosHijos);
