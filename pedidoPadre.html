@@ -104,26 +104,28 @@
                   <label for="tiendas">Ver</label><select id="tiendas" style="width: 25%;" class="form-control" id="tienda"></select>
                 </div>
                 <div class="table-responsive">
-                  <table id="tablaPedidos" class="table table-condensed table-bordered table-striped table-hover" style="margin-top:15px;">
-                    <thead id="theadTablaPedidos">
-                      <tr>
-                        <th>Clave</th>
-                        <th>Descripción</th>
-                        <th>Total Pz</th>
-                        <th>Total Kg</th>
-                      </tr>
-                    </thead>
-                    <tbody id="tbodyTablaPedidos">
-                      <tr>
+                  <div id="pdf">
+                    <table id="tablaPedidos" class="table table-condensed table-bordered table-striped table-hover" style="margin-top:15px;">
+                      <thead id="theadTablaPedidos">
+                        <tr>
+                          <th>Clave</th>
+                          <th>Descripción</th>
+                          <th>Total Pz</th>
+                          <th>Total Kg</th>
+                        </tr>
+                      </thead>
+                      <tbody id="tbodyTablaPedidos">
+                        <tr>
 
-                      </tr>
-                    </tbody>
-                  </table>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <button onclick="printTable();" class="btn btn-lg btn-danger">Imprimir</button>
+            <button onclick="generarPDF();" class="btn btn-lg btn-danger">Imprimir</button>
             <!--<span style="color: #2C42AD; font-size: 30px; font-style: italic;">Pedido 000001</span><span style="float: right; font-size: 20px;">Recibido Martes 13 de abril</span>
             <div class="form-group">
               <select id="tiendas" style="width: 25%;" class="form-control" id="tienda"></select>
@@ -166,7 +168,8 @@
     <script src="dist/js/sb-admin-2.js"></script>
     <script src="js/bootstrap-tooltip.js"></script>
     <script src="js/bootstrap-select.min.js"></script>
-    <script src="js/jspdf.debug.js"></script>
+    <script src="js/jspdf.min.js"></script>
+    <script src="js/jspdf.plugin.autotable.js"></script>
     <script>
     $(document).ready(function () {
       var mySelect = $('#first-disabled2');

@@ -191,3 +191,20 @@ function printTable(){
   newWin.print();
   newWin.close();
 }
+
+function generarPDF() {
+  let pdf = new jsPDF('p', 'pt');
+
+  let res = pdf.autoTableHtmlToJson(document.getElementById('tablaPedidos'));
+  pdf.autoTable(res.columns, res.data, {
+    startY: false,
+    tableWidth: 'auto',
+    columnWidth: 'auto',
+    styles: {
+      overflow: 'linebreak'
+    },
+    margin: {top: 150}
+  });
+
+  pdf.save('PrimerPDF.pdf');
+}
