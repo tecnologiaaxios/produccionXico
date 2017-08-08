@@ -183,3 +183,11 @@ $('#campana').click(function() {
 $(document).ready(function() {
   $('[data-toggle="tooltip"]').tooltip();
 })
+
+function printTable(){
+  let divToPrint = document.getElementById('tablaPedidos');
+  newWin = window.open("");
+  newWin.document.write(divToPrint.outerHTML);
+  newWin.print();
+  newWin.close();
+}
