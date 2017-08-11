@@ -15,15 +15,15 @@ function llenarSelectTiendas() {
 }
 
 function llenarSelectProductos() {
-  let productosRef = db.ref('productos');
+  let productosRef = db.ref('productos2');
   productosRef.on('value', function(snapshot) {
     let productos = snapshot.val();
 
     let row = "";
     for(let producto in productos) {
-      row += '<option value="'+producto+'">'+productos[producto].claveInterna + ' ' + productos[producto].nombreProducto +' ' + productos[producto].capEmpaque +'</option>';
+      row += '<option value="'+producto+'">'+producto + ' ' + productos[producto].nombre +' ' + productos[producto].empaque +'</option>';
     }
-    $('#productos').empty().append(row);
+    $('#productos').html(row);
     $('#productos').multiselect();
   });
 }
@@ -109,28 +109,31 @@ function agregarProducto() {
 }
 
 function agregarProductos() {
+  let consorcio = $('#consorcio').val();
   let productos = $('#productos').val();
-  let idTienda = $('#tienda').val();
 
-  let productosRef = db.ref('productos');
-
-  for(producto in productos) {
+  let productosRef = db.ref('productos2');
+  let paqueteProductos = {};
+  for(let producto in productos) {
     productosRef.on('value', function(snapshot) {
       let products = snapshot.val();
 
-      for(product in products) {
+      for(let product in products) {
         if(productos[producto] == product) {
-          let productosTienda = db.ref('tiendas/'+idTienda+'/productos');
+
           let datosProducto = {
-            nombre: products[product].nombreProducto,
-            empaque: products[product].capEmpaque,
-            clave: products[product].claveInterna
+            nombre: products[product].nombre,
+            empaque: products[product].empaque,
+            unidad: products[product].unidad
           };
-          productosTienda.push(datosProducto);
+          paqueteProductos[product] = datosProducto;
         }
       }
     });
   }
+
+  let productosTienda = db.ref('productos/'+consorcio);
+  productosTienda.set(paqueteProductos);
 
   $('#productos').multiselect('deselectAll', false).focus();
   $('#productos').multiselect('updateButtonText');
