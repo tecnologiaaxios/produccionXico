@@ -97,35 +97,33 @@
             </ul><br>
             <div class="panel panel-default">
               <div class="panel-heading">
-                <span style="color: #2C42AD; font-size: 30px; font-style: italic;" class="panel-title">Pedido 000001</span><span style="float: right; font-size: 20px;">Recibido Martes 13 de abril</span>
+                <span id="numPedido" style="color: #2C42AD; font-size: 30px; font-style: italic;" class="panel-title"><!--Pedido 000001--></span><span id="fechaPedido" style="float: right; font-size: 20px;"><!--Recibido Martes 13 de abril--></span>
               </div>
               <div class="panel-body">
                 <div class="form-group">
                   <label for="tiendas">Ver</label><select id="tiendas" style="width: 25%;" class="form-control" id="tienda"></select>
                 </div>
                 <div class="table-responsive">
-                  <div id="pdf">
-                    <table id="tablaPedidos" class="table table-condensed table-bordered table-striped table-hover" style="margin-top:15px;">
-                      <thead id="theadTablaPedidos">
-                        <tr>
-                          <th>Clave</th>
-                          <th>Descripción</th>
-                          <th>Total Pz</th>
-                          <th>Total Kg</th>
-                        </tr>
-                      </thead>
-                      <tbody id="tbodyTablaPedidos">
-                        <tr>
+                  <table id="tablaPedidos" class="table table-condensed table-bordered table-striped table-hover" style="margin-top:15px;">
+                    <thead id="theadTablaPedidos">
+                      <tr>
+                        <th>Clave</th>
+                        <th>Descripción</th>
+                        <th>Total Pz</th>
+                        <th>Total Kg</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbodyTablaPedidos">
+                      <tr>
 
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
 
-            <button onclick="generarPDF();" class="btn btn-lg btn-danger">Imprimir</button>
+            <button id="Imprimir" onclick="generarPDF();" class="btn btn-lg btn-danger">Imprimir</button>
             <!--<span style="color: #2C42AD; font-size: 30px; font-style: italic;">Pedido 000001</span><span style="float: right; font-size: 20px;">Recibido Martes 13 de abril</span>
             <div class="form-group">
               <select id="tiendas" style="width: 25%;" class="form-control" id="tienda"></select>

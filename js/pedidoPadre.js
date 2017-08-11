@@ -31,6 +31,23 @@ function getQueryVariable(variable)
        return(false);
 }
 
+function mostrarDatos() {
+  let idPedidoPadre = getQueryVariable('id');
+  let pedidoPadreRef = db.ref('pedidoPadre/'+idPedidoPadre);
+  pedidoPadreRef.once('value', function(snapshot) {
+    let datos = snapshot.val();
+    $('#numPedido').html(idPedidoPadre);
+
+    let diaCaptura = datos.fechaCreacionPadre.substr(0,2);
+    let mesCaptura = datos.fechaCreacionPadre.substr(3,2);
+    let añoCaptura = datos.fechaCreacionPadre.substr(6,4);
+    let fechaCreacion = mesCaptura + '/' + diaCaptura + '/' + añoCaptura;
+    moment.locale('es');
+    let fechaCreacionMostrar = moment(fechaCreacion).format('LL');
+    $('#fechaPedido').html("Recibido el " +fechaCreacionMostrar);
+  });
+}
+
 function llenarSelectTiendas() {
   let idPedidoPadre = getQueryVariable('id');
   let tiendasRef = db.ref('pedidoPadre/'+idPedidoPadre+'/pedidosHijos');
@@ -105,6 +122,7 @@ function mostrarUna(idPedidoHijo) {
 
 $(document).ready(function() {
   mostrarTodas();
+  mostrarDatos();
 });
 
 $('#tiendas').change(function() {
@@ -182,17 +200,15 @@ $('#campana').click(function() {
 
 $(document).ready(function() {
   $('[data-toggle="tooltip"]').tooltip();
-})
+});
 
-function printTable(){
-  let divToPrint = document.getElementById('tablaPedidos');
-  newWin = window.open("");
-  newWin.document.write(divToPrint.outerHTML);
-  newWin.print();
-  newWin.close();
-}
+$('#Imprimir').click(function() {
 
-function generarPDF() {
+
+  generarPDF();
+});
+
+function generarPDF(/*nombre*/) {
   let pdf = new jsPDF('p', 'pt');
 
   let res = pdf.autoTableHtmlToJson(document.getElementById('tablaPedidos'));
@@ -206,5 +222,6 @@ function generarPDF() {
     margin: {top: 150}
   });
 
-  pdf.save('PrimerPDF.pdf');
+  pdf.save('Pedido.pdf');
+  /*pdf.save('Pedido-'+nombre+'.pdf');*/
 }

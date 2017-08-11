@@ -61,6 +61,51 @@ function mostrarPedidos() {
   });
 }
 
+function mostrarHistorialPedidos() {
+  let historialPedidosRef = db.ref('historialPedidosEntrada/');
+  historialPedidosRef.on('value', function(snapshot) {
+    let nuevosId = snapshot.val();
+    let row="";
+
+    for(let nuevoId in nuevosId) {
+      let estado = "";
+      let pedidosEntrada = nuevosId[nuevoId];
+
+      for(let pedido in pedidosEntrada) {
+        switch(pedidosEntrada[pedido].encabezado.estado) {
+          case "Pendiente":
+            estado = '<td class="no-padding"><i style="color:#d50000; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>';
+            break;
+          case "En proceso":
+            estado = '<td class="no-padding"><i style="color:#FF8000; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>';
+            break;
+          case "Lista":
+            estado = '<td class="no-padding"><i style="color:#70E707; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>';
+            break;
+        }
+
+        let diaCaptura = pedidosEntrada[pedido].encabezado.fechaCaptura.substr(0,2);
+        let mesCaptura = pedidosEntrada[pedido].encabezado.fechaCaptura.substr(3,2);
+        let añoCaptura = pedidosEntrada[pedido].encabezado.fechaCaptura.substr(6,4);
+        let fechaCaptura = mesCaptura + '/' + diaCaptura + '/' + añoCaptura;
+        moment.locale('es');
+        let fechaCapturaMostrar = moment(fechaCaptura).format('LL');
+
+        row += '<tr style="padding:0px 0px 0px;" class="no-pading">' +
+                 '<td>' + pedido +'</td>' +
+                 '<td>' + fechaCapturaMostrar + '</td>' +
+                 '<td>' + pedidosEntrada[pedido].encabezado.tienda +'</td>' +
+                 '<td>' + pedidosEntrada[pedido].encabezado.ruta +'</td>' +
+                 '<td class="no-padding"><button type="button" class="btn btn-info btn-sm"><span style="padding-bottom:0px;" class="glyphicon glyphicon-print"></span></button></td>' +
+                 estado +
+               '</tr>';
+      }
+    }
+
+    $('#tablaHistorialPedidos tbody').html(row);
+  });
+}
+
 function guardarFechaRuta(idPedidoPadre) {
   let pedidoPadreRef = db.ref('pedidoPadre/');
   let nuevaFechaRuta = $('#fechaRuta-'+idPedidoPadre).val();
@@ -86,6 +131,8 @@ function mostrarPedidosEnProceso() {
     for(pedidoPadre in pedidosPadre) {
       let tr = $('<tr/>');
       let td = $('<td/>');
+      let group = $('<div/>', {'class': 'form-group'});
+      let group2 = $('<div/>', {'class': 'form-group'});
       let div = $('<div/>', {'class': 'input-group date', 'style': 'width: 200px;'});
       let input = $('<input/>', {
         'class': 'form-control',
@@ -93,8 +140,6 @@ function mostrarPedidosEnProceso() {
         'placeholder': 'Fecha de ruta',
         'id': 'fechaRuta-'+pedidoPadre
       });
-
-      //let div1 = '<div class="input-group-addon btn btn-primary"><span class="glyphicon glyphicon-calendar"></span></div>';
 
       let button = $('<button/>', {
         'class': 'btn btn-primary',
@@ -144,7 +189,7 @@ function mostrarPedidosEnProceso() {
         let añoRuta = pedidosPadre[pedidoPadre].fechaRuta.substr(6,4);
         let fechaRuta = mesRuta + '/' + diaRuta + '/' + añoRuta;
 
-        fechaRutaMostrar = moment(fechaRuta).format('DD MMMM YYYY');
+        fechaRutaMostrar = moment(fechaRuta).format('LL');
       } else {
         fechaRutaMostrar = "Fecha pendiente";
       }
@@ -155,8 +200,11 @@ function mostrarPedidosEnProceso() {
 
       div.append(input);
       div.append('<span class="input-group-addon btn-primary"><i class="glyphicon glyphicon-calendar"></i></span>');
-      td.append(div);
-      td.append(button);
+      group.append(div);
+      group2.append(button);
+      td.append(group);
+      td.append(group2);
+      //td.append(button);
       tr.append(row);
       tr.append(td);
       tr.append('<td>' + pedidosPadre[pedidoPadre].ruta + '</td>');
@@ -341,6 +389,8 @@ function historialPedidos() {
   $('#pedidosRecibidos').hide();
   $('#pedidosEnProceso').hide();
   $('#historialPedidos').show();
+
+  mostrarHistorialPedidos();
 }
 
 function mostrarNotificaciones() {
