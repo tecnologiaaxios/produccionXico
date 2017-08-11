@@ -261,11 +261,13 @@ function generarPedidoPadre() {
         for(let producto in detalle) {
           datosProducto = {
             clave: detalle[producto].clave,
+            precioUnitario: detalle[producto].precioUnitario,
             nombre: detalle[producto].nombre,
             degusPz: detalle[producto].degusPz,
             pedidoPz: detalle[producto].pedidoPz,
             totalKg: detalle[producto].totalKg,
-            totalPz: detalle[producto].totalPz
+            totalPz: detalle[producto].totalPz,
+            unidad: detalle[producto].unidad
           };
 
           productosRepetidos.push(datosProducto);

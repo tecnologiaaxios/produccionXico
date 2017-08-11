@@ -11,6 +11,7 @@ function haySesion() {
     //si hay un usuario
     if (user) {
       mostrarContador();
+      mostrarDatos();
     }
     else {
       $(location).attr("href", "index.html");
@@ -33,10 +34,11 @@ function getQueryVariable(variable)
 
 function mostrarDatos() {
   let idPedidoPadre = getQueryVariable('id');
+
   let pedidoPadreRef = db.ref('pedidoPadre/'+idPedidoPadre);
-  pedidoPadreRef.once('value', function(snapshot) {
+  pedidoPadreRef.on('value', function(snapshot) {
     let datos = snapshot.val();
-    $('#numPedido').html(idPedidoPadre);
+    $('#numPedido').html("Pedido: " + idPedidoPadre);
 
     let diaCaptura = datos.fechaCreacionPadre.substr(0,2);
     let mesCaptura = datos.fechaCreacionPadre.substr(3,2);
@@ -44,7 +46,7 @@ function mostrarDatos() {
     let fechaCreacion = mesCaptura + '/' + diaCaptura + '/' + añoCaptura;
     moment.locale('es');
     let fechaCreacionMostrar = moment(fechaCreacion).format('LL');
-    $('#fechaPedido').html("Recibido el " +fechaCreacionMostrar);
+    $('#fechaPedido').html("Recibido el " + fechaCreacionMostrar);
   });
 }
 
@@ -61,8 +63,7 @@ function llenarSelectTiendas() {
         'data-content': '<img src="'+imagen+'">',
         text: pedidosHijos[pedidoHijo].encabezado.tienda
       });*/
-
-      row += '<option value='+pedidoHijo+'>'+pedidosHijos[pedidoHijo].encabezado.tienda+'</option>';
+      row += '<option value="'+pedidoHijo+'">'+pedidosHijos[pedidoHijo].encabezado.tienda+'</option>';
     }
 
     $('#tiendas').empty().append('<option value="Todas">Todas las tiendas</option>').append(row);
@@ -78,20 +79,33 @@ function mostrarTodas() {
     let productos = snapshot.val();
     let row = "";
     let TotalPz, TotalKg;
-
+    let TotalPzs = 0, TotalKgs = 0, TotalPrecUni = 0, TotalImporte = 0;
     for(producto in productos) {
-
+      let importe = 0;
+      if(productos[producto].unidad == "PZA") {
+        importe = productos[producto].totalPz * productos[producto].precioUnitario;
+      }
+      if(productos[producto].unidad == "KG") {
+        importe = productos[producto].totalKg * productos[producto].precioUnitario;
+      }
       row += '<tr>' +
               '<td>' + productos[producto].clave + '</td>' +
               '<td>' + productos[producto].nombre + '</td>' +
               //'<td></td>' +
               //'<td></td>' +
-              '<td class="TotalPz">'+productos[producto].totalPz+'</td>' +
-              '<td class="TotalKg">'+productos[producto].totalKg+'</td>' +
+              '<td class="TotalPz">'+ productos[producto].totalPz +'</td>' +
+              '<td class="TotalKg">'+ productos[producto].totalKg +'</td>' +
+              '<td class"precioUnitario>$ '+ productos[producto].precioUnitario +'</td>' +
+              '<td class="Importe">$ '+ importe +'</td>'+
              '</tr>';
+      TotalPzs += productos[producto].totalPz;
+      TotalKgs += productos[producto].totalKg;
+      TotalPrecUni += productos[producto].precioUnitario;
+      TotalImporte += importe;
     }
-    $('#theadTablaPedidos').empty().append('<tr><th>Clave</th><th>Descripción</th><th>Total Pz</th><th>Total Kg</th></tr>');
-    $('#tbodyTablaPedidos').empty().append(row);
+    row += '<tr><td></td><td>Totales</td><td>'+TotalPzs+'</td><td>'+TotalKgs+'</td><td>'+TotalPrecUni+'</td><td>'+TotalImporte+'</td></tr>';
+    $('#theadTablaPedidos').html('<tr><th>Clave</th><th>Descripción</th><th>Total Pz</th><th>Total Kg</th><th>Precio unit.</th><th>Importe</th></tr>');
+    $('#tbodyTablaPedidos').html(row);
   });
 }
 
@@ -136,10 +150,6 @@ $('#tiendas').change(function() {
   }
 
 });
-
-function mostrarDatos() {
-
-}
 
 function mostrarNotificaciones() {
   let usuario = auth.currentUser.uid;
