@@ -145,6 +145,7 @@ function mostrarUna(idPedidoHijo) {
 
 $(document).ready(function() {
   mostrarTodas();
+  $('#Imprimir').attr('disabled', true);
   mostrarDatos();
 });
 
@@ -153,9 +154,11 @@ $('#tiendas').change(function() {
 
   if(tienda == "Todas") {
     mostrarTodas();
+    $('#Imprimir').attr('disabled', true);
   }
   else {
     mostrarUna(tienda);
+    $('#Imprimir').attr('disabled', false);
   }
 
 });
