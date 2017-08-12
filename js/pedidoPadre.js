@@ -118,17 +118,26 @@ function mostrarUna(idPedidoHijo) {
     let row = "";
 
     for(let pedido in detalles) {
+      let importe = 0;
+      if(detalles[pedido].unidad == "PZA") {
+        importe = detalles[pedido].totalPz * detalles[pedido].precioUnitario;
+      }
+      if(detalles[pedido].unidad == "KG") {
+        importe = detalles[pedido].totalKg * detalles[pedido].precioUnitario;
+      }
       row += '<tr>' +
               '<td>' + detalles[pedido].clave + '</td>' +
               '<td>' + detalles[pedido].nombre + '</td>' +
               '<td>' + detalles[pedido].totalPz + '</td>' +
               '<td>' + detalles[pedido].totalKg + '</td>' +
+              '<td>' + detalles[pedido].precioUnitario + '</td>' +
+              '<td>' + importe + '</td>' +
               //'<td class="TotalPz"></td>' +
               //'<td class="TotalKg"></td>' +
              '</tr>';
     }
-    $('#theadTablaPedidos').empty().append('<tr><th>Clave</th><th>Descripción</th><th>Pieza</th><th>Kg</th></tr>');
-    $('#tbodyTablaPedidos').empty().append(row);
+    $('#theadTablaPedidos').html('<tr><th>Clave</th><th>Descripción</th><th>Pieza</th><th>Kg</th><th>Precio unit.</th><th>Importe</th></tr>');
+    $('#tbodyTablaPedidos').html(row);
     $('.TotalPz').text(Tpz);
     $('.TotalKg').text(Tkg);
   });
