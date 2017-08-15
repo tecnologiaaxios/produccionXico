@@ -147,14 +147,14 @@
               </form>-->
             </div>
             <div class="table-responsive">
-              <table id="tablaPedidos" class="table table-condensed table-bordered" style="margin-top:15px;">
+              <table id="tablaPedidos" class="table table-condensed table-bordered table-striped" style="margin-top:15px;">
                 <thead>
                   <tr>
                     <th>Clave</th>
                     <th>Fecha de captura</th>
                     <th>Tienda</th>
                     <th>Ruta</th>
-                    <th>Imprimir</th>
+                    <th>Detalles</th>
                     <th>Estado</th>
                   </tr>
                 </thead>
@@ -162,6 +162,53 @@
 
                 </tbody>
               </table>
+
+              <!--<div class="contenedor-tabla">
+                <div class="contenedor-fila">
+                  <div class="contenedor-columna">Columna 1</div>
+                  <div class="contenedor-columna">Columna 2</div>
+                  <div class="contenedor-columna">Columna 3</div>
+                </div>
+              </div>-->
+
+              <!--<div class="Table">
+                <div class="Title">
+                  <p>Esta es la tabla</p>
+                </div>
+                <div class="Heading">
+                  <div class="Cell">
+                    <p>Primer Nombre</p>
+                  </div>
+                  <div class="Cell">
+                    <p>Segundo Nombre</p>
+                  </div>
+                  <div class="Cell">
+                    <p>Edad</p>
+                  </div>
+                </div>
+                <div class="Row">
+                  <div class="Cell">
+                    <p>Juan</p>
+                  </div>
+                  <div class="Cell">
+                    <p>Escutia</p>
+                  </div>
+                  <div class="Cell">
+                    <p>28</p>
+                  </div>
+                </div>
+                <div class="Row">
+                  <div class="Cell">
+                    <p>Pedro</p>
+                  </div>
+                  <div class="Cell">
+                    <p>Infante</p>
+                  </div>
+                  <div class="Cell">
+                    <p>27</p>
+                  </div>
+                </div>
+              </div>-->
             </div><!--/.table-responsive-->
             <div class="collapse" id="collapseExample">
               <div class="well">
@@ -172,11 +219,11 @@
                       <th>Fecha de captura</th>
                       <th>Tienda</th>
                       <th>Ruta</th>
-                      <th>Imprimir</th>
+                      <th>Detalles</th>
                       <th>Estado</th>
                     </thead>
                     <tbody id="tbodyTablaPedidoPadre" style="border: 2px solid grey; border-style: dashed; height:200px; width:100%;"  class="tabla-drag">
-                      <h4>Arrastra los pedidos dentro de las lineas punteadas para agruparlos</h4>
+                      <h4>Arrastra los pedidos dentro de las líneas punteadas para agruparlos</h4>
                       <tr id="vacio" style="padding:0px 0px 0px;" class="no-pading">
                         <td scope="row" style="border:none;"></td>
                         <td></td>
@@ -202,7 +249,7 @@
                   <th>Modificar fecha ruta</th>
                   <th>Ruta</th>
                   <th>Modificar ruta</th>
-                  <th></th>
+                  <th>Detalles</th>
                 </thead>
                 <tbody id="tbodyTablaPedidos">
 

@@ -21,15 +21,14 @@ function haySesion() {
 
 haySesion();
 
-function getQueryVariable(variable)
-{
-       var query = window.location.search.substring(1);
-       var vars = query.split("&");
-       for (var i=0;i<vars.length;i++) {
-               var pair = vars[i].split("=");
-               if(pair[0] == variable){return pair[1];}
-       }
-       return(false);
+function getQueryVariable(variable) {
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+    if(pair[0] == variable){return pair[1];}
+  }
+  return(false);
 }
 
 function mostrarDatos() {
@@ -38,7 +37,7 @@ function mostrarDatos() {
   let pedidoPadreRef = db.ref('pedidoPadre/'+idPedidoPadre);
   pedidoPadreRef.on('value', function(snapshot) {
     let datos = snapshot.val();
-    $('#numPedido').html("Pedido: " + idPedidoPadre);
+    $('#numPedido').html("Pedido: " + datos.clave);
 
     let diaCaptura = datos.fechaCreacionPadre.substr(0,2);
     let mesCaptura = datos.fechaCreacionPadre.substr(3,2);
@@ -147,6 +146,8 @@ $(document).ready(function() {
   mostrarTodas();
   $('#Imprimir').attr('disabled', true);
   mostrarDatos();
+  $('.loader').hide();
+  $('#panel').show();
 });
 
 $('#tiendas').change(function() {

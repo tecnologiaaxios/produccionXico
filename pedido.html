@@ -8,7 +8,7 @@
     <meta name="author" content="">
     <link href='logo.ico' rel='shortcut icon' type='image/x-icon'/>
 
-    <title>Pedido padre</title>
+    <title>Detalles del pedidos</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -26,7 +26,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="dist/js/bootstrap-select.js"></script>
     <link rel="stylesheet" href="css/dragula.min.css">
-    <link rel="stylesheet" href="css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" href="css/bootstrap-datepicker3.standalone.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -57,9 +59,9 @@
               <i class="fa fa-caret-down"></i>
             </a>
             <ul id="contenedorNotificaciones" class="dropdown-menu dropdown-alerts">
-
+              <!--Notificaciones aquí-->
             </ul>
-            <!-- /.dropdown-alerts -->
+            <!--<div id="spanNotificaciones" style="display:none; background-color:red; color:white; border-radius:5px; padding:10%;  font-size:10px; font-family: intelo-bold; transform:translate(10px, -22px);"></div>-->
           </li>
           <li><img src="http://lorempixel.com/40/40/" alt="..." class="img-circle"> </li>
           <li class="dropdown no-padding">
@@ -92,29 +94,29 @@
       <div id="page-wrapper">
         <div class="row">
           <div class="col-lg-12"><br>
-            <ul class="nav nav-pills">
-              <li role="presentation"><a href="panel.html">Panel</a></li>
-            </ul><br>
-            <div class="loader"></div>
-            <div id="panel" style="display: none;" class="panel panel-default">
+            <!--<div class="loader"></div>-->
+            <div id="panel" class="panel panel-default">
               <div class="panel-heading">
                 <span id="numPedido" style="color: #2C42AD; font-size: 30px; font-style: italic;" class="panel-title"><!--Pedido 000001--></span><span id="fechaPedido" style="float: right; font-size: 20px;"><!--Recibido Martes 13 de abril--></span>
               </div>
               <div class="panel-body">
-                <div class="form-group">
-                  <label for="tiendas">Ver</label><select id="tiendas" style="width: 25%;" class="form-control" id="tienda"></select>
-                </div>
+                <legend>Productos</legend>
                 <div class="table-responsive">
-                  <table id="tablaPedidos" class="table table-condensed table-bordered table-striped table-hover" style="margin-top:15px;">
-                    <thead id="theadTablaPedidos">
+                  <table id="productos" class="table table-condensed table-bordered table-striped table-hover" style="margin-top:15px;">
+                    <thead id="theadProductos">
                       <tr>
                         <th>Clave</th>
                         <th>Descripción</th>
+                        <th>Degustación</th>
+                        <th>Pedido Pz</th>
                         <th>Total Pz</th>
                         <th>Total Kg</th>
+                        <th>Precio unit.</th>
+                        <th>Unidad</th>
+                        <th>Cambio físico</th>
                       </tr>
                     </thead>
-                    <tbody id="tbodyTablaPedidos">
+                    <tbody id="tbodyProductos">
                       <tr>
 
                       </tr>
@@ -123,31 +125,7 @@
                 </div>
               </div>
             </div>
-
             <button id="Imprimir" onclick="generarPDF();" class="btn btn-lg btn-danger"><i class="fa fa-print" aria-hidden="true"></i> Imprimir</button>
-            <!--<span style="color: #2C42AD; font-size: 30px; font-style: italic;">Pedido 000001</span><span style="float: right; font-size: 20px;">Recibido Martes 13 de abril</span>
-            <div class="form-group">
-              <select id="tiendas" style="width: 25%;" class="form-control" id="tienda"></select>
-            </div>
-            <table id="tablaPedidos" class="table table-condensed table-bordered table-striped" style="margin-top:15px;">
-              <thead id="theadTablaPedidos">
-                <tr>
-                  <th>Clave</th>
-                  <th>Descripción</th>
-                  <th>Total Pz</th>
-                  <th>Total Kg</th>
-                </tr>
-              </thead>
-              <tbody id="tbodyTablaPedidos">
-                <tr>
-                  <td>Clave</td>
-                  <td>Descripción</td>
-                  <td>Total Pz</td>
-                  <td>Total Kg</td>
-                  <td>Total Pz</td>
-                  <td>Total Kg</td>
-                </tr>
-              </tbody>-->
             </table>
           </div><!-- /.col-lg-12 -->
         </div><!-- /.row -->
@@ -165,31 +143,11 @@
     <script src="data/morris-data.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="dist/js/sb-admin-2.js"></script>
+    <script type="text/javascript" src="js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap-datepicker.es.min.js"></script>
     <script src="js/bootstrap-tooltip.js"></script>
-    <script src="js/bootstrap-select.min.js"></script>
-    <script src="js/jspdf.min.js"></script>
-    <script src="js/jspdf.plugin.autotable.js"></script>
-    <script>
-    $(document).ready(function () {
-      var mySelect = $('#first-disabled2');
-
-      $('#special').on('click', function () {
-        mySelect.find('option:selected').prop('disabled', true);
-        mySelect.selectpicker('refresh');
-      });
-
-      $('#special2').on('click', function () {
-        mySelect.find('option:disabled').prop('disabled', false);
-        mySelect.selectpicker('refresh');
-      });
-
-      $('#basic2').selectpicker({
-        liveSearch: true,
-        maxOptions: 1
-      });
-    });
-    </script>
     <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
+    <script src="js/jspdf.debug.js"></script>
     <script>
       // Initialize Firebase
       var config = {
@@ -203,8 +161,7 @@
       firebase.initializeApp(config);
     </script>
     <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/$VERSION/dragula.min.js'></script>-->
-    <script src="js/dragula.min.js"></script>
-    <script src="js/pedidoPadre.js"></script>
     <script src="js/moment-with-locales.js"></script>
+    <script src="js/pedido.js"></script>
   </body>
 </html>

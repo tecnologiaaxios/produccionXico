@@ -52,7 +52,7 @@ function mostrarPedidos() {
                '<td>' + fechaCapturaMostrar + '</td>' +
                '<td>' + pedidos[pedido].encabezado.tienda +'</td>' +
                '<td>' + pedidos[pedido].encabezado.ruta +'</td>' +
-               '<td class="no-padding"><button type="button" class="btn btn-info btn-sm"><span style="padding-bottom:0px;" class="glyphicon glyphicon-print"></span></button></td>' +
+               '<td class="no-padding"><a href="pedido.html?id='+pedido+'" class="btn btn-info btn-sm"><span style="padding-bottom:0px;" class="glyphicon glyphicon-eye-open"></span> Ver más</a></td>' +
                estado +
              '</tr>';
     }
