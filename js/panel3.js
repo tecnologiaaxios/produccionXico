@@ -258,6 +258,7 @@ function generarPedidoPadre() {
         pedidos.push(pedido);
 
         let detalle = pedido.detalle;
+        console.log(detalle);
         for(let producto in detalle) {
           datosProducto = {
             clave: detalle[producto].clave,
@@ -300,86 +301,75 @@ function generarPedidoPadre() {
     }
   }
 
-  let pedidosPadresRef = db.ref('pedidoPadre/');
-  pedidosPadresRef.once('value', function(snapshot) {
-    let listapedidos = snapshot.val();
+  let fechaCreacionPadre = moment().format('DD/MM/YYYY');
+  let pedidoPadreRef = db.ref('pedidoPadre/');
+  let datosPedidoPadre = {
+    fechaCreacionPadre: fechaCreacionPadre,
+    fechaRuta: "",
+    ruta: "",
+    productos: productosNoRepetidos
+  }
+  let key = pedidoPadreRef.push(datosPedidoPadre).getKey();
 
-    let keys = Object.keys(listapedidos);
-    let last = keys[keys.length-1];
-    let ultimo = listapedidos[last];
-    let lastclave = ultimo.clave;
+  let pedidoPadreRefKey = db.ref('pedidoPadre/'+key+'/pedidosHijos');
+  let historialPedidosEntradaRef = db.ref('historialPedidosEntrada');
+  let pedidoEntradaRef = db.ref('pedidoEntrada');
 
-    let fechaCreacionPadre = moment().format('DD/MM/YYYY');
-    let pedidoPadreRef = db.ref('pedidoPadre/');
-    let datosPedidoPadre = {
-      fechaCreacionPadre: fechaCreacionPadre,
-      fechaRuta: "",
-      ruta: "",
-      productos: productosNoRepetidos,
-      clave: lastclave+1
-    }
-    let key = pedidoPadreRef.push(datosPedidoPadre).getKey();
+  let datosPedidosHijos = {};
+  for(let pedido in pedidos) {
+    //pedidoPadreRefKey.push(pedidos[pedido]);
+    datosPedidosHijos[claves[pedido]] = pedidos[pedido];
 
-    let pedidoPadreRefKey = db.ref('pedidoPadre/'+key+'/pedidosHijos');
-    let historialPedidosEntradaRef = db.ref('historialPedidosEntrada');
-    let pedidoEntradaRef = db.ref('pedidoEntrada');
+    let promotoraRef = db.ref('usuarios/tiendas/supervisoras/'+pedidos[pedido].encabezado.promotora);
+    promotoraRef.once('value', function(snapshot) {
+      let region = snapshot.val().region;
 
-    let datosPedidosHijos = {};
-    for(let pedido in pedidos) {
-      //pedidoPadreRefKey.push(pedidos[pedido]);
-      datosPedidosHijos[claves[pedido]] = pedidos[pedido];
+      let pedidoRef = db.ref('pedidoEntrada/'+claves[pedido]);
+      pedidoRef.once('value', function(snappy) {
+        console.log(snappy.val());
+        let idTienda = snappy.val().encabezado.tienda.split(" ")[0];
+        let regionRef = db.ref('regiones/'+region+'/'+idTienda+'/historialPedidos');
+        regionRef.push(pedidos[pedido]);
 
-      let promotoraRef = db.ref('usuarios/tiendas/supervisoras/'+pedidos[pedido].encabezado.promotora);
-      promotoraRef.once('value', function(snapshot) {
-        let region = snapshot.val().region;
-
-        let pedidoRef = db.ref('pedidoEntrada/'+claves[pedido]);
-        pedidoRef.once('value', function(snappy) {
-          console.log(snappy.val());
-          let idTienda = snappy.val().encabezado.tienda.split(" ")[0];
-          let regionRef = db.ref('regiones/'+region+'/'+idTienda+'/historialPedidos');
-          regionRef.push(pedidos[pedido]);
-
-          pedidoEntradaRef.child(claves[pedido]).remove();
-        });
+        pedidoEntradaRef.child(claves[pedido]).remove();
       });
+    });
+  }
+
+  pedidoPadreRefKey.set(datosPedidosHijos);
+  historialPedidosEntradaRef.push(datosPedidosHijos);
+
+  let row = '<tr id="vacio" style="padding:0px 0px 0px;" class="no-pading">' +
+              '<td scope="row" style="border:none;"></td>' +
+              '<td></td>' +
+              '<td></td>' +
+              '<td></td>' +
+              '<td class="no-padding"></td>' +
+              '<td class="no-padding"> </td>' +
+            '</tr>';
+  $('#tbodyTablaPedidoPadre').empty().append(row);
+
+  for(let promotora in promotoras) {
+    let notificacionesListaRef = db.ref('notificaciones/tiendas/'+promotoras[promotora]+'/lista');
+    moment.locale('es');
+    let formato = moment().format("MMMM DD YYYY, HH:mm:ss");
+    let fecha = formato.toString();
+    let notificacion = {
+      fecha: fecha,
+      leida: false,
+      mensaje: "El pedido: " + claves[promotora] + " se ha agrupado."
     }
 
-    pedidoPadreRefKey.set(datosPedidosHijos);
-    historialPedidosEntradaRef.push(datosPedidosHijos);
+    notificacionesListaRef.push(notificacion);
 
-    let row = '<tr id="vacio" style="padding:0px 0px 0px;" class="no-pading">' +
-                '<td scope="row" style="border:none;"></td>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td></td>' +
-                '<td class="no-padding"></td>' +
-                '<td class="no-padding"> </td>' +
-              '</tr>';
-    $('#tbodyTablaPedidoPadre').empty().append(row);
+    let notificacionesRef = db.ref('notificaciones/tiendas/'+promotoras[promotora]);
+    notificacionesRef.once('value', function(snapshot) {
+      let notusuario = snapshot.val();
+      let cont = notusuario.cont + 1;
 
-    for(let promotora in promotoras) {
-      let notificacionesListaRef = db.ref('notificaciones/tiendas/'+promotoras[promotora]+'/lista');
-      moment.locale('es');
-      let formato = moment().format("MMMM DD YYYY, HH:mm:ss");
-      let fecha = formato.toString();
-      let notificacion = {
-        fecha: fecha,
-        leida: false,
-        mensaje: "El pedido: " + claves[promotora] + " se ha agrupado."
-      }
-
-      notificacionesListaRef.push(notificacion);
-
-      let notificacionesRef = db.ref('notificaciones/tiendas/'+promotoras[promotora]);
-      notificacionesRef.once('value', function(snapshot) {
-        let notusuario = snapshot.val();
-        let cont = notusuario.cont + 1;
-
-        notificacionesRef.update({cont: cont});
-      });
-    }
-  });
+      notificacionesRef.update({cont: cont});
+    });
+  }
 }
 
 function pedidosRecibidos() {
