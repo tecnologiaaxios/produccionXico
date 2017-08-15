@@ -306,8 +306,8 @@ function generarPedidoPadre() {
 
     let keys = Object.keys(listapedidos);
     let last = keys[keys.length-1];
-    let ultimo = listapedidos[last];
-    let lastclave = ultimo.clave;
+    let ultimoPedido = listapedidos[last];
+    let lastclave = ultimoPedido.clave;
 
     let fechaCreacionPadre = moment().format('DD/MM/YYYY');
     let pedidoPadreRef = db.ref('pedidoPadre/');
@@ -316,7 +316,8 @@ function generarPedidoPadre() {
       fechaRuta: "",
       ruta: "",
       productos: productosNoRepetidos,
-      clave: lastclave+1
+      clave: lastclave+1,
+      estado: "En proceso"
     }
     let key = pedidoPadreRef.push(datosPedidoPadre).getKey();
 
