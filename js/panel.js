@@ -194,7 +194,7 @@ function mostrarPedidosEnProceso() {
         fechaRutaMostrar = "Fecha pendiente";
       }
 
-      row = '<td>' + pedidoPadre + '</td>' +
+      row = '<td>' + pedidosPadre[pedidoPadre].clave + '</td>' +
             '<td>' + fechaCapturaMostrar + '</td>' +
             '<td>' + fechaRutaMostrar + '</td>';
 
