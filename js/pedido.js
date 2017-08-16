@@ -18,7 +18,6 @@ function getQueryVariable(variable) {
 function haySesion() {
   auth.onAuthStateChanged(function (user) {
     if (user) { //si hay un usuario
-      mostrarPedidos();
       mostrarContador();
     }
     else {
@@ -36,6 +35,14 @@ function mostrarDatos() {
     let datos = snapshot.val();
 
     $('#numPedido').html("Pedido: " + idPedido);
+    let diaCaptura = datos.encabezado.fechaCaptura.substr(0,2);
+    let mesCaptura = datos.encabezado.fechaCaptura.substr(3,2);
+    let añoCaptura = datos.encabezado.fechaCaptura.substr(6,4);
+    let fechaCaptura = mesCaptura + '/' + diaCaptura + '/' + añoCaptura;
+    moment.locale('es');
+    let fechaCapturaMostrar = moment(fechaCaptura).format('LL');
+    $('#fechaPedido').html("Recibido el "+fechaCapturaMostrar);
+    $('#tienda').html('Tienda: ' + datos.encabezado.tienda);
     let detalle = datos.detalle;
     let trs = "";
     for(let producto in detalle) {
