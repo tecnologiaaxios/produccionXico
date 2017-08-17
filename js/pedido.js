@@ -154,6 +154,7 @@ $(document).ready(function() {
 
 function generarPDF() {
   let pdf = new jsPDF();
+  
   pdf.fromHTML($('#panel').get(0), 10, 10, {'width': 180});
   //pdf.autoPrint();
   //pdf.output("dataurlnewwindow"); // this opens a new popup,  after this the PDF opens the print window view but there are browser inconsistencies with how this is handled
@@ -164,4 +165,6 @@ function generarPDF() {
   x.document.open();
   x.document.write(iframe);
   x.document.close();
+
+
 }
