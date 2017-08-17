@@ -245,6 +245,12 @@ function generarPDF(/*nombre*/) {
     margin: {top: 150}
   });
 
-  pdf.save('Pedido.pdf');
-  /*pdf.save('Pedido-'+nombre+'.pdf');*/
+  //pdf.save('Pedido.pdf');
+  //pdf.output('dataurlnewwindow');
+  var string = pdf.output('datauristring');
+  var iframe = "<iframe width='100%' height='100%' src='" + string + "'></iframe>"
+  var x = window.open();
+  x.document.open();
+  x.document.write(iframe);
+  x.document.close();
 }
