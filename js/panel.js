@@ -131,6 +131,7 @@ function mostrarPedidosEnProceso() {
     for(pedidoPadre in pedidosPadre) {
       let tr = $('<tr/>');
       let td = $('<td/>');
+      let form = $('<form/>', {'class': 'form-inline'});
       let group = $('<div/>', {'class': 'form-group'});
       let group2 = $('<div/>', {'class': 'form-group'});
       let div = $('<div/>', {'class': 'input-group date', 'style': 'width: 200px;'});
@@ -141,8 +142,9 @@ function mostrarPedidosEnProceso() {
         'id': 'fechaRuta-'+pedidoPadre
       });
 
+      //let span = $('<span/>', {'class': 'input-group-btn'});
       let button = $('<button/>', {
-        'class': 'btn btn-primary',
+        'class': 'btn btn-success',
         'onclick': 'guardarFechaRuta("'+pedidoPadre+'")',
         'html': '<i class="fa fa-floppy-o" aria-hidden="true"></i>'
       });
@@ -160,7 +162,7 @@ function mostrarPedidosEnProceso() {
       let span2 = $('<span/>', {'class': 'input-group-btn'});
 
       let button2 = $('<button/>', {
-        'class': 'btn btn-primary',
+        'class': 'btn btn-success',
         'onclick': 'guardarRuta("'+pedidoPadre+'")',
         'html': '<i class="fa fa-floppy-o" aria-hidden="true"></i>'
       });
@@ -199,12 +201,12 @@ function mostrarPedidosEnProceso() {
             '<td>' + fechaRutaMostrar + '</td>';
 
       div.append(input);
-      div.append('<span class="input-group-addon btn-primary"><i class="glyphicon glyphicon-calendar"></i></span>');
+      div.append('<span class="input-group-addon btn-primary"><i class="fa fa-calendar"></i></span>');
       group.append(div);
       group2.append(button);
-      td.append(group);
-      td.append(group2);
-      //td.append(button);
+      form.append(div);
+      form.append(button);
+      td.append(form);
       tr.append(row);
       tr.append(td);
       tr.append('<td>' + pedidosPadre[pedidoPadre].ruta + '</td>');
@@ -218,6 +220,7 @@ function mostrarPedidosEnProceso() {
       $('#tablaPedidosEnProceso tbody').append(tr);
 
       $('.input-group.date').datepicker({
+        autoclose: true,
         format: "dd/mm/yyyy",
         startDate: "today",
         language: "es"
