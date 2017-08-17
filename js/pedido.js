@@ -125,43 +125,10 @@ $(document).ready(function() {
   $('[data-toggle="tooltip"]').tooltip();
 });
 
-/*function generarPDF() {
-  let pdf = new jsPDF('p', 'in', 'letter');
-
-  var source = $('#panel')[0];
-  var specialElementHandlers = {
-    '#bypassme': function(element, renderer) {
-    return true;
-    }
-  };
-
-  pdf.fromHTML(
-    source, // HTML string or DOM elem ref.
-    0.5, // x coord
-    0.5, // y coord
-    {
-    'width': 7.5, // max width of content on PDF
-    'elementHandlers': specialElementHandlers
-  });
-
-  var string = pdf.output('datauristring');
-  var iframe = "<iframe width='100%' height='100%' src='" + string + "'></iframe>"
-  var x = window.open();
-  x.document.open();
-  x.document.write(iframe);
-  x.document.close();
-}*/
-
-function generarPDF() {
-  let pdf = new jsPDF();
-  pdf.fromHTML($('#panel').get(0), 10, 10, {'width': 180});
-  //pdf.autoPrint();
-  //pdf.output("dataurlnewwindow"); // this opens a new popup,  after this the PDF opens the print window view but there are browser inconsistencies with how this is handled
-
-  var string = pdf.output('datauristring');
-  var iframe = "<iframe width='100%' height='100%' src='" + string + "'></iframe>"
-  var x = window.open();
-  x.document.open();
-  x.document.write(iframe);
-  x.document.close();
+function generarPDF(){
+    let contenido= document.getElementById('panel').innerHTML;
+    let contenidoOriginal= document.body.innerHTML;
+    document.body.innerHTML = contenido;
+    window.print();
+    document.body.innerHTML = contenidoOriginal;
 }
