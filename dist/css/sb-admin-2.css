@@ -538,6 +538,10 @@ table.dataTable thead .sorting:after {
   display: none;
 }
 
+#ticketsRespondidos {
+  display: none;
+}
+
 .contenedor-tabla {
 display: table;
 }

@@ -95,39 +95,35 @@
         <div class="row">
           <div class="col-lg-12"><br>
             <!--<div class="loader"></div>-->
-            <div id="panel" class="panel panel-default">
+            <div id="panel" class="panel panel-primary">
               <div class="panel-heading">
-                <span id="numPedido" style="color: #2C42AD; font-size: 30px; font-style: italic;" class="panel-title"></span><span id="fechaPedido" style="float: right; font-size: 20px;"><!--Recibido Martes 13 de abril--></span>
+                <span id="numPedido" style="font-size: 30px; font-style: italic;" class="panel-title"></span><span id="fechaPedido" class="pull-right" style="font-size: 20px;"><!--Recibido Martes 13 de abril--></span>
               </div>
               <div class="panel-body">
                 <label id="tienda" for="">Tienda: </label>
-                <div class="table-responsive">
-                  <table id="productos" class="table table-condensed table-bordered table-striped table-hover" style="margin-top:15px;">
-                    <caption>Productos de este pedido:</caption>
-                    <thead id="theadProductos">
-                      <tr>
-                        <th>Clave</th>
-                        <th>Descripción</th>
-                        <th>Degustación</th>
-                        <th>Pedido Pz</th>
-                        <th>Total Pz</th>
-                        <th>Total Kg</th>
-                        <th>Precio unit.</th>
-                        <th>Unidad</th>
-                        <th>Cambio físico</th>
-                      </tr>
-                    </thead>
-                    <tbody id="tbodyProductos">
-                      <tr>
+                <p class="lead"><small>Productos de este pedido:</small></p>
+              </div>
+              <div class="table-responsive">
+                <table id="productos" class="table table-condensed table-bordered table-striped table-hover">
+                  <!--<caption>Productos de este pedido:</caption>-->
+                  <thead id="theadProductos">
+                    <th>Clave</th>
+                    <th>Descripción</th>
+                    <th>Degustación</th>
+                    <th>Pedido Pz</th>
+                    <th>Total Pz</th>
+                    <th>Total Kg</th>
+                    <th>Precio unit.</th>
+                    <th>Unidad</th>
+                    <th>Cambio físico</th>
+                  </thead>
+                  <tbody id="tbodyProductos">
 
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                  </tbody>
+                </table>
               </div>
             </div>
             <button id="Imprimir" onclick="generarPDF();" class="btn btn-lg btn-danger"><i class="fa fa-print" aria-hidden="true"></i> Imprimir</button>
-            </table>
           </div><!-- /.col-lg-12 -->
         </div><!-- /.row -->
       </div><!-- /#page-wrapper -->

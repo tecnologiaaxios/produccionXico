@@ -133,7 +133,6 @@ function mostrarPedidosEnProceso() {
       let td = $('<td/>');
       let form = $('<form/>', {'class': 'form-inline'});
       let group = $('<div/>', {'class': 'form-group'});
-      let group2 = $('<div/>', {'class': 'form-group'});
       let div = $('<div/>', {'class': 'input-group date', 'style': 'width: 200px;'});
       let input = $('<input/>', {
         'class': 'form-control',
@@ -185,6 +184,7 @@ function mostrarPedidosEnProceso() {
       let fechaCapturaMostrar = moment(fechaCaptura).format('LL');
 
       let fechaRutaMostrar;
+      let rutaMostrar;
       if(pedidosPadre[pedidoPadre].fechaRuta.length > 0) {
         let diaRuta = pedidosPadre[pedidoPadre].fechaRuta.substr(0,2);
         let mesRuta = pedidosPadre[pedidoPadre].fechaRuta.substr(3,2);
@@ -195,6 +195,11 @@ function mostrarPedidosEnProceso() {
       } else {
         fechaRutaMostrar = "Fecha pendiente";
       }
+      if(pedidosPadre[pedidoPadre].ruta.length == 0) {
+        rutaMostrar = "Ruta pendiente";
+      } else {
+        rutaMostrar = pedidosPadre[pedidoPadre].ruta;
+      }
 
       row = '<td>' + pedidosPadre[pedidoPadre].clave + '</td>' +
             '<td>' + fechaCapturaMostrar + '</td>' +
@@ -203,13 +208,12 @@ function mostrarPedidosEnProceso() {
       div.append(input);
       div.append('<span class="input-group-addon btn-primary"><i class="fa fa-calendar"></i></span>');
       group.append(div);
-      group2.append(button);
-      form.append(div);
+      form.append(group);
       form.append(button);
       td.append(form);
       tr.append(row);
       tr.append(td);
-      tr.append('<td>' + pedidosPadre[pedidoPadre].ruta + '</td>');
+      tr.append('<td>' + rutaMostrar + '</td>');
       div2.append(input2);
       span2.append(button2);
       div2.append(span2);

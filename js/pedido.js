@@ -125,7 +125,6 @@ $(document).ready(function() {
   $('[data-toggle="tooltip"]').tooltip();
 });
 
-<<<<<<< HEAD
 function generarPDF(){
     let contenido= document.getElementById('panel').innerHTML;
     let contenidoOriginal= document.body.innerHTML;
@@ -133,7 +132,6 @@ function generarPDF(){
     window.print();
     document.body.innerHTML = contenidoOriginal;
 }
-=======
 /*function generarPDF() {
   let pdf = new jsPDF('p', 'in', 'letter');
 
@@ -161,9 +159,9 @@ function generarPDF(){
   x.document.close();
 }*/
 
-function generarPDF() {
+/*function generarPDF() {
   let pdf = new jsPDF();
-  
+
   pdf.fromHTML($('#panel').get(0), 10, 10, {'width': 180});
   //pdf.autoPrint();
   //pdf.output("dataurlnewwindow"); // this opens a new popup,  after this the PDF opens the print window view but there are browser inconsistencies with how this is handled
@@ -174,7 +172,4 @@ function generarPDF() {
   x.document.open();
   x.document.write(iframe);
   x.document.close();
-
-
-}
->>>>>>> 529aefbeaabdb66d8f286c296cbf5fec70a1303b
+}*/
