@@ -75,6 +75,8 @@ function mostrarNotificaciones() {
       arrayNotificaciones.push(lista[notificacion]);
     }
 
+    arrayNotificaciones.reverse();
+
     for(let i in arrayNotificaciones) {
       let date = arrayNotificaciones[i].fecha;
       moment.locale('es');

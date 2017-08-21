@@ -93,10 +93,20 @@ function mostrarTicketsCalidadProducto(estado) {
 
 function enviarMensaje() {
   let idTicket = $('#modalResponder').attr('data-idticket');
-  let mensaje = $('#mensaje').val();
+  let respuesta = $('#respuesta').val();
 
-  let ticketsRef = db.ref('tickets/calidadProducto/'+idTicket);
-  ticketsRef.update({mensaje: mensaje, estado: "Respondido"});
+  if(respuesta.length > 0) {
+    let ticketsRef = db.ref('tickets/calidadProducto/'+idTicket);
+    ticketsRef.update({respuesta: respuesta, estado: "Respondido"});
+    $('#respuesta').val('');
+
+    $('#helpblockRespuesta').hide();
+    $('#modalResponder').modal('hide');
+  }
+  else {
+    $('#respuesta').parent().addClass('has-error');
+    $('#helpblockRespuesta').show();
+  }
 }
 
 function haySesion() {
@@ -125,6 +135,8 @@ function mostrarNotificaciones() {
     for(let notificacion in lista) {
       arrayNotificaciones.push(lista[notificacion]);
     }
+
+    arrayNotificaciones.reverse();
 
     for(let i in arrayNotificaciones) {
       let date = arrayNotificaciones[i].fecha;
