@@ -47,7 +47,7 @@ function mostrarTicketsCalidadProducto(estado) {
         let button = $('<button/>', {
           'onclick': 'mostrarModal("'+ticket+'")',
           'class': 'btn btn-danger btn-xs',
-          text: 'Responder'
+          html: '<span class="fa fa-comment" aria-hidden="true"></span> Responder'
         });
 
         td.append(button);
