@@ -1,7 +1,7 @@
 {
   "name": "Xico",
   "title": "SB Admin 2",
-  "productName": "Electron tutorial app",
+  "productName": "Xico",
   "version": "3.3.7+1",
   "homepage": "http://startbootstrap.com/template-overviews/sb-admin-2",
   "author": "Start Bootstrap",
@@ -24,5 +24,8 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/BlackrockDigital/startbootstrap-sb-admin-2.git"
+  },
+  "dependencies": {
+    "jquery": "^3.2.1"
   }
 }

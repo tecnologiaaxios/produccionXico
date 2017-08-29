@@ -22,9 +22,6 @@
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="dist/css/bootstrap-select.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    <script src="dist/js/bootstrap-select.js"></script>
     <link rel="stylesheet" href="css/dragula.min.css">
     <link rel="stylesheet" href="css/bootstrap-select.min.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -154,7 +151,15 @@
       </div><!-- /#page-wrapper -->
     </div><!-- /#wrapper -->
     <!-- jQuery -->
-    <script src="vendor/jquery/jquery.min.js"></script>
+    <!--<script src="js/jquery-3.2.1.js"></script>-->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>window.$ = window.jQuery = require('jquery');</script>-->
+    <!-- If the require doesn't work, include first the jQuery file
+    <script src="jquery-3.0.0.min.js"></script>-->
+    <script>window.$ = window.jQuery = require('./js/jquery-3.2.1.min.js');</script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="dist/js/bootstrap-select.js"></script>
+
     <!-- Bootstrap Core JavaScript -->
     <!--<script src="vendor/bootstrap/js/bootstrap.min.js"></script>-->
     <!-- Metis Menu Plugin JavaScript -->
