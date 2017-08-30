@@ -390,6 +390,14 @@ function generarPedidoPadre() {
   });
 }
 
+function cancelarPedidoPadre() {
+  $("#tablaPedidoPadre tbody tr").each(function (i)
+  {
+    $('#tablaPedidos tbody').append(i);
+    $('#tablaPedidosPadre tbody').remove(i);
+  }
+}
+
 function pedidosRecibidos() {
   $('#pedidosEnProceso').hide();
   $('#historialPedidos').hide();
