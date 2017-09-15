@@ -40,20 +40,20 @@ $('#contraseña').keypress(function (e) {
 function login() {
   let username = $('#username').val();
   let contraseña = $('#contraseña').val();
+  console.log(username);
 
   if(username.length > 0 && contraseña.length > 0) {
 
     let usuarios = db.ref('usuarios/planta/almacen/');
     usuarios.orderByChild("username").equalTo(username).on("child_added", function(snapshot) {
       let email = snapshot.val().email;
-  
+
       if(email != null) {
         auth.signInWithEmailAndPassword(email, contraseña)
         .then(function() { //en caso de exito
           obtenerUsuario();
         })
         .catch(function(error) { //en caso de error
-          console.log(error);
           if(error.code === 'auth/wrong-password') { //imprime un error si te equivocaste en la contraseña
             $('#contrasena').parent().addClass('has-error');
             $('#helpblockContraseña').html("La contraseña es incorrecta").show();

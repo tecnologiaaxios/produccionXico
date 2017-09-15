@@ -18,22 +18,21 @@ body {
 /*** ESTILOS DEL LOGGIN ***/
 
 #left-login{
-background: url(../../img/bg-home.png) no-repeat top fixed;
--webkit-background-size: cover;
--moz-background-size: cover;
--o-background-size: cover;
-background-size: cover;
-width:50%;
-float:left;
-height:100% !important;
-
+  background: url(../../img/bg-home.png) no-repeat top;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  width:50%;
+  float:left;
+  height:100% !important;
 }
 
 #right-login{
-padding: 30px;
-width:50%;
- float:right;
- height:300px;
+  padding: 30px;
+  width:50%;
+  float:right;
+  height:300px;
 
 }
 
@@ -68,16 +67,15 @@ width:50%;
   z-index: 2;
   top: 0px;
 }
-.login-container{
-  height: 500px !important;
-  width: 70% !important;
+.login-container {
+  width: 90% !important;
+  height: 700px !important;
   margin: 0 auto !important;
   text-align: center !important;
   margin-top: 70px !important;
   overflow: hidden;
   border-radius: 15px !important;
   background-color: white !important;
-
 }
 .navbar{z-index: 1;}
 @media (min-width: 768px) {

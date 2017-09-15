@@ -18,7 +18,7 @@ body {
 /*** ESTILOS DEL LOGGIN ***/
 
 #left-login{
-background: url(../../img/bg-home.png) no-repeat top fixed;
+background: url(../../img/bg-home.png) no-repeat top;
 -webkit-background-size: cover;
 -moz-background-size: cover;
 -o-background-size: cover;
@@ -69,7 +69,7 @@ width:50%;
   top: 0px;
 }
 .login-container{
-  height: 500px !important;
+  height: 700px !important;
   width: 70% !important;
   margin: 0 auto !important;
   text-align: center !important;
