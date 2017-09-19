@@ -72,10 +72,12 @@ function llenarSelectTiendas() {
 llenarSelectTiendas();
 
 function mostrarTodas() {
+  $('#tableinfo').hide();
   let idPedidoPadre = getQueryVariable('id');
   let tiendasRef = db.ref('pedidoPadre/'+idPedidoPadre+'/productos');
   tiendasRef.on('value', function(snapshot) {
     let productos = snapshot.val();
+
     let row = "";
     let TotalPz, TotalKg;
     let TotalPzs = 0, TotalKgs = 0, TotalPrecUni = 0, TotalImporte = 0;
@@ -158,6 +160,7 @@ function mostrarUna(idPedidoHijo) {
         '<td>SUC:</td>'+
         '<td>'+tienda+'</td>'+
       '</tr>');
+    $('#tableinfo').show();
 
     $('.TotalPz').text(Tpz);
     $('.TotalKg').text(Tkg);

@@ -44,6 +44,7 @@ function mostrarDatos() {
     $('#fechaPedido').html("Recibido el "+fechaCapturaMostrar);
     $('#tienda').html('Tienda: ' + datos.encabezado.tienda);
     let detalle = datos.detalle;
+    $('#cantidad').html('<small class="lead">'+Object.keys(detalle).length+'</small>');
     let trs = "";
     for(let producto in detalle) {
       trs += '<tr>' +

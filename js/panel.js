@@ -26,6 +26,8 @@ function mostrarPedidos() {
     let pedidos = snapshot.val();
     let row="";
 
+    $('.loader').remove();
+
     for(let pedido in pedidos) {
       let estado = "";
       switch(pedidos[pedido].encabezado.estado) {
