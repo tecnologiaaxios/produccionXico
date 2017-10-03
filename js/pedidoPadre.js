@@ -253,9 +253,10 @@ $(document).ready(function() {
 });
 
 function generarPDF(/*nombre*/) {
-  var jsPDF = require('jspdf');
-  require('jspdf-autotable');
+  //var jsPDF = require('jspdf');
+  //require('jspdf-autotable');
   let pdf = new jsPDF('p', 'pt');
+  console.log("HOla")
 
   let res = pdf.autoTableHtmlToJson(document.getElementById('tablaPedidos'));
   let res2 = pdf.autoTableHtmlToJson(document.getElementById('tableinfo'));
@@ -283,7 +284,7 @@ function generarPDF(/*nombre*/) {
   });
 
   pdf.autoTable(res3.columns, res3.data, {
-    startY: pdf.autoTableEndPosY() + 200,
+    startY: pdf.autoTableEndPosY() + 20,
     tableWidth: 'auto',
     columnWidth: 'auto',
     styles: {
@@ -297,11 +298,61 @@ function generarPDF(/*nombre*/) {
   });
 
   //pdf.save('Pedido.pdf');
-  pdf.output('dataurlnewwindow');
-  /*var string = pdf.output('datauristring');
+  //pdf.output('dataurlnewwindow');
+  var string = pdf.output('datauristring');
   var iframe = "<iframe width='100%' height='100%' src='" + string + "'></iframe>"
   var x = window.open();
-  x.document.write(iframe);
   x.document.open();
-  x.document.close();*/
+  x.document.write(iframe);
+  x.document.close();
 }
+
+//De esta manera funciona en electron
+/*function generarPDF() {
+  var jsPDF = require('jspdf');
+  require('jspdf-autotable');
+  let pdf = new jsPDF('p', 'pt');
+  console.log("HOla")
+
+  let res = pdf.autoTableHtmlToJson(document.getElementById('tablaPedidos'));
+  let res2 = pdf.autoTableHtmlToJson(document.getElementById('tableinfo'));
+  let res3 = pdf.autoTableHtmlToJson(document.getElementById('table-bottom'));
+
+  pdf.autoTable(res2.columns, res2.data, {
+    startY: false,
+    tableWidth: 'auto',
+    columnWidth: 'auto',
+    styles: {
+      overflow: 'linebreak'
+    },
+    margin: {top: 150}
+  });
+
+  pdf.autoTable(res.columns, res.data, {
+    startY: pdf.autoTableEndPosY() + 10,
+    tableWidth: 'auto',
+    columnWidth: 'auto',
+    styles: {
+      overflow: 'linebreak'
+    },
+    theme: 'grid',
+    margin: {top: 150}
+  });
+
+  pdf.autoTable(res3.columns, res3.data, {
+    startY: pdf.autoTableEndPosY() + 20,
+    tableWidth: 'auto',
+    columnWidth: 'auto',
+    styles: {
+      overflow: 'linebreak',
+      fillColor: [255, 255, 255],
+      textColor: [0, 0, 0],
+    },
+    margin: {top: 150},
+    theme: 'grid', // 'striped', 'grid',
+    tableLineColor: [255, 255, 255]
+  });
+
+  pdf.save('Pedido.pdf');
+  pdf.output('dataurlnewwindow');
+}*/

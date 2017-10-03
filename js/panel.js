@@ -26,8 +26,6 @@ function mostrarPedidos() {
     let pedidos = snapshot.val();
     let row="";
 
-    $('.loader').remove();
-
     for(let pedido in pedidos) {
       let estado = "";
       switch(pedidos[pedido].encabezado.estado) {
@@ -59,7 +57,9 @@ function mostrarPedidos() {
              '</tr>';
     }
 
+    $('#loaderPedidos').remove();
     $('#tablaPedidos tbody').empty().append(row);
+    $('#tablaPedidos').removeClass('hidden');
   });
 }
 
@@ -127,7 +127,12 @@ function guardarRuta(idPedidoPadre) {
 function mostrarPedidosEnProceso() {
   let pedidosPadreRef = db.ref('pedidoPadre');
   pedidosPadreRef.on('value', function(snapshot) {
+    let loader = $('#loaderPedidosEnProceso');
     let pedidosPadre = snapshot.val();
+    if(pedidosPadre == null || pedidosPadre == undefined) {
+      loader.remove();
+      $('#pPedidosProceso').html('No se encontraron pedidos en proceso');
+    }
     let row = "";
     $('#tablaPedidosEnProceso tbody').empty();
     for(pedidoPadre in pedidosPadre) {
@@ -224,7 +229,11 @@ function mostrarPedidosEnProceso() {
       tr.append('<td><i style="color:#FFCC25; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>');
       tr.append('<td><a class="btn btn-info" href="pedidoPadre.html?id='+pedidoPadre+'">Ver más</a></td>');
 
+      $('#pPedidosProceso').remove();
+      $('#loaderPedidosEnProceso').remove();
       $('#tablaPedidosEnProceso tbody').append(tr);
+      $('#tablaPedidosEnProceso').removeClass('hidden');
+      console.log('hola')
 
       $('.input-group.date').datepicker({
         autoclose: true,
@@ -270,6 +279,7 @@ function generarPedidoPadre() {
         let detalle = pedido.detalle;
         for(let producto in detalle) {
           datosProducto = {
+            claveConsorcio: detalles[producto].claveConsorcio,
             clave: detalle[producto].clave,
             precioUnitario: detalle[producto].precioUnitario,
             nombre: detalle[producto].nombre,
