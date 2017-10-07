@@ -24,8 +24,9 @@ function mostrarPedidos() {
   let pedidosEntradaRef = db.ref('pedidoEntrada/');
   pedidosEntradaRef.on('value', function(snapshot) {
     let pedidos = snapshot.val();
-    let row="";
+    //let row="";
 
+    $('#tablaPedidos tbody').empty();
     for(let pedido in pedidos) {
       let estado = "";
       switch(pedidos[pedido].encabezado.estado) {
@@ -47,7 +48,7 @@ function mostrarPedidos() {
       moment.locale('es');
       let fechaCapturaMostrar = moment(fechaCaptura).format('LL');
 
-      row += `<tr style="padding:0px 0px 0px;" class="no-pading">
+      let row = `<tr style="padding:0px 0px 0px;" class="no-pading">
                <td>${pedido}</td>
                <td>${fechaCapturaMostrar}</td>
                <td>${pedidos[pedido].encabezado.tienda}</td>
@@ -56,10 +57,10 @@ function mostrarPedidos() {
                ${estado}
                <td class="text-center"><button type="button" class="btn btn-danger btn-sm" onclick="abrirModalEliminarPedido('${pedido}')"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></button></td>
              </tr>`;
+             $('#tablaPedidos tbody').prepend(row);
     }
 
     $('#loaderPedidos').remove();
-    $('#tablaPedidos tbody').empty().append(row);
     $('#tablaPedidos').removeClass('hidden');
   });
 }

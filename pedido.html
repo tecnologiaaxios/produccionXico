@@ -133,7 +133,7 @@
       </div><!-- /#page-wrapper -->
     </div><!-- /#wrapper -->
     <div id="modalAgregarProducto" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modalAgregarProducto">
-      <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -141,86 +141,125 @@
           </div>
           <div class="modal-body">
             <form>
-              <div class="form-inline">
-                <div class="row">
-                  <div class="col-md-12 col-lg-12">
-                    <div class="form-group">
-                      <label for="productos">Elige un producto:</label>
-                      <select class="form-control" name="productos" id="listaProductos">
-                        <option value="Seleccionar" id="SeleccionarProducto">Seleccionar</option>
-                      </select>
-                      <span style="display: none;" id="helpblockProductos" class="help-block">Campo obligatorio</span>
-                    </div>
-                  </div>
-                </div><br>
-                <div class="row">
-                  <div class="hidden col-md-3 col-lg-3">
-                    <div class="form-group">
-                      <label for="nombre">Nombre:</label>
-                      <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre">
-                    </div>
-                  </div>
-                  <div class="hidden col-md-3 col-lg-3">
-                    <div class="form-group">
-                      <label for="claveConsorcio">Clave consorcio:</label>
-                      <input type="text" id="claveConsorcio" name="claveConsorcio" class="form-control" placeholder="Clave consorcio">
-                    </div>
-                  </div>
-                </div><br>
-                <div class="row">
-                  <div class="col-md-3 col-lg-3">
-                    <div class="form-group">
-                      <label for="pedidoPz">Pedido Pz:</label>
-                      <input type="text" id="pedidoPz" name="pedidoPz" class="form-control" placeholder="Pedido Pz">
-                      <span style="display: none;" id="helpblockPedidoPz" class="help-block">Campo obligatorio</span>
-                    </div>
-                  </div>
-                  <div class="col-md-3 col-lg-3">
-                    <div class="form-group">
-                      <label for="degusPz">Degustación Pz:</label>
-                      <input type="text" id="degusPz" name="degusPz" class="form-control" placeholder="Degustación Pz">
-                      <span style="display: none;" id="helpblockDegusPz" class="help-block">Campo obligatorio</span>
-                    </div>
-                  </div>
-                  <div class="col-md-3 col-lg-3">
-                    <div class="form-group">
-                      <label for="cambioFisico">Cambio físico:</label>
-                      <input type="text" id="cambioFisico" name="cambioFisico" class="form-control" placeholder="Cambio físico">
-                      <span style="display: none;" id="helpblockCambioFisico" class="help-block">Campo obligatorio</span>
-                    </div>
-                  </div>
-                  <div class="hidden col-md-3 col-lg-3">
-                    <div class="form-group">
-                      <label for="empaque" class="">Empaque:</label>
-                      <input type="text" id="empaque" name="empaque" class="form-control">
-                    </div>
-                  </div>
-                </div><br>
-                <div class="row">
-                  <div class="col-md-3 col-lg-3">
-                    <div class="form-group">
-                      <label for="precioUnitario">Precio unitario:</label>
-                      <input type="text" id="precioUnitario" name="precioUnitario" class="form-control" placeholder="Precio unitario">
-                    </div>
-                  </div>
-                  <div class="hidden col-md-3 col-lg-3">
-                    <div class="form-group">
-                      <label for="unidad">Unidad:</label>
-                      <input type="text" id="unidad" name="unidad" class="form-control" placeholder="Unidad">
-                    </div>
-                  </div>
-                  <div class="col-md-3 col-lg-3">
-                    <div class="form-group">
-                      <label for="totalPz">Total Pz</label>
-                      <input readonly type="text" id="totalPz" name="totalPz" class="form-control">
-                    </div>
-                  </div>
-                  <div class="col-md-3 col-lg-3">
-                    <div class="form-group">
-                      <label for="totalKg">Total Kg</label>
-                      <input readonly type="text" id="totalKg" name="totalKg" class="form-control">
-                    </div>
-                  </div>
+              <div class="form-group row">
+                <div class="col-md-12">
+                  <label for="productos">Elige un producto:</label>
+                  <select class="form-control" name="productos" id="listaProductos">
+                    <option value="Seleccionar" id="SeleccionarProducto">Seleccionar</option>
+                  </select>
+                  <span style="display: none;" id="helpblockProductos" class="help-block">Campo obligatorio</span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="hidden col-md-4">
+                  <label for="nombre">Nombre:</label>
+                  <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre">
+                </div>
+                <div class="col-md-4">
+                  <label for="claveConsorcio">Clave consorcio:</label>
+                  <input type="text" id="claveConsorcio" name="claveConsorcio" class="form-control" placeholder="Clave consorcio">
+                </div>
+                <div class="col-md-4">
+                  <label for="pedidoPz">Pedido Pz:</label>
+                  <input type="text" id="pedidoPz" name="pedidoPz" class="form-control" placeholder="Pedido Pz">
+                  <span style="display: none;" id="helpblockPedidoPz" class="help-block">Campo obligatorio</span>
+                </div>
+                <div class="col-md-4">
+                  <label for="degusPz">Degustación Pz:</label>
+                  <input type="text" id="degusPz" name="degusPz" class="form-control" placeholder="Degustación Pz">
+                  <span style="display: none;" id="helpblockDegusPz" class="help-block">Campo obligatorio</span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-md-4">
+                  <label for="cambioFisico">Cambio físico:</label>
+                  <input type="text" id="cambioFisico" name="cambioFisico" class="form-control" placeholder="Cambio físico">
+                  <span style="display: none;" id="helpblockCambioFisico" class="help-block">Campo obligatorio</span>
+                </div>
+                <div class="hidden col-md-4">
+                  <label for="empaque" class="">Empaque:</label>
+                  <input type="text" id="empaque" name="empaque" class="form-control">
+                </div>
+                <div class="col-md-4">
+                  <label for="precioUnitario">Precio unitario:</label>
+                  <input type="text" id="precioUnitario" name="precioUnitario" class="form-control" placeholder="Precio unitario">
+                </div>
+                <div class="col-md-4">
+                  <label for="unidad">Unidad:</label>
+                  <input type="text" id="unidad" name="unidad" class="form-control" placeholder="Unidad">
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-md-4">
+                  <label for="totalPz">Total Pz</label>
+                  <input readonly type="text" id="totalPz" name="totalPz" class="form-control">
+                </div>
+                <div class="col-md-4">
+                  <label for="totalKg">Total Kg</label>
+                  <input readonly type="text" id="totalKg" name="totalKg" class="form-control">
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            <button id="" onclick="agregarProducto()" type="button" class="btn btn-primary">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="modalEditarProducto" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modalAgregarProducto">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Editar producto</h4>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group row">
+                <div class="col-md-12 col-lg-12">
+                  <label for="nombreEditar">Nombre:</label>
+                  <input type="text" id="nombreEditar" name="nombreEditar" class="form-control" placeholder="Nombre">
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-md-3">
+                  <label for="claveConsorcioEditar">Clave consorcio:</label>
+                  <input readonly type="text" id="claveConsorcioEditar" name="claveConsorcioEditar" class="form-control" placeholder="Clave consorcio">
+                </div>
+                <div class="col-md-3">
+                  <label for="pedidoPzEditar">Pedido Pz:</label>
+                  <input type="text" id="pedidoPzEditar" name="pedidoPzEditar" class="form-control" placeholder="Pedido Pz">
+                  <span style="display: none;" id="helpblockPedidoPzEditar" class="help-block">Campo obligatorio</span>
+                </div>
+                <div class="col-md-3">
+                  <label for="degusPzEditar">Degustación Pz:</label>
+                  <input type="text" id="degusPzEditar" name="degusPzEditar" class="form-control" placeholder="Degustación Pz">
+                  <span style="display: none;" id="helpblockDegusPzEditar" class="help-block">Campo obligatorio</span>
+                </div>
+                <div class="col-md-3">
+                  <label for="cambioFisicoEditar">Cambio físico:</label>
+                  <input type="text" id="cambioFisicoEditar" name="cambioFisicoEditar" class="form-control" placeholder="Cambio físico">
+                  <span style="display: none;" id="helpblockCambioFisicoEditar" class="help-block">Campo obligatorio</span>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-md-3">
+                  <label for="precioUnitarioEditar">Precio unitario:</label>
+                  <input type="text" id="precioUnitarioEditar" name="precioUnitarioEditar" class="form-control" placeholder="Precio unitario">
+                </div>
+                <div class="col-md-3">
+                  <label for="unidadEditar">Unidad:</label>
+                  <input type="text" id="unidadEditar" name="unidadEditar" class="form-control" placeholder="Unidad">
+                </div>
+                <div class="col-md-3">
+                  <label for="totalPzeditar">Total Pz</label>
+                  <input readonly type="text" id="totalPzeditar" name="totalPzeditar" class="form-control">
+                </div>
+                <div class="col-md-3">
+                  <label for="totalKgEditar">Total Kg</label>
+                  <input readonly type="text" id="totalKgEditar" name="totalKgEditar" class="form-control">
                 </div>
               </div>
             </form>
