@@ -103,6 +103,14 @@
                     <span class="glyphicon glyphicon-filter"></span></span>Filtrar por: </span>
                     <select id="tiendas" class="form-control" id="tienda"></select>
                   </div>
+                  <div class="form-group">
+                    <span class="">Tipo de pedido</span>
+                    <select name="tipoPedido" id="tipoPedido" class="form-control">
+                      <option value="cambioFisico">Cambio físico</option>
+                      <option value="degusPz">Degustación Pz.</option>
+                      <option value="pedidoPz">Pedido Pz.</option>
+                    </select>
+                  </div>
                 </form><br>
                 <div style="" class="table-responsive">
                   <table id="tableinfo" class="table-condensed table-striped table-hover">
@@ -120,7 +128,7 @@
                       <tr>
                         <th>Clave</th>
                         <th>Descripción</th>
-                        <th>Total Pz</th>
+                        <th>Total Kg</th>
                         <th>Total Kg</th>
                       </tr>
                     </thead>

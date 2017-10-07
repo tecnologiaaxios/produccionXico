@@ -30,13 +30,13 @@ function mostrarPedidos() {
       let estado = "";
       switch(pedidos[pedido].encabezado.estado) {
         case "Pendiente":
-          estado = '<td class="no-padding"><i style="color:#d50000; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>';
+          estado = '<td class="no-padding text-center"><i style="color:#d50000; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>';
           break;
         case "En proceso":
-          estado = '<td class="no-padding"><i style="color:#FF8000; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>';
+          estado = '<td class="no-padding text-center"><i style="color:#FF8000; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>';
           break;
         case "Lista":
-          estado = '<td class="no-padding"><i style="color:#70E707; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>';
+          estado = '<td class="no-padding text-center"><i style="color:#70E707; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>';
           break;
       }
 
@@ -47,20 +47,31 @@ function mostrarPedidos() {
       moment.locale('es');
       let fechaCapturaMostrar = moment(fechaCaptura).format('LL');
 
-      row += '<tr style="padding:0px 0px 0px;" class="no-pading">' +
-               '<td>' + pedido +'</td>' +
-               '<td>' + fechaCapturaMostrar + '</td>' +
-               '<td>' + pedidos[pedido].encabezado.tienda +'</td>' +
-               '<td>' + pedidos[pedido].encabezado.ruta +'</td>' +
-               '<td class="no-padding"><a href="pedido.html?id='+pedido+'" class="btn btn-info btn-sm"><span style="padding-bottom:0px;" class="glyphicon glyphicon-eye-open"></span> Ver más</a></td>' +
-               estado +
-             '</tr>';
+      row += `<tr style="padding:0px 0px 0px;" class="no-pading">
+               <td>${pedido}</td>
+               <td>${fechaCapturaMostrar}</td>
+               <td>${pedidos[pedido].encabezado.tienda}</td>
+               <td>${pedidos[pedido].encabezado.ruta}</td>
+               <td class="no-padding text-center"><a href="pedido.html?id=${pedido}" class="btn btn-info btn-sm"><span style="padding-bottom:0px;" class="glyphicon glyphicon-eye-open"></span> Ver más</a></td>
+               ${estado}
+               <td class="text-center"><button type="button" class="btn btn-danger btn-sm" onclick="abrirModalEliminarPedido('${pedido}')"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></button></td>
+             </tr>`;
     }
 
     $('#loaderPedidos').remove();
     $('#tablaPedidos tbody').empty().append(row);
     $('#tablaPedidos').removeClass('hidden');
   });
+}
+
+function abrirModalEliminarPedido(idPedido) {
+  $('#modalConfirmarEliminarPedido').modal('show');
+  $('#btnConfirmar').attr('onclick', `eliminarPedido("${idPedido}")`);
+}
+
+function eliminarPedido(idPedido) {
+  db.ref('pedidoEntrada').child(idPedido).remove();
+  $.toaster({priority: 'success', title: 'Mensaje de información', message: `El pedido ${idPedido} fue eliminado con exito`});
 }
 
 function mostrarHistorialPedidos() {
@@ -270,7 +281,7 @@ function generarPedidoPadre() {
       }
     });
 
-    if($(this).attr('id') !="vacio"){
+    if($(this).attr('id') != "vacio"){
       let pedidoRef = db.ref('pedidoEntrada/'+clave);
       pedidoRef.once('value', function(snapshot) {
         let pedido = snapshot.val();
@@ -279,7 +290,7 @@ function generarPedidoPadre() {
         let detalle = pedido.detalle;
         for(let producto in detalle) {
           datosProducto = {
-            claveConsorcio: detalles[producto].claveConsorcio,
+            claveConsorcio: detalle[producto].claveConsorcio,
             clave: detalle[producto].clave,
             precioUnitario: detalle[producto].precioUnitario,
             nombre: detalle[producto].nombre,
@@ -320,6 +331,7 @@ function generarPedidoPadre() {
     }
   }
 
+
   let pedidosPadresRef = db.ref('pedidoPadre/');
   pedidosPadresRef.once('value', function(snapshot) {
     let existe = (snapshot.val() != null);
@@ -358,7 +370,7 @@ function generarPedidoPadre() {
 
           let pedidoRef = db.ref('pedidoEntrada/'+claves[pedido]);
           pedidoRef.once('value', function(snappy) {
-            console.log(snappy.val());
+
             let idTienda = snappy.val().encabezado.tienda.split(" ")[0];
             let regionRef = db.ref('regiones/'+region+'/'+idTienda+'/historialPedidos');
             regionRef.push(pedidos[pedido]);
@@ -572,4 +584,10 @@ $('#campana').click(function() {
 
 $(document).ready(function() {
   $('[data-toggle="tooltip"]').tooltip();
+
+  $.toaster({
+    settings: {
+      'timeout': 3000
+    }
+  });
 });

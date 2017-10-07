@@ -71,6 +71,11 @@ function llenarSelectTiendas() {
 
 llenarSelectTiendas();
 
+$('#tipoPedido').change(function () {
+  let tienda = $('#tiendas').val();
+  mostrarUna(tienda);
+});
+
 function mostrarTodas() {
   $('#tableinfo').hide();
   let idPedidoPadre = getQueryVariable('id');
@@ -112,6 +117,19 @@ function mostrarTodas() {
 
 function mostrarUna(idPedidoHijo) {
   let idPedidoPadre = getQueryVariable('id');
+  let tipoPedido = $('#tipoPedido').val();
+  let pieza;
+  switch(tipoPedido) {
+    case 'cambioFisico':
+      pieza = "Cambio físico";
+      break;
+    case 'degusPz':
+      pieza = "Degustación Pz";
+      break;
+    case 'pedidoPz':
+      pieza = "Pedido Pz";
+      break;
+  }
   let pedidoHijoRef = db.ref('pedidoPadre/'+idPedidoPadre+'/pedidosHijos/'+idPedidoHijo);
   pedidoHijoRef.on('value', function(snapshot) {
     let pedidoHijo = snapshot.val();
@@ -121,23 +139,39 @@ function mostrarUna(idPedidoHijo) {
     let row = "";
     let totalPiezas = 0, totalKilos = 0, totalImporte = 0;
 
+    let cantidadPiezas;
+    let cantidadKg;
     for(let pedido in detalles) {
+      switch(tipoPedido) {
+        case 'cambioFisico':
+          cantidadPiezas = detalles[pedido].cambioFisico;
+          cantidadKg = detalles[pedido].cambioFisicoKg;
+          break;
+        case 'degusPz':
+          cantidadPiezas = detalles[pedido].degusPz;
+          cantidadKg = detalles[pedido].degusKg;
+          break;
+        case 'pedidoPz':
+          cantidadPiezas = detalles[pedido].pedidoPz;
+          cantidadKg = detalles[pedido].pedidoKg;
+          break;
+      }
       let importe = 0;
       if(detalles[pedido].unidad == "PZA") {
-        importe = detalles[pedido].totalPz * detalles[pedido].precioUnitario;
+        importe = cantidadPiezas * detalles[pedido].precioUnitario;
       }
       if(detalles[pedido].unidad == "KG") {
-        importe = detalles[pedido].totalKg * detalles[pedido].precioUnitario;
+        importe = cantidadKg * detalles[pedido].precioUnitario;
       }
-      totalPiezas += detalles[pedido].totalPz;
-      totalKilos += detalles[pedido].totalKg;
+      totalPiezas += cantidadPiezas;
+      totalKilos += cantidadKg;
       totalImporte += Number(importe.toFixed(2));
       row += '<tr>' +
               '<td>' + detalles[pedido].claveConsorcio + '</td>' +
               '<td>' + detalles[pedido].clave + '</td>' +
               '<td>' + detalles[pedido].nombre + '</td>' +
-              '<td>' + detalles[pedido].totalPz + '</td>' +
-              '<td>' + detalles[pedido].totalKg + '</td>' +
+              '<td>' + cantidadPiezas + '</td>' +
+              '<td>' + cantidadKg.toFixed(2) + '</td>' +
               '<td>$ ' + detalles[pedido].precioUnitario.toFixed(2) + '</td>' +
               '<td>$ ' + importe.toFixed(2) + '</td>' +
               //'<td class="TotalPz"></td>' +
@@ -147,7 +181,7 @@ function mostrarUna(idPedidoHijo) {
 
     let fechaImpresion = new moment().format("DD/MM/YYYY");
     row += '<tr><td></td><td></td><td>Total general</td><td>'+totalPiezas+'</td><td>'+totalKilos.toFixed(2)+'</td><td></td><td>$ '+totalImporte.toFixed(2)+'</td>';
-    $('#theadTablaPedidos').html('<tr><th>Clave Cliente</th><th>Clave Xico</th><th>Descripción</th><th>Pieza</th><th>Kg</th><th>Precio unit.</th><th>Importe</th></tr>');
+    $('#theadTablaPedidos').html(`<tr><th>Clave Cliente</th><th>Clave Xico</th><th>Descripción</th><th>${pieza}</th><th>Kg</th><th>Precio unit.</th><th>Importe</th></tr>`);
     $('#tbodyTablaPedidos').html(row);
 
     $('#theadTableInfo').html('<tr><th>O. C.:</th><th>Fecha: '+fechaImpresion+'</th></tr>');

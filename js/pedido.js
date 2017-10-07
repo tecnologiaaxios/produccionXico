@@ -47,21 +47,224 @@ function mostrarDatos() {
     $('#cantidad').html('<small class="lead">'+Object.keys(detalle).length+'</small>');
     let trs = "";
     for(let producto in detalle) {
-      trs += '<tr>' +
-              '<td>' + detalle[producto].clave + '</td>' +
-              '<td>' + detalle[producto].nombre + '</td>' +
-              '<td>' + detalle[producto].degusPz + '</td>' +
-              '<td>' + detalle[producto].pedidoPz + '</td>' +
-              '<td>' + detalle[producto].totalPz + '</td>' +
-              '<td>' + detalle[producto].totalKg + '</td>' +
-              '<td>' + detalle[producto].precioUnitario + '</td>' +
-              '<td>' + detalle[producto].unidad + '</td>' +
-              '<td>' + detalle[producto].cambioFisico + '</td>' +
-             '</tr>';
+      let datosProducto = detalle[producto];
+      trs += `<tr>
+              <td>${datosProducto.clave}</td>
+              <td>${datosProducto.nombre}</td>
+              <td>${datosProducto.degusPz}</td>
+              <td>${datosProducto.pedidoPz}</td>
+              <td>${datosProducto.totalPz}</td>
+              <td>${datosProducto.totalKg}</td>
+              <td>${datosProducto.precioUnitario}</td>
+              <td>${datosProducto.unidad}</td>
+              <td>${datosProducto.cambioFisico}</td>
+              <td class="text-center"><button class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-pencil" aria-hidden="true"></i></button></td>
+              <td class="text-center"><button class="btn btn-danger btn-sm" onclick="abrirModalEliminarProducto('${producto}')"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></button></td>
+             </tr>`;
     }
 
     $('#tbodyProductos').empty().append(trs);
   });
+}
+
+function abrirModal() {
+  $('#modalAgregarProducto').modal('show');
+  llenarSelectProductos();
+}
+
+function llenarSelectProductos() {
+  let idPedido = getQueryVariable('id');
+  let pedidoEntradaRef = db.ref(`pedidoEntrada/${idPedido}`);
+  pedidoEntradaRef.on('value', function(snapshot) {
+    let consorcio = snapshot.val().encabezado.consorcio;
+
+    let productosRef = db.ref('productos/'+consorcio);
+    productosRef.on('value', function(snapshot) {
+      let productos = snapshot.val();
+      let options = '<option value="Seleccionar" id="SeleccionarProducto">Seleccionar</option>';
+      for(let producto in productos) {
+        options += `<option value="${producto}"> ${producto} ${productos[producto].nombre} ${productos[producto].empaque}</option>`;
+      }
+      $('#listaProductos').html(options);
+    });
+  })
+}
+
+$('#listaProductos').change(function() {
+  let idPedido = getQueryVariable('id');
+  let pedidoEntradaRef = db.ref(`pedidoEntrada/${idPedido}`);
+  pedidoEntradaRef.on('value', function(snapshot) {
+    let consorcio = snapshot.val().encabezado.consorcio;
+    let idProducto = $('#listaProductos').val();
+
+    let productoActualRef = db.ref('productos/'+consorcio+'/'+idProducto);
+    productoActualRef.on('value', function(snapshot) {
+      let producto = snapshot.val();
+      $('#nombre').val(producto.nombre);
+      $('#empaque').val(producto.empaque);
+      $('#precioUnitario').val(producto.precioUnitario);
+      $('#unidad').val(producto.unidad);
+      $('#claveConsorcio').val(producto.claveConsorcio);
+    });
+  });
+
+  if(this.value != null || this.value != undefined) {
+    $('#productos').parent().removeClass('has-error');
+    $('#helpblockProductos').hide();
+  } else {
+    $('#productos').parent().addClass('has-error');
+    $('#helpblockProductos').show();
+  }
+});
+
+$('#pedidoPz').keyup(function(){
+  let pedidoPz = Number($('#pedidoPz').val());
+  let degusPz = Number($('#degusPz').val());
+  let cambioFisico = Number($('#cambioFisico').val());
+  let empaque = Number($('#empaque').val());
+  let totalPz = pedidoPz+degusPz+cambioFisico;
+  let totalKg = (totalPz*empaque).toFixed(4);
+
+  $('#totalPz').val(totalPz);
+  $('#totalKg').val(totalKg);
+
+  if(this.value.length < 1) {
+    $('#pedidoPz').parent().addClass('has-error');
+    $('#helpblockPedidoPz').show();
+  }
+  else {
+    $('#pedidoPz').parent().removeClass('has-error');
+    $('#helpblockPedidoPz').hide();
+  }
+});
+
+$('#degusPz').keyup(function(){
+  let pedidoPz = Number($('#pedidoPz').val());
+  let degusPz = Number($('#degusPz').val());
+  let cambioFisico = Number($('#cambioFisico').val());
+  let empaque = Number($('#empaque').val());
+  let totalPz = pedidoPz+degusPz+cambioFisico;
+  let totalKg = (totalPz*empaque).toFixed(4);
+
+  $('#totalPz').val(totalPz);
+  $('#totalKg').val(totalKg);
+});
+
+$('#cambioFisico').keyup(function(){
+  let pedidoPz = Number($('#pedidoPz').val());
+  let degusPz = Number($('#degusPz').val());
+  let cambioFisico = Number($(this).val());
+  if(cambioFisico == undefined || cambioFisico == null) {
+    cambioFisico = 0;
+  }
+  let empaque = Number($('#empaque').val());
+  let totalPz = pedidoPz+degusPz+cambioFisico;
+  let totalKg = (totalPz*empaque).toFixed(4);
+
+  $('#totalPz').val(totalPz);
+  $('#totalKg').val(totalKg);
+});
+
+function agregarProducto() {
+  let idPedido = getQueryVariable('id');
+  let claveProducto = $('#listaProductos').val();
+  let nombre = $('#nombre').val();
+  let pedidoPz = $('#pedidoPz').val();
+  let degusPz = $('#degusPz').val();
+  let cambioFisico = $('#cambioFisico').val();
+  let unidad = $('#unidad').val();
+  let empaque = $('#empaque').val();
+  let totalKg = $('#totalKg').val();
+  let totalPz = $('#totalPz').val();
+  let precioUnitario = $('#precioUnitario').val();
+  let claveConsorcio = $('#claveConsorcio').val();
+  let pedidoKg = pedidoPz * empaque;
+
+  if(claveProducto != null && claveProducto && undefined && claveProducto != "Seleccionar" && pedidoPz.length > 0) {
+    if(cambioFisico.length < 1) {
+      cambioFisico = 0;
+    }
+    if(degusPz.length < 1) {
+      degusPz = 0;
+    }
+    let cambioFisicoKg = cambioFisico * empaque;
+    let degusKg = degusPz * empaque;
+
+    let datosProducto = {
+      cambioFisico: cambioFisico,
+      cambioFisicoKg: cambioFisicoKg,
+      clave: claveProducto,
+      claveConsorcio: claveConsorcio,
+      degusKg: degusKg,
+      degusPz: degusPz,
+      precioUnitario: precioUnitario,
+      totalKg: totalKg,
+      totalPz: totalPz,
+      unidad: unidad
+    }
+
+    let claves = [];
+
+    let $filas = $('#tbodyProductos').children('tr'); //arreglo de hijos (filas)
+    console.log($filas);
+    $filas.each(function () {
+      let clave = $(this)[0].cells[0].innerHTML;
+      claves.push(clave);
+    });
+
+    if(claves.includes(claveProducto)) {
+      $.toaster({priority: 'warning', title: 'Mensaje de información', message: `El producto ${clave} ya se encuentra en el pedido`});
+    }
+    else {
+      let pedidoEntradaRef = db.ref(`pedidoEntrada/${idPedido}/detalle`);
+      pedidoEntradaRef.push(datosProducto);
+      $.toaster({priority: 'success', title: 'Mensaje de información', message: `Se agregó el producto ${clave} al pedido`});
+
+      $('#listaProductos').val('');
+      $('#nombre').val('');
+      $('#pedidoPz').val('');
+      $('#degusPz').val('');
+      $('#cambioFisico').val('');
+      $('#unidad').val('');
+      $('#empaque').val('');
+      $('#totalKg').val('');
+      $('#totalPz').val('');
+      $('#precioUnitario').val('');
+      $('#claveConsorcio').val('');
+
+      $('#modalAgregarProducto').modal('hide');
+    }
+  }
+  else {
+    if(claveProducto == null || claveProducto == undefined || claveProducto == "Seleccionar") {
+      $('#listaProductos').parent().addClass('has-error');
+      $('#helpblockProductos').show();
+    }
+    else {
+      $('#productos').parent().removeClass('has-error');
+      $('#helpblockProductos').hide();
+    }
+    if(pedidoPz.length < 1) {
+      $('#pedidoPz').parent().addClass('has-error');
+      $('#helpblockPedidoPz').show();
+    }
+    else {
+      $('#pedidoPz').parent().removeClass('has-error');
+      $('#helpblockPedidoPz').hide();
+    }
+  }
+}
+
+function abrirModalEliminarProducto(idProducto) {
+  $('#modalConfirmarEliminarProducto').modal('show');
+  $('#btnConfirmar').attr('onclick', `eliminarProducto("${idProducto}")`);
+}
+
+function eliminarProducto(idProducto) {
+  let idPedido = getQueryVariable('id');
+
+  db.ref(`pedidoEntrada/${idPedido}/detalle`).child(idProducto).remove();
+  $.toaster({priority: 'success', title: 'Mensaje de información', message: `El producto ${idProducto} fue eliminado con exito de este pedido`});
 }
 
 function mostrarNotificaciones() {
