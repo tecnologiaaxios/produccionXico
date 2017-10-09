@@ -622,3 +622,8 @@ display: table-cell;
     transform: rotate(360deg);
   }
 }
+
+/*.table-hover > tbody > tr:hover {
+  background-color: #337AB7;
+  color: white;
+}*/

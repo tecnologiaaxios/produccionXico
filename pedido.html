@@ -230,18 +230,22 @@
                 </div>
                 <div class="col-md-3">
                   <label for="pedidoPzEditar">Pedido Pz:</label>
-                  <input type="text" id="pedidoPzEditar" name="pedidoPzEditar" class="form-control" placeholder="Pedido Pz">
+                  <input type="number" id="pedidoPzEditar" name="pedidoPzEditar" class="form-control" placeholder="Pedido Pz">
                   <span style="display: none;" id="helpblockPedidoPzEditar" class="help-block">Campo obligatorio</span>
                 </div>
                 <div class="col-md-3">
                   <label for="degusPzEditar">Degustación Pz:</label>
-                  <input type="text" id="degusPzEditar" name="degusPzEditar" class="form-control" placeholder="Degustación Pz">
+                  <input type="number" id="degusPzEditar" name="degusPzEditar" class="form-control" placeholder="Degustación Pz">
                   <span style="display: none;" id="helpblockDegusPzEditar" class="help-block">Campo obligatorio</span>
                 </div>
                 <div class="col-md-3">
                   <label for="cambioFisicoEditar">Cambio físico:</label>
-                  <input type="text" id="cambioFisicoEditar" name="cambioFisicoEditar" class="form-control" placeholder="Cambio físico">
+                  <input type="number" id="cambioFisicoEditar" name="cambioFisicoEditar" class="form-control" placeholder="Cambio físico">
                   <span style="display: none;" id="helpblockCambioFisicoEditar" class="help-block">Campo obligatorio</span>
+                </div>
+                <div class="hidden col-md-3">
+                  <label for="empaqueEditar">Empaque:</label>
+                  <input type="text" id="empaqueEditar" name="empaqueEditar" class="form-control">
                 </div>
               </div>
               <div class="form-group row">
@@ -254,8 +258,8 @@
                   <input type="text" id="unidadEditar" name="unidadEditar" class="form-control" placeholder="Unidad">
                 </div>
                 <div class="col-md-3">
-                  <label for="totalPzeditar">Total Pz</label>
-                  <input readonly type="text" id="totalPzeditar" name="totalPzeditar" class="form-control">
+                  <label for="totalPzEditar">Total Pz</label>
+                  <input readonly type="text" id="totalPzEditar" name="totalPzEditar" class="form-control">
                 </div>
                 <div class="col-md-3">
                   <label for="totalKgEditar">Total Kg</label>
@@ -289,15 +293,14 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     <!-- jQuery -->
-    <!--<script src="js/jquery-3.2.1.min.js"></script>-->
-    <!--<script src="js/jquery-3.2.1.js"></script>-->
+    <script src="js/jquery-3.2.1.min.js"></script>
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>window.$ = window.jQuery = require('jquery');</script>-->
     <!-- If the require doesn't work, include first the jQuery file
     <script src="jquery-3.0.0.min.js"></script>-->
     <!--<script>window.$ = window.jQuery = require('/js/jquery-3.2.1.min.js');</script>-->
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>-->
-    <script src="js/jquery-3.2.1.min.js" onload="window.$ = window.jQuery = module.exports;"></script>-->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script> -->
+    <!--<script src="js/jquery-3.2.1.min.js" onload="window.$ = window.jQuery = module.exports;"></script>-->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="dist/js/bootstrap-select.js"></script>
 

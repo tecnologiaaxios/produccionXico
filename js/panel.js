@@ -238,8 +238,8 @@ function mostrarPedidosEnProceso() {
       div2.append(span2);
       td2.append(div2);
       tr.append(td2);
-      tr.append('<td><i style="color:#FFCC25; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>');
-      tr.append('<td><a class="btn btn-info" href="pedidoPadre.html?id='+pedidoPadre+'">Ver más</a></td>');
+      tr.append('<td class="text-center"><i style="color:#FFCC25; font-size:30px; margin:0px 0px; padding:0px 0px; width:25px; height:30px; overflow:hidden;" class="material-icons center">fiber_manual_record</i></td>');
+      tr.append('<td class="text-center"><a class="btn btn-info" href="pedidoPadre.html?id='+pedidoPadre+'">Ver más</a></td>');
 
       $('#pPedidosProceso').remove();
       $('#loaderPedidosEnProceso').remove();

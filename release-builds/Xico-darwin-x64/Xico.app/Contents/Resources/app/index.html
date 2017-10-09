@@ -36,26 +36,29 @@
         <h1 style="color:white;">Bienvenido</h1>
       </div>
       <div id="right-login">
-        <div role="form" style="margin-top:200px;">
-          <div class="center">
-            <h1 style="color: #0E439B;">Inicia sesión</h1>
+        <div class="login-panel panel panel-default" style="margin-top:200px;">
+          <div class="panel-heading">
+            <!--<h3 class="panel-title" style="color: #0E439B;">Por favor inicia sesón</h3>-->
+            <h1 class="panel-title" style="color: #0E439B; font-size: 30px;">Por favor inicia sesión</h1>
           </div>
-          <div class="form-group">
-            <input id="username" class="form-control input-lg input-login" placeholder="Nombre de usuario" type="text" required>
-            <span style="display: none;" id="helpblockUserName" class="help-block">Campo obligatorio</span>
-          </div>
-          <div class="form-group">
-            <input id="contraseña" class="form-control input-lg input-login" placeholder="Contraseña" type="password" required>
-            <span style="display: none;" id="helpblockContraseña" class="help-block">Campo obligatorio</span>
-          </div>
-          <div class="form-group" style="width:100%;">
-            <button style="width:100%;" class="btn btn-primary btn-lg btn-login" id="entrar" onclick="login()" type="button">Entrar</button>
+          <div class="panel-body">
+            <div class="form-group">
+              <input id="username" class="form-control input-lg input-login" placeholder="Nombre de usuario" type="text" required>
+              <span style="display: none;" id="helpblockUserName" class="help-block">Campo obligatorio</span>
+            </div>
+            <div class="form-group">
+              <input id="contraseña" class="form-control input-lg input-login" placeholder="Contraseña" type="password" required>
+              <span style="display: none;" id="helpblockContraseña" class="help-block">Campo obligatorio</span>
+            </div>
+            <div class="form-group" style="width:100%;">
+              <button style="width:100%;" class="btn btn-primary btn-lg btn-login" id="entrar" onclick="login()" type="button">Entrar</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>-->
-    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
+    <!-- <script src="js/jquery-3.2.1.min.js"></script> -->
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>window.$ = window.jQuery = require('jquery');</script>-->
     <!-- If the require doesn't work, include first the jQuery file

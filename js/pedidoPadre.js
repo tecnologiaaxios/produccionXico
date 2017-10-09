@@ -286,9 +286,7 @@ $(document).ready(function() {
   $('[data-toggle="tooltip"]').tooltip();
 });
 
-function generarPDF(/*nombre*/) {
-  //var jsPDF = require('jspdf');
-  //require('jspdf-autotable');
+function generarPDF() {
   let pdf = new jsPDF('p', 'pt');
   console.log("HOla")
 

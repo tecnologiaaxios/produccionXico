@@ -148,8 +148,9 @@
                 <i style="color: #4388E5;" class="form-control-feedback glyphicon glyphicon-search rota-horizontal"></i>
               </div>
             </div>
+            <div id="loaderPedidos" class="loader"></div>
             <div class="table-responsive">
-              <table id="tablaPedidos" class="table table-condensed table-bordered table-striped" style="margin-top:15px;">
+              <table id="tablaPedidos" class="hidden table table-condensed table-bordered table-striped" style="margin-top:15px;">
                 <thead>
                   <tr>
                     <th>Clave</th>
@@ -158,6 +159,7 @@
                     <th>Ruta</th>
                     <th>Detalles</th>
                     <th>Estado</th>
+                    <th>Eliminar</th>
                   </tr>
                 </thead>
                 <tbody id="tbodyTablaPedidos">
@@ -243,8 +245,10 @@
             </div>
           </div><!-- /.col-lg-12 -->
           <div id="pedidosEnProceso" class="col-lg-12">
+            <div id="loaderPedidosEnProceso" class="loader"></div>
             <div class="table-responsive">
-              <table id="tablaPedidosEnProceso" class="table table-condensed table-striped table-bordered" style="margin-top:15px;">
+              <h4 class="text-center" id="pPedidosProceso"></h4>
+              <table id="tablaPedidosEnProceso" class="hidden table table-condensed table-striped table-bordered" style="margin-top:15px;">
                 <thead>
                   <th>Clave</th>
                   <th>Fecha de captura</th>
@@ -278,12 +282,29 @@
               </table>
             </div><!--/.table-responsive-->
           </div>
+          <div id="modalConfirmarEliminarPedido" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title">Confirmar eliminación</h4>
+                </div>
+                <div class="modal-body">
+                  <p>¿Realmente desea eliminar este pedido?</p>
+                </div>
+                <div class="modal-footer">
+                  <button id="btnCancelar" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                  <button id="btnConfirmar" type="button" class="btn btn-primary" data-dismiss="modal">Confirmar</button>
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div><!-- /.modal -->
         </div><!-- /.row -->
       </div><!-- /#page-wrapper -->
     </div><!-- /#wrapper -->
     <!-- jQuery -->
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>-->
-    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
+    <!-- <script src="js/jquery-3.2.1.min.js"></script> -->
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>window.$ = window.jQuery = require('jquery');</script>-->
     <!-- If the require doesn't work, include first the jQuery file
@@ -307,6 +328,7 @@
     <script type="text/javascript" src="js/bootstrap-datepicker.min.js"></script>
     <script type="text/javascript" src="js/bootstrap-datepicker.es.min.js"></script>
     <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/jquery.toaster.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
     <!--<script src="js/jspdf.debug.js"></script>-->
     <script>

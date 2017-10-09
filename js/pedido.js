@@ -58,7 +58,7 @@ function mostrarDatos() {
               <td>${datosProducto.precioUnitario}</td>
               <td>${datosProducto.unidad}</td>
               <td>${datosProducto.cambioFisico}</td>
-              <td class="text-center"><button class="btn btn-warning btn-sm" onclick="abrirModalEditarProducto('${producto}')"><i class="glyphicon glyphicon-pencil" aria-hidden="true"></i></button></td>
+              <td class="text-center"><button class="btn btn-warning btn-sm" onclick="abrirModalEditarProducto('${producto}', '${datosProducto.clave}')"><i class="glyphicon glyphicon-pencil" aria-hidden="true"></i></button></td>
               <td class="text-center"><button class="btn btn-danger btn-sm" onclick="abrirModalEliminarProducto('${producto}')"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></button></td>
              </tr>`;
     }
@@ -255,26 +255,92 @@ function agregarProducto() {
   }
 }
 
-function abrirModalEditarProducto(idProducto) {
+function abrirModalEditarProducto(idProducto, claveProducto) {
   let idPedido = getQueryVariable('id');
-  let productoRef = db.ref(`pedidoEntrada/${idPedido}/detalle/${idProducto}`);
-  productoRef.on('value', function(snapshot) {
-    let producto = snapshot.val();
+  let pedidoRef = db.ref(`pedidoEntrada/${idPedido}`);
+  pedidoRef.once('value', function(snapshot) {
+    let consorcio = snapshot.val().encabezado.consorcio;
 
-    $('#nombreEditar').val(producto.nombre);
-    $('#pedidoPzEditar').val(producto.pedidoPz);
-    $('#degusPzEditar').val(producto.degusPz);
-    $('#cambioFisicoEditar').val(producto.cambioFisico);
-    $('#unidadEditar').val(producto.unidad);
-    $('#empaqueEditar').val(producto.empaque);
-    $('#totalKgEditar').val(producto.totalKg);
-    $('#totalPzEditar').val(producto.totalPz);
-    $('#precioUnitarioEditar').val(producto.precioUnitario);
-    $('#claveConsorcioEditar').val(producto.claveConsorcio);
+    let empaqueRef = db.ref(`productos/${consorcio}/${claveProducto}`);
+    empaqueRef.once('value', function(snapshot) {
+      let empaque = snapshot.val().empaque;
+      //console.log(empaque);
+
+      let productoRef = db.ref(`pedidoEntrada/${idPedido}/detalle/${idProducto}`);
+      productoRef.once('value', function(snapshot) {
+        let producto = snapshot.val();
+
+
+
+        $('#nombreEditar').val(producto.nombre);
+        $('#pedidoPzEditar').val(producto.pedidoPz);
+        $('#degusPzEditar').val(producto.degusPz);
+        $('#cambioFisicoEditar').val(producto.cambioFisico);
+        $('#unidadEditar').val(producto.unidad);
+        $('#empaqueEditar').val(empaque);
+        $('#totalKgEditar').val(producto.totalKg);
+        $('#totalPzEditar').val(producto.totalPz);
+        $('#precioUnitarioEditar').val(producto.precioUnitario);
+        $('#claveConsorcioEditar').val(producto.claveConsorcio);
+      });
+
+      $('#modalEditarProducto').modal('show');
+    })
   });
-
-  $('#modalEditarProducto').modal('show');
 }
+
+$('#pedidoPzEditar').keyup(function(){
+  let pedidoPz = Number($('#pedidoPzEditar').val());
+  let degusPz = Number($('#degusPzEditar').val());
+  let cambioFisico = Number($('#cambioFisicoEditar').val());
+  let empaque = Number($('#empaqueEditar').val());
+
+  console.log(empaque)
+
+  let totalPz = pedidoPz+degusPz+cambioFisico;
+  let totalKg = (totalPz*empaque).toFixed(4);
+
+  console.log(totalKg)
+
+  $('#totalPzEditar').val(totalPz);
+  $('#totalKgEditar').val(totalKg);
+
+  if(this.value.length < 1) {
+    $('#pedidoPzEditar').parent().addClass('has-error');
+    $('#helpblockPedidoPzEditar').show();
+  }
+  else {
+    $('#pedidoPzEditar').parent().removeClass('has-error');
+    $('#helpblockPedidoPzEditar').hide();
+  }
+});
+
+$('#degusPzEditar').keyup(function(){
+  let pedidoPz = Number($('#pedidoPzEditar').val());
+  let degusPz = Number($('#degusPzEditar').val());
+  let cambioFisico = Number($('#cambioFisicoEditar').val());
+  let empaque = Number($('#empaqueEditar').val());
+  let totalPz = pedidoPz+degusPz+cambioFisico;
+  let totalKg = (totalPz*empaque).toFixed(4);
+
+  $('#totalPzEditar').val(totalPz);
+  $('#totalKgEditar').val(totalKg);
+});
+
+$('#cambioFisicoEditar').keyup(function(){
+  let pedidoPz = Number($('#pedidoPzEditar').val());
+  let degusPz = Number($('#degusPzEditar').val());
+  let cambioFisico = Number($(this).val());
+  if(cambioFisico == undefined || cambioFisico == null) {
+    cambioFisico = 0;
+  }
+  let empaque = Number($('#empaqueEditar').val());
+  let totalPz = pedidoPz+degusPz+cambioFisico;
+  let totalKg = (totalPz*empaque).toFixed(4);
+
+  $('#totalPzEditar').val(totalPz);
+  $('#totalKgEditar').val(totalKg);
+});
 
 function editarProducto(idProducto) {
   let idPedido = getQueryVariable('id');
