@@ -1,7 +1,6 @@
 const db = firebase.database();
 const auth = firebase.auth();
 
-
 function logout() {
   auth.signOut();
 }
@@ -72,7 +71,7 @@ function obtenerFormulaBase() {
                       <td>${subProducto}</td>
                       <td>${subProductos[subProducto].nombre}</td>
                       <td>${subProductos[subProducto].valorConstante}</td>
-                      <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
+                      <td><input value="${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}" class="form-control"></td>
                     </tr>`;
         }
         else {
@@ -80,7 +79,7 @@ function obtenerFormulaBase() {
                       <td>${subProducto}</td>
                       <td>${subProductos[subProducto].nombre}</td>
                       <td>${subProductos[subProducto].valorConstante}</td>
-                      <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
+                      <td><input value="${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}" class="form-control"></td>
                     </tr>`;
         }
         i++;
@@ -132,199 +131,31 @@ function guardarBatida(){
   let rutaBatidas = db.ref('batidas');
 
   let batida = {
-    numBatidas: numBatidas,
+    batidas: numBatidas,
     claveBatida: clave,
     fechaCaptura: fechaCaptura,
     claveProducto: claveProducto,
-    nombreProducto: nombreProducto,
-    estado: "En proceso"
+    nombreProducto: nombreProducto
   };
 
   let keyBatida = rutaBatidas.push(batida).getKey();
 
+  console.log(listaClaves);
+  console.log(listaSubProductos);
   for (let i in listaSubProductos) {
     let rutaBatida = db.ref(`batidas/${keyBatida}/subProductos/${listaClaves[i]}`);
     rutaBatida.set(listaSubProductos[i]);
   }
-
-  $('#producto').val('');
-  $('#nombreProducto').val('');
-  $('#numBatidas').val('');
-  $('#tabla-subProductos tbody').html('');
-  obtenerClaveBatida();
 }
 
-function mostrarBatidas() {
-  let tabla = $(`#tabla-batidasRegistradas`).DataTable({
-    destroy: true,
-    "lengthChange": false,
-    "scrollY": "300px",
-    "scrollCollapse": true,
-    "language": {
-      "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
-    },
-    "searching": false,
-    "paging": false,
-    "bInfo" : false
-  });
-  let rutaBatidas = db.ref('batidas');
-  rutaBatidas.orderByChild("estado") .equalTo("En proceso").on('value', function(snap) {
-    let batidas = snap.val();
-    let filas = "";
-    tabla.clear();
-
-    for(let batida in batidas) {
-      filas += `<tr>
-                  <td>${batidas[batida].claveBatida}</td>
-                  <td>${batidas[batida].claveProducto}</td>
-                  <td>${batidas[batida].nombreProducto}</td>
-                  <td>${batidas[batida].numBatidas}</td>
-                  <td>${batidas[batida].fechaCaptura}</td>
-                  <td class="text-center"><button onclick="abrirModalEditar('${batida}')" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></td>
-                  <td class="text-center"><button onclick="abrirModalFinalizar('${batida}')" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button></td>
-                </tr>`;
-    }
-    // $('#loader1').remove();
-    // $('#tabla-batidasRegistradas tbody').html(filas)
-    // $('#tabla-batidasRegistradas').removeClass('hidden');
-    tabla.rows.add($(filas)).columns.adjust().draw();
-  });
-}
-
-function abrirModalEditar(idBatida){
-  $('#modalEditar').modal('show');
-  mostrarSubProductos(idBatida);
-  $('#btnGuardarCambios').attr('onclick', `guardarCambiosBatida('${idBatida}')`);
-}
-
-function mostrarSubProductos(idBatida) {
-  /*let tabla = $(`#tablaModalEditar`).DataTable({
-    destroy: true,
-    "lengthChange": false,
-    "scrollY": "300px",
-    "scrollCollapse": true,
-    "language": {
-      "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
-    },
-    "searching": false,
-    "paging": false,
-    "bInfo" : false
-  });*/
-  let rutaSubProductos = db.ref(`batidas/${idBatida}/subProductos`);
-  rutaSubProductos.on('value', function(snap){
-    let subProductos = snap.val();
-    let filas = "";
-    //tabla.clear();
-
-    for(let subProducto in subProductos) {
-      filas += `<tr>
-                  <td>${subProducto}</td>
-                  <td>${subProductos[subProducto].nombre}</td>
-                  <td><input class="form-control" value="${subProductos[subProducto].valorConstante}"></td>
-                </tr>`;
-    }
-
-    $('#tablaModalEditar tbody').html(filas);
-    //tabla.rows.add($(filas)).columns.adjust().draw();
-  });
-}
-
-function guardarCambiosBatida(idBatida){
-  let listaValoresConstantes = [], listaClaves = [];
-  let claveSubProducto, valorConstante;
-
-  $("#tablaModalEditar tbody tr").each(function (i)
-  {
-    $(this).children("td").each(function (j)
-    {
-      if(j==0) {
-        claveSubProducto = $(this).text();
-      }
-      if(j==2) {
-        valorConstante = $(this).children().val()
-      }
-    });
-
-    listaClaves.push(claveSubProducto);
-    listaValoresConstantes.push(valorConstante);
-  });
-
-  for(let i in listaClaves){
-    let ruta = db.ref(`batidas/${idBatida}/subProductos/${listaClaves[i]}`);
-    ruta.update({
-      valorConstante: listaValoresConstantes[i]
-    });
-  }
-  $.toaster({priority: 'info', title: 'Info:', message: `Se actualizó la batida correctamente`});
-  $('#modalEditar').modal('hide');
-
-}
-
-function finalizarBatida(idBatida) {
-  //let rutaBatidas = db.ref('batidas');
-  let rutaBatida = db.ref(`batidas/${idBatida}`);
-
-  /*rutaBatida.once('value', function (snapshot) {
-    let batida = snapshot.val();
-    let rutaBatidaFinalizada = db.ref(`batidasFinalizadas/${idBatida}`);
-    rutaBatidaFinalizada.set(batida);
-    rutaBatidas.child(idBatida).remove();
-  });*/
-
-  rutaBatida.update({
-    estado: "Finalizada"
-  });
-
-  $('#modalFinalizar').modal('hide');
-}
-
-function abrirModalFinalizar(idBatida) {
-  $('#modalFinalizar').modal('show');
-  $('#btnFinalizar').attr('onclick', `finalizarBatida('${idBatida}')`);
-}
-
-function mostrarBatidasFinalizadas() {
-  let tabla = $(`#tabla-batidasFinalizadas`).DataTable({
-    destroy: true,
-    "lengthChange": false,
-    "scrollY": "300px",
-    "scrollCollapse": true,
-    "language": {
-      "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
-    },
-    "searching": false,
-    "paging": false,
-    "bInfo" : false
-  });
-  // let rutaBatidasFinalizadas = db.ref('batidasFinalizadas');
-  let rutaBatidas = db.ref('batidas');
-  rutaBatidas.orderByChild("estado").equalTo("Finalizada").on('value', function (snapshot) {
-    let batidasFinalizadas = snapshot.val();
-    let filas = "";
-    tabla.clear();
-    for(let batida in batidasFinalizadas) {
-      filas += `<tr>
-                  <td>${batidasFinalizadas[batida].claveBatida}</td>
-                  <td>${batidasFinalizadas[batida].claveProducto}</td>
-                  <td>${batidasFinalizadas[batida].nombreProducto}</td>
-                  <td>${batidasFinalizadas[batida].numBatidas}</td>
-                  <td>${batidasFinalizadas[batida].fechaCaptura}</td>
-                </tr>`;
-    }
-
-    // $('#loader2').remove();
-    // $('#tabla-batidasFinalizadas tbody').html(filas);
-    // $('#tabla-batidasFinalizadas').removeClass('hidden');
-    tabla.rows.add($(filas)).columns.adjust().draw();
-  })
-
-}
 
 function haySesion() {
   auth.onAuthStateChanged(function (user) {
     //si hay un usuario
     if (user) {
       mostrarContador();
+
+
     }
     else {
       $(location).attr("href", "index.html");

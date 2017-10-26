@@ -40,11 +40,10 @@ $('#contraseña').keypress(function (e) {
 function login() {
   let username = $('#username').val();
   let contraseña = $('#contraseña').val();
-  console.log(username);
 
   if(username.length > 0 && contraseña.length > 0) {
 
-    let usuarios = db.ref('usuarios/planta/almacen/');
+    let usuarios = db.ref('usuarios/planta/produccion/');
     usuarios.orderByChild("username").equalTo(username).on("child_added", function(snapshot) {
       let email = snapshot.val().email;
 
