@@ -22,32 +22,40 @@ function obtenerClaveBatida(){
     else{
       $('#clave').val(1);
     }
-
-  })
+  });
 }
 
-$('#producto').keypress(function(e){
+$('#producto').keypress(function(e) {
+  let claveProducto = $(this).val();
+
   if (e.which == 13) {
-    let claveProducto = $(this).val();
-    let rutaFormulaciones = db.ref(`formulaciones/${claveProducto}`);
-    rutaFormulaciones.once('value', function(snapshot){
-      if (snapshot.hasChildren()) {
-        $('#nombreProducto').val(snapshot.val().nombre);
-        $('#numBatidas').attr('readonly', false);
-        $('#btnGenerarFormula').attr('disabled', false);
-      }else{
-        $.toaster({priority: 'danger', title: 'Error', message: `El producto con la clave ${claveProducto} no existe`});
-        $('#nombreProducto').val("");
-      }
-    })
+    if(claveProducto.length > 0) {
+      let rutaFormulaciones = db.ref(`formulaciones/${claveProducto}`);
+      rutaFormulaciones.once('value', function(snapshot){
+        if (snapshot.hasChildren()) {
+          $('#nombreProducto').val(snapshot.val().nombre);
+          $('#numBatidas').attr('readonly', false);
+          $('#btnGenerarFormula').attr('disabled', false);
+        }else{
+          $.toaster({priority: 'danger', title: 'Error', message: `El producto con la clave ${claveProducto} no existe`});
+          $('#nombreProducto').val("");
+        }
+      });
+      $(this).parent().removeClass('has-error');
+      $('#helpBlockProducto').addClass('hidden');
+    }
+    else {
+      $(this).parent().addClass('has-error');
+      $('#helpBlockProducto').removeClass('hidden');
+    }
   }
-})
+});
 
 function obtenerFormulaBase() {
   let tabla = $(`#tabla-subProductos`).DataTable({
     destroy: true,
     "lengthChange": false,
-    "scrollY": "300px",
+    "scrollY": "200px",
     "scrollCollapse": true,
     "language": {
       "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
@@ -69,28 +77,29 @@ function obtenerFormulaBase() {
       for (let subProducto in subProductos) {
         if(i%2 == 0) {
           filas += `<tr class="info">
-                      <td>${subProducto}</td>
-                      <td>${subProductos[subProducto].nombre}</td>
-                      <td>${subProductos[subProducto].valorConstante}</td>
-                      <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
-                    </tr>`;
+          <td>${subProducto}</td>
+          <td>${subProductos[subProducto].nombre}</td>
+          <td>${subProductos[subProducto].valorConstante}</td>
+          <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
+          </tr>`;
         }
         else {
           filas += `<tr>
-                      <td>${subProducto}</td>
-                      <td>${subProductos[subProducto].nombre}</td>
-                      <td>${subProductos[subProducto].valorConstante}</td>
-                      <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
-                    </tr>`;
+          <td>${subProducto}</td>
+          <td>${subProductos[subProducto].nombre}</td>
+          <td>${subProductos[subProducto].valorConstante}</td>
+          <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
+          </tr>`;
         }
         i++;
       }
       //$('#tabla-subProductos tbody').html(filas);
       tabla.rows.add($(filas)).columns.adjust().draw();
+      $('#btnGuardarBatida').attr('disabled', false);
     }else{
       $.toaster({priority: 'danger', title: 'Error', message: `El producto con la clave ${claveProducto} no existe`});
     }
-  })
+  });
 }
 
 function guardarBatida(){
@@ -158,7 +167,7 @@ function mostrarBatidas() {
   let tabla = $(`#tabla-batidasRegistradas`).DataTable({
     destroy: true,
     "lengthChange": false,
-    "scrollY": "300px",
+    "scrollY": "500px",
     "scrollCollapse": true,
     "language": {
       "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
@@ -287,14 +296,14 @@ function mostrarBatidasFinalizadas() {
   let tabla = $(`#tabla-batidasFinalizadas`).DataTable({
     destroy: true,
     "lengthChange": false,
-    "scrollY": "300px",
+    "scrollY": "500px",
     "scrollCollapse": true,
     "language": {
       "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
     },
-    "searching": false,
-    "paging": false,
-    "bInfo" : false
+    //"searching": false,
+    //"paging": false,
+    //"bInfo" : false
   });
   // let rutaBatidasFinalizadas = db.ref('batidasFinalizadas');
   let rutaBatidas = db.ref('batidas');
@@ -396,6 +405,7 @@ $('#campana').click(function() {
 $(document).ready(function() {
   $('[data-toggle="tooltip"]').tooltip();
   obtenerClaveBatida();
+  $('#fechaCaptura').val(moment().format('YYYY-MM-DD'));
 
   $.toaster({
     settings: {

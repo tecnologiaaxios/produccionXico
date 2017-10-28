@@ -114,7 +114,7 @@
               </div>
               <div class="row">
                 <div class="col-lg-6 col-md-6 col-lg-offset-1">
-                  <div class="panel panel-default">
+                  <div class="panel panel-primary">
                     <div class="panel-heading">
                       Formulario de registro
                     </div>
@@ -123,33 +123,56 @@
                         <div class="row">
                           <div class="col-md-3">
                             <div class="form-group">
-                              <label for="clave">Clave:</label>
+                              <label for="clave">Clave batida:</label>
                               <input type="number" class="form-control text-right" name="clave" id="clave" placeholder="" readonly>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="form-group">
+                              <label for="producto">Clave producto:</label>
+                              <input type="text" name="producto" id="producto" class="form-control" placeholder="">
+                              <span id="helpBlockProducto" class="hidden help-block">Ingresa una clave</span>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="nombreProducto">Nombre del producto:</label>
+                              <input type="text" name="nombreProducto" id="nombreProducto" class="form-control" placeholder="" readonly>
                             </div>
                           </div>
                         </div>
                         <div class="row">
                           <div class="col-md-3">
                             <div class="form-group">
-                              <label for="producto">Producto:</label>
-                              <input type="text" name="producto" id="producto" class="form-control" placeholder="">
+                              <label for="fechaCaptura">Fecha:</label>
+                              <input type="date" class="form-control" name="fechaCaptura" id="fechaCaptura" readonly>
                             </div>
                           </div>
-                          <div class="col-md-6">
+                          <div class="col-md-3">
                             <div class="form-group">
-                              <label for="nombreProducto">Nombre:</label>
-                              <input type="text" name="nombreProducto" id="nombreProducto" class="form-control" placeholder="" readonly>
+                              <label for="kilos">Kilos:</label>
+                              <input type="number" class="form-control" name="kilos" id="kilos" readonly>
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="form-group">
+                              <label for="piezas">Piezas:</label>
+                              <input type="number" class="form-control" name="piezas" id="piezas" readonly>
                             </div>
                           </div>
                         </div>
+
                         <div class="row">
                           <div class="col-md-5">
                             <div class="form-inline">
                               <label for="numBatidas">Batidas:</label>
-                              <input type="number" name="numBatidas" id="numBatidas" class="form-control" readonly required>
+                              <input type="number" name="numBatidas" id="numBatidas" min="1" class="form-control" readonly required>
                               <button id="btnGenerarFormula" title="Generar fórmula" onclick="obtenerFormulaBase()" data-toggle="tooltip" data-placement="bottom" type="button" class="btn btn-primary" disabled="disabled"><i class="fa fa-flask" aria-hidden="true"></i></button>
                             </div>
                           </div>
+                        </div>
+                        <div class="row">
+
                         </div>
                       </form><br>
                       <table class="table table-bordered table-condensed table-hover table-striped" id="tabla-subProductos">
@@ -165,7 +188,7 @@
 
                         </tbody>
                       </table><br>
-                      <button type="button" onclick="guardarBatida()" class="btn btn-success pull-right" id="btnGuardarBatida" name="btnGuardarBatida">Guardar batida <!--<i class="fa fa-floppy-o" aria-hidden="true"></i>--></button>
+                      <button disabled="disabled" type="button" onclick="guardarBatida()" class="btn btn-success pull-right" id="btnGuardarBatida" name="btnGuardarBatida">Guardar batida <!--<i class="fa fa-floppy-o" aria-hidden="true"></i>--></button>
                     </div>
                   </div>
                 </div>
