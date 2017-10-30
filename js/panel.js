@@ -29,12 +29,21 @@ $('#producto').keyup(function() {
   $(this).val($(this).val().toUpperCase());
 });
 
-$('#cbAgregarSustitutos').change(function() {
+/*$('#cbAgregarSustitutos').change(function() {
   if($(this).prop('checked')) {
     $('#collapseSustitutos').collapse('show')
     mostrarSustitutos();
   }else {
     $('#collapseSustitutos').collapse('hide')
+  }
+});*/
+
+$('#cbAgregarSustitutos').on('switchChange.bootstrapSwitch', function(event, state) {
+  if(state) {
+    $('#collapseSustitutos').collapse('show');
+
+  }else {
+    $('#collapseSustitutos').collapse('hide');
   }
 });
 
@@ -62,6 +71,11 @@ $('#producto').keypress(function(e) {
       $('#helpBlockProducto').removeClass('hidden');
     }
   }
+});
+
+$('#btnGenerarFormula').click(function() {
+  obtenerFormulaBase();
+  mostrarSustitutos();
 });
 
 function obtenerFormulaBase() {
@@ -94,8 +108,9 @@ function obtenerFormulaBase() {
                       <td>${subProductos[subProducto].nombre}</td>
                       <td>${subProductos[subProducto].valorConstante}</td>
                       <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
-                      <td class="text-center"><button onclick="quitarSubProducto('fila-${subProducto}')" type="button" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button></td>
                     </tr>`;
+                      //<td class="text-center"><button onclick="quitarSubProducto('fila-${subProducto}')" type="button" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button></td>
+
         }
         else {
           filas += `<tr id="fila-${subProducto}" >
@@ -103,8 +118,8 @@ function obtenerFormulaBase() {
                       <td>${subProductos[subProducto].nombre}</td>
                       <td>${subProductos[subProducto].valorConstante}</td>
                       <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
-                      <td class="text-center"><button onclick="quitarSubProducto('fila-${subProducto}')" type="button" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button></td>
                     </tr>`;
+                      //<td class="text-center"><button onclick="quitarSubProducto('fila-${subProducto}')" type="button" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button></td>
         }
         i++;
       }
@@ -116,48 +131,66 @@ function obtenerFormulaBase() {
   });
 
   $('#btnGuardarBatida').attr('disabled', false);
-  $('#cbAgregarSustitutos').bootstrapToggle('enable')
+  //$('#cbAgregarSustitutos').bootstrapToggle('enable')
+  $('input[name="cbAgregarSustitutos"]').bootstrapSwitch('toggleReadonly', true, false);
 }
 
 function mostrarSustitutos() {
+  // let tabla = $(`#tabla-sustitutos`).DataTable({
+  //   destroy: true,
+  //   "lengthChange": false,
+  //   "scrollY": "200px",
+  //   "scrollCollapse": true,
+  //   "language": {
+  //     "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
+  //   },
+  //   "searching": false,
+  //   "paging": false,
+  //   "bInfo" : false
+  // });
+
   let claveProducto = $('#producto').val();
   let numBatidas = $('#numBatidas').val();
   let rutaFormulaciones = db.ref(`formulaciones/${claveProducto}/subProductos`);
   rutaFormulaciones.on('value', function(snapshot) {
     let subProductos = snapshot.val();
+    //tabla.clear();
     let filas = "";
     let i = 0;
 
     for(let subProducto in subProductos) {
-      if(subProductos[subProducto].sustituto != undefined) {
-        console.log('Si tiene sustituto');
-        console.log(subProductos[subProducto].sustituto);
+      if(subProductos[subProducto].sustitutos != undefined) {
+        let sustitutos = subProductos[subProducto].sustitutos;
 
-
-        if(i%2 == 0) {
-          filas += `<tr id="fila-${subProducto}" class="info">
-                      <td>${subProducto}</td>
-                      <td>${subProductos[subProducto].nombre}</td>
-                      <td>${subProductos[subProducto].valorConstante}</td>
-                      <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
-                      <td class="text-center"><button onclick="quitarSubProducto('fila-${subProducto}')" type="button" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button></td>
-                    </tr>`;
+        for(let sustituto in sustitutos) {
+          if(i%2 == 0) {
+            filas += `<tr id="fila-${subProducto}" class="info" data-claveSubProducto="${subProducto}">
+                        <td>${sustituto}</td>
+                        <td>${sustitutos[sustituto].nombre}</td>
+                        <td>${sustitutos[sustituto].valorConstante}</td>
+                        <td>${(sustitutos[sustituto].valorConstante*numBatidas).toFixed(4)}</td>
+                        <td class="text-center"><input id="cb-${sustituto}" class="toggle-checkbox" type="checkbox" data-size="mini" data-on-color="success" data-off-color="danger" data-on-text="Sí" data-off-text="No"/></td>
+                      </tr>`;
+          }
+          else {
+            filas += `<tr id="fila-${subProducto}" data-claveSubProducto="${subProducto}">
+                        <td>${sustituto}</td>
+                        <td>${sustitutos[sustituto].nombre}</td>
+                        <td>${sustitutos[sustituto].valorConstante}</td>
+                        <td>${(sustitutos[sustituto].valorConstante*numBatidas).toFixed(4)}</td>
+                        <td class="text-center"><input id="cb-${sustituto}" class="toggle-checkbox" type="checkbox" data-size="mini" data-on-color="success" data-off-color="danger" data-on-text="Sí" data-off-text="No"/></td>
+                      </tr>`;
+          }
+          i++;
         }
-        else {
-          filas += `<tr id="fila-${subProducto}" >
-                      <td>${subProducto}</td>
-                      <td>${subProductos[subProducto].nombre}</td>
-                      <td>${subProductos[subProducto].valorConstante}</td>
-                      <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
-                      <td class="text-center"><button onclick="quitarSubProducto('fila-${subProducto}')" type="button" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button></td>
-                    </tr>`;
-        }
-        i++;
       }
       else {
         console.log('No tiene sustituto');
       }
     }
+    $('#tabla-sustitutos tbody').html(filas)
+    //tabla.rows.add($(filas)).columns.adjust().draw();
+    $('.toggle-checkbox').bootstrapSwitch();
   });
 }
 
@@ -165,66 +198,169 @@ function quitarSubProducto(idFila){
   $(`#${idFila}`).remove();
 }
 
-function guardarBatida(){
-  let numBatidas = $('#numBatidas').val();
-  let clave = $('#clave').val();
-  let fechaCaptura = moment().format('DD/MM/YYYY');
-  let claveProducto = $('#producto').val();
-  let nombreProducto = $('#nombreProducto').val();
+function guardarBatida() {
+  let seUsaronSustitutos = $('#cbAgregarSustitutos').bootstrapSwitch('state');
+  if(seUsaronSustitutos) {
+    let numBatidas = $('#numBatidas').val();
+    let clave = $('#clave').val();
+    let fechaCaptura = moment().format('DD/MM/YYYY');
+    let claveProducto = $('#producto').val();
+    let nombreProducto = $('#nombreProducto').val();
 
-  let listaSubProductos = [], listaClaves = [];
-  let claveSubProducto, nombreSubProducto, valorConstante;
+    let listaSubProductos = [], listaClaves = [];
+    let claveSubProducto, nombreSubProducto, valorConstante;
+    let claveBorrar, claveSustituto, nombreSustituto, valorConstanteSustituto, checkbox;
 
-  $("#tabla-subProductos tbody tr").each(function (i)
-  {
-    $(this).children("td").each(function (j)
-    {
-      switch (j) {
-        case 0:
-          claveSubProducto = $(this).text();
-          break;
-        case 1:
-          nombreSubProducto = $(this).text();
-          break;
-        case 3:
-          valorConstante = $(this).text();
-          break;
-      }
+    $("#tabla-subProductos tbody tr").each(function (i) {
+      $(this).children("td").each(function (j) {
+        switch (j) {
+          case 0:
+            claveSubProducto = $(this).text();
+            break;
+          case 1:
+            nombreSubProducto = $(this).text();
+            break;
+          case 3:
+            valorConstante = $(this).text();
+            break;
+        }
+      });
+
+      let datos = {
+        nombre: nombreSubProducto,
+        valorConstante: valorConstante
+      };
+
+      listaSubProductos.push(datos);
+      listaClaves.push(claveSubProducto);
     });
 
-    let datos = {
-      nombre: nombreSubProducto,
-      valorConstante: valorConstante
+    $('#tabla-sustitutos tbody tr').each(function (i) {
+      claveBorrar = $(this).attr('data-claveSubProducto');
+      $(this).children("td").each(function (j) {
+        switch (j) {
+          case 0:
+            claveSustituto = $(this).text();
+            break;
+          case 1:
+            nombreSustituto = $(this).text();
+            break;
+          case 3:
+            valorConstanteSustituto = $(this).text();
+            break;
+          case 4:
+            checkbox = $(`cb-${claveSustituto}`).bootstrapSwitch('state');
+            break;
+        }
+      });
+
+      if(checkbox) {
+        let posicion = listaClaves.indexOf(claveBorrar);
+        listaSubProductos.splice(posicion, 1);
+        let datosSustituto = {
+          nombre: nombreSustituto,
+          valorConstante: valorConstanteSustituto
+        };
+
+        listaSubProductos.push(datosSustituto);
+        listaClaves.push(claveSustituto);
+      }
+
+      let datos = {
+        nombre: nombreSubProducto,
+        valorConstante: valorConstante
+      };
+
+      listaSubProductos.push(datos);
+      listaClaves.push(claveSubProducto);
+    });
+
+    let rutaBatidas = db.ref('batidas');
+
+    let batida = {
+      numBatidas: numBatidas,
+      claveBatida: clave,
+      fechaCaptura: fechaCaptura,
+      claveProducto: claveProducto,
+      nombreProducto: nombreProducto,
+      estado: "En proceso"
     };
 
-    listaSubProductos.push(datos);
-    listaClaves.push(claveSubProducto);
-  });
+    let keyBatida = rutaBatidas.push(batida).getKey();
 
-  let rutaBatidas = db.ref('batidas');
+    for (let i in listaSubProductos) {
+      let rutaBatida = db.ref(`batidas/${keyBatida}/subProductos/${listaClaves[i]}`);
+      rutaBatida.set(listaSubProductos[i]);
+    }
 
-  let batida = {
-    numBatidas: numBatidas,
-    claveBatida: clave,
-    fechaCaptura: fechaCaptura,
-    claveProducto: claveProducto,
-    nombreProducto: nombreProducto,
-    estado: "En proceso"
-  };
+    $('#producto').val('');
+    $('#nombreProducto').val('');
+    $('#numBatidas').val('');
+    $('#tabla-subProductos tbody').html('');
+    $('#btnGuardarBatida').attr('disabled', true);
+    obtenerClaveBatida();
+  }
+  else {
+    let numBatidas = $('#numBatidas').val();
+    let clave = $('#clave').val();
+    let fechaCaptura = moment().format('DD/MM/YYYY');
+    let claveProducto = $('#producto').val();
+    let nombreProducto = $('#nombreProducto').val();
 
-  let keyBatida = rutaBatidas.push(batida).getKey();
+    let listaSubProductos = [], listaClaves = [];
+    let claveSubProducto, nombreSubProducto, valorConstante;
 
-  for (let i in listaSubProductos) {
-    let rutaBatida = db.ref(`batidas/${keyBatida}/subProductos/${listaClaves[i]}`);
-    rutaBatida.set(listaSubProductos[i]);
+    $("#tabla-subProductos tbody tr").each(function (i) {
+      $(this).children("td").each(function (j) {
+        switch (j) {
+          case 0:
+            claveSubProducto = $(this).text();
+            break;
+          case 1:
+            nombreSubProducto = $(this).text();
+            break;
+          case 3:
+            valorConstante = $(this).text();
+            break;
+        }
+      });
+
+      let datos = {
+        nombre: nombreSubProducto,
+        valorConstante: valorConstante
+      };
+
+      listaSubProductos.push(datos);
+      listaClaves.push(claveSubProducto);
+    });
+
+    let rutaBatidas = db.ref('batidas');
+
+    let batida = {
+      numBatidas: numBatidas,
+      claveBatida: clave,
+      fechaCaptura: fechaCaptura,
+      claveProducto: claveProducto,
+      nombreProducto: nombreProducto,
+      estado: "En proceso"
+    };
+
+    let keyBatida = rutaBatidas.push(batida).getKey();
+
+    for (let i in listaSubProductos) {
+      let rutaBatida = db.ref(`batidas/${keyBatida}/subProductos/${listaClaves[i]}`);
+      rutaBatida.set(listaSubProductos[i]);
+    }
+
+    $('#producto').val('');
+    $('#nombreProducto').val('');
+    $('#numBatidas').val('');
+    $('#tabla-subProductos tbody').html('');
+    $('#btnGuardarBatida').attr('disabled', true);
+    obtenerClaveBatida();
   }
 
-  $('#producto').val('');
-  $('#nombreProducto').val('');
-  $('#numBatidas').val('');
-  $('#tabla-subProductos tbody').html('');
-  $('#btnGuardarBatida').attr('disabled', true);
-  obtenerClaveBatida();
+
 }
 
 function mostrarBatidas() {
@@ -471,6 +607,7 @@ $(document).ready(function() {
 
   obtenerClaveBatida();
 
+  $("#cbAgregarSustitutos").bootstrapSwitch();
 
 
   $('#fechaCaptura').val(moment().format('YYYY-MM-DD'));
