@@ -8,7 +8,7 @@ function logout() {
 
 function obtenerClaveBatida(){
   let rutaBatidas = db.ref('batidas');
-  rutaBatidas.once('value', function(snapshot){
+  rutaBatidas.on('value', function(snapshot){
     if (snapshot.hasChildren()) {
 
       let listabatidas = snapshot.val();
@@ -24,6 +24,19 @@ function obtenerClaveBatida(){
     }
   });
 }
+
+$('#producto').keyup(function() {
+  $(this).val($(this).val().toUpperCase());
+});
+
+$('#cbAgregarSustitutos').change(function() {
+  if($(this).prop('checked')) {
+    $('#collapseSustitutos').collapse('show')
+    mostrarSustitutos();
+  }else {
+    $('#collapseSustitutos').collapse('hide')
+  }
+});
 
 $('#producto').keypress(function(e) {
   let claveProducto = $(this).val();
@@ -76,30 +89,80 @@ function obtenerFormulaBase() {
       let i = 0;
       for (let subProducto in subProductos) {
         if(i%2 == 0) {
-          filas += `<tr class="info">
-          <td>${subProducto}</td>
-          <td>${subProductos[subProducto].nombre}</td>
-          <td>${subProductos[subProducto].valorConstante}</td>
-          <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
-          </tr>`;
+          filas += `<tr  id="fila-${subProducto}" class="info">
+                      <td>${subProducto}</td>
+                      <td>${subProductos[subProducto].nombre}</td>
+                      <td>${subProductos[subProducto].valorConstante}</td>
+                      <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
+                      <td class="text-center"><button onclick="quitarSubProducto('fila-${subProducto}')" type="button" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button></td>
+                    </tr>`;
         }
         else {
-          filas += `<tr>
-          <td>${subProducto}</td>
-          <td>${subProductos[subProducto].nombre}</td>
-          <td>${subProductos[subProducto].valorConstante}</td>
-          <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
-          </tr>`;
+          filas += `<tr id="fila-${subProducto}" >
+                      <td>${subProducto}</td>
+                      <td>${subProductos[subProducto].nombre}</td>
+                      <td>${subProductos[subProducto].valorConstante}</td>
+                      <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
+                      <td class="text-center"><button onclick="quitarSubProducto('fila-${subProducto}')" type="button" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button></td>
+                    </tr>`;
         }
         i++;
       }
       //$('#tabla-subProductos tbody').html(filas);
       tabla.rows.add($(filas)).columns.adjust().draw();
-      $('#btnGuardarBatida').attr('disabled', false);
     }else{
       $.toaster({priority: 'danger', title: 'Error', message: `El producto con la clave ${claveProducto} no existe`});
     }
   });
+
+  $('#btnGuardarBatida').attr('disabled', false);
+  $('#cbAgregarSustitutos').bootstrapToggle('enable')
+}
+
+function mostrarSustitutos() {
+  let claveProducto = $('#producto').val();
+  let numBatidas = $('#numBatidas').val();
+  let rutaFormulaciones = db.ref(`formulaciones/${claveProducto}/subProductos`);
+  rutaFormulaciones.on('value', function(snapshot) {
+    let subProductos = snapshot.val();
+    let filas = "";
+    let i = 0;
+
+    for(let subProducto in subProductos) {
+      if(subProductos[subProducto].sustituto != undefined) {
+        console.log('Si tiene sustituto');
+        console.log(subProductos[subProducto].sustituto);
+
+
+        if(i%2 == 0) {
+          filas += `<tr id="fila-${subProducto}" class="info">
+                      <td>${subProducto}</td>
+                      <td>${subProductos[subProducto].nombre}</td>
+                      <td>${subProductos[subProducto].valorConstante}</td>
+                      <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
+                      <td class="text-center"><button onclick="quitarSubProducto('fila-${subProducto}')" type="button" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button></td>
+                    </tr>`;
+        }
+        else {
+          filas += `<tr id="fila-${subProducto}" >
+                      <td>${subProducto}</td>
+                      <td>${subProductos[subProducto].nombre}</td>
+                      <td>${subProductos[subProducto].valorConstante}</td>
+                      <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
+                      <td class="text-center"><button onclick="quitarSubProducto('fila-${subProducto}')" type="button" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button></td>
+                    </tr>`;
+        }
+        i++;
+      }
+      else {
+        console.log('No tiene sustituto');
+      }
+    }
+  });
+}
+
+function quitarSubProducto(idFila){
+  $(`#${idFila}`).remove();
 }
 
 function guardarBatida(){
@@ -124,7 +187,7 @@ function guardarBatida(){
           nombreSubProducto = $(this).text();
           break;
         case 3:
-          valorConstante = $(this).children().val();
+          valorConstante = $(this).text();
           break;
       }
     });
@@ -160,6 +223,7 @@ function guardarBatida(){
   $('#nombreProducto').val('');
   $('#numBatidas').val('');
   $('#tabla-subProductos tbody').html('');
+  $('#btnGuardarBatida').attr('disabled', true);
   obtenerClaveBatida();
 }
 
@@ -189,8 +253,8 @@ function mostrarBatidas() {
                   <td>${batidas[batida].nombreProducto}</td>
                   <td>${batidas[batida].numBatidas}</td>
                   <td>${batidas[batida].fechaCaptura}</td>
-                  <td class="text-center"><button onclick="abrirModalEditar('${batida}')" class="btn btn-warning"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></td>
-                  <td class="text-center"><button onclick="abrirModalFinalizar('${batida}')" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></button></td>
+                  <td class="text-center"><button onclick="abrirModalEditar('${batida}')" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></td>
+                  <td class="text-center"><button onclick="abrirModalFinalizar('${batida}')" class="btn btn-success btn-sm"><i class="fa fa-check" aria-hidden="true"></i></button></td>
                 </tr>`;
     }
     // $('#loader1').remove();
@@ -404,7 +468,11 @@ $('#campana').click(function() {
 
 $(document).ready(function() {
   $('[data-toggle="tooltip"]').tooltip();
+
   obtenerClaveBatida();
+
+
+
   $('#fechaCaptura').val(moment().format('YYYY-MM-DD'));
 
   $.toaster({

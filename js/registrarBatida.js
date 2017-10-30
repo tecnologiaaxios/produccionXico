@@ -25,6 +25,10 @@ function obtenerClaveBatida(){
   })
 }
 
+$('#producto').keyup(function () {
+  $(this).val($(this).val().toUpperCase());
+});
+
 $('#producto').keypress(function(e){
   if (e.which == 13) {
     let claveProducto = $(this).val();
