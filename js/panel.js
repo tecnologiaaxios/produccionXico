@@ -366,6 +366,10 @@ function guardarBatida() {
     $('#numBatidas').val('');
     $('#tabla-subProductos tbody').html('');
     $('#btnGuardarBatida').attr('disabled', true);
+    $('#cbAgregarSustitutos').bootstrapSwitch('readonly', true, true);
+    $('#tabla-sustitutos tbody').html('');
+    $('#collapseSustitutos').collapse('hide');
+
     obtenerClaveBatida();
   }
 
