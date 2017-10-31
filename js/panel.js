@@ -58,6 +58,10 @@ $('#producto').keypress(function(e) {
           $('#nombreProducto').val(snapshot.val().nombre);
           $('#numBatidas').attr('readonly', false);
           $('#btnGenerarFormula').attr('disabled', false);
+
+          $('#tabla-subProductos tbody').html('');
+          $('#numBatidas').val('');
+          $('#cbAgregarSustitutos').bootstrapSwitch('readonly', true, true);
         }else{
           $.toaster({priority: 'danger', title: 'Error', message: `El producto con la clave ${claveProducto} no existe`});
           $('#nombreProducto').val("");
@@ -132,7 +136,7 @@ function obtenerFormulaBase() {
 
   $('#btnGuardarBatida').attr('disabled', false);
   //$('#cbAgregarSustitutos').bootstrapToggle('enable')
-  $('input[name="cbAgregarSustitutos"]').bootstrapSwitch('toggleReadonly', true, false);
+  $('input[name="cbAgregarSustitutos"]').bootstrapSwitch('readonly', false, true);
 }
 
 function mostrarSustitutos() {
@@ -257,6 +261,7 @@ function guardarBatida() {
       if(checkbox) {
         let posicion = listaClaves.indexOf(claveBorrar);
         listaSubProductos.splice(posicion, 1);
+        listaClaves.splice(posicion, 1);
         let datosSustituto = {
           nombre: nombreSustituto,
           valorConstante: valorConstanteSustituto
@@ -298,6 +303,10 @@ function guardarBatida() {
     $('#numBatidas').val('');
     $('#tabla-subProductos tbody').html('');
     $('#btnGuardarBatida').attr('disabled', true);
+    $('#cbAgregarSustitutos').bootstrapSwitch('readonly', true, true);
+    $('#tabla-sustitutos tbody').html('');
+    $('#collapseSustitutos').collapse('hide');
+
     obtenerClaveBatida();
   }
   else {

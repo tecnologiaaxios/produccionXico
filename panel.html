@@ -151,18 +151,12 @@
                           </div>
                           <div class="col-md-3">
                             <div class="form-group">
-                              <label for="kilos">Kilos:</label>
-                              <input type="number" class="form-control" name="kilos" id="kilos" readonly>
+                              <label for="kilosProduccion">Kilos producción:</label>
+                              <input type="number" class="form-control" name="kilosProduccion" id="kilosProduccion" readonly>
                             </div>
                           </div>
-                          <div class="col-md-3">
-                            <div class="form-group">
-                              <label for="piezas">Piezas:</label>
-                              <input type="number" class="form-control" name="piezas" id="piezas" readonly>
-                            </div>
-                          </div>
-                        </div>
 
+                        </div>
                         <div class="row">
                           <div class="col-md-7">
                             <div class="form-inline">
@@ -299,6 +293,22 @@
           <h4 class="modal-title">Lista de subproductos</h4>
         </div>
         <div class="modal-body">
+          <form>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="kilos">Kilos:</label>
+                  <input type="number" class="form-control" name="kilos" id="kilos">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="piezas">Piezas:</label>
+                  <input type="number" class="form-control" name="piezas" id="piezas">
+                </div>
+              </div>
+            </div>
+          </form>
           <label for="">SubProductos:</label>
           <div class="table-responsive" style="max-height: 200px; overflow: true;">
             <table id="tablaModalEditar"class="table table-hover table-striped table-condensed table-bordered">
