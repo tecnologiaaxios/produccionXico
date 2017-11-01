@@ -57,7 +57,7 @@ $('#producto').keypress(function(e) {
         if (snapshot.hasChildren()) {
           $('#nombreProducto').val(snapshot.val().nombre);
           $('#numBatidas').attr('readonly', false);
-          $('#btnGenerarFormula').attr('disabled', false);
+          //$('#btnGenerarFormula').attr('disabled', false);
 
           $('#tabla-subProductos tbody').html('');
           $('#numBatidas').val('');
@@ -79,8 +79,34 @@ $('#producto').keypress(function(e) {
 
 $('#btnGenerarFormula').click(function() {
   obtenerFormulaBase();
+  calcularKilos();
   mostrarSustitutos();
 });
+
+$("#numBatidas").keyup(function() {
+  let numBatidas = $(this).val();
+  if(numBatidas.length > 0) {
+    $('#btnGenerarFormula').attr('disabled', false);
+  }
+  else {
+    console.log('else')
+    $('#btnGenerarFormula').attr('disabled', true);
+  }
+});
+
+function calcularKilos() {
+  let claveProducto = $('#producto').val();
+
+  let rutaFormula = db.ref(`formulaciones/${claveProducto}`);
+  rutaFormula.once('value', function(snap) {
+    if (snap.hasChildren()) {
+      let kilosProduccion = snap.val().kilosProduccion;
+      let numBatidas = $('#numBatidas').val();
+
+      $('#kilosProduccion').val((kilosProduccion*numBatidas).toFixed(4));
+    }
+  });
+}
 
 function obtenerFormulaBase() {
   let tabla = $(`#tabla-subProductos`).DataTable({
@@ -188,9 +214,6 @@ function mostrarSustitutos() {
           i++;
         }
       }
-      else {
-        console.log('No tiene sustituto');
-      }
     }
     $('#tabla-sustitutos tbody').html(filas)
     //tabla.rows.add($(filas)).columns.adjust().draw();
@@ -205,11 +228,12 @@ function quitarSubProducto(idFila){
 function guardarBatida() {
   let seUsaronSustitutos = $('#cbAgregarSustitutos').bootstrapSwitch('state');
   if(seUsaronSustitutos) {
-    let numBatidas = $('#numBatidas').val();
-    let clave = $('#clave').val();
+    let numBatidas = Number($('#numBatidas').val());
+    let clave = Number($('#clave').val());
     let fechaCaptura = moment().format('DD/MM/YYYY');
     let claveProducto = $('#producto').val();
     let nombreProducto = $('#nombreProducto').val();
+    let kilosProduccion = Number($('#kilosProduccion').val());
 
     let listaSubProductos = [], listaClaves = [];
     let claveSubProducto, nombreSubProducto, valorConstante;
@@ -270,20 +294,13 @@ function guardarBatida() {
         listaSubProductos.push(datosSustituto);
         listaClaves.push(claveSustituto);
       }
-
-      let datos = {
-        nombre: nombreSubProducto,
-        valorConstante: valorConstante
-      };
-
-      listaSubProductos.push(datos);
-      listaClaves.push(claveSubProducto);
     });
 
     let rutaBatidas = db.ref('batidas');
 
     let batida = {
-      numBatidas: numBatidas,
+      numBatidas: Number(numBatidas,
+      kilosProduccion: kilosProduccion,
       claveBatida: clave,
       fechaCaptura: fechaCaptura,
       claveProducto: claveProducto,
@@ -301,6 +318,7 @@ function guardarBatida() {
     $('#producto').val('');
     $('#nombreProducto').val('');
     $('#numBatidas').val('');
+    $('#kilosProduccion').val('');
     $('#tabla-subProductos tbody').html('');
     $('#btnGuardarBatida').attr('disabled', true);
     $('#cbAgregarSustitutos').bootstrapSwitch('readonly', true, true);
@@ -310,11 +328,12 @@ function guardarBatida() {
     obtenerClaveBatida();
   }
   else {
-    let numBatidas = $('#numBatidas').val();
-    let clave = $('#clave').val();
+    let numBatidas = Number($('#numBatidas').val());
+    let clave = Number($('#clave').val());
     let fechaCaptura = moment().format('DD/MM/YYYY');
     let claveProducto = $('#producto').val();
     let nombreProducto = $('#nombreProducto').val();
+    let kilosProduccion = Number($('#kilosProduccion').val());
 
     let listaSubProductos = [], listaClaves = [];
     let claveSubProducto, nombreSubProducto, valorConstante;
@@ -351,6 +370,7 @@ function guardarBatida() {
       fechaCaptura: fechaCaptura,
       claveProducto: claveProducto,
       nombreProducto: nombreProducto,
+      kilosProduccion: kilosProduccion,
       estado: "En proceso"
     };
 
@@ -364,6 +384,7 @@ function guardarBatida() {
     $('#producto').val('');
     $('#nombreProducto').val('');
     $('#numBatidas').val('');
+    $('#kilosProduccion').val('');
     $('#tabla-subProductos tbody').html('');
     $('#btnGuardarBatida').attr('disabled', true);
     $('#cbAgregarSustitutos').bootstrapSwitch('readonly', true, true);
