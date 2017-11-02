@@ -133,7 +133,7 @@ function obtenerFormulaBase() {
       let i = 0;
       for (let subProducto in subProductos) {
         if(i%2 == 0) {
-          filas += `<tr  id="fila-${subProducto}" class="info">
+          filas += `<tr id="fila-${subProducto}" class="info">
                       <td>${subProducto}</td>
                       <td>${subProductos[subProducto].nombre}</td>
                       <td>${subProductos[subProducto].valorConstante}</td>
@@ -299,8 +299,10 @@ function guardarBatida() {
     let rutaBatidas = db.ref('batidas');
 
     let batida = {
-      numBatidas: Number(numBatidas,
+      numBatidas: numBatidas,
       kilosProduccion: kilosProduccion,
+      kilos: 0,
+      piezas: 0,
       claveBatida: clave,
       fechaCaptura: fechaCaptura,
       claveProducto: claveProducto,
@@ -371,6 +373,8 @@ function guardarBatida() {
       claveProducto: claveProducto,
       nombreProducto: nombreProducto,
       kilosProduccion: kilosProduccion,
+      kilos: 0,
+      piezas: 0,
       estado: "En proceso"
     };
 
@@ -415,17 +419,32 @@ function mostrarBatidas() {
     let batidas = snap.val();
     let filas = "";
     tabla.clear();
+    let i = 0;
 
     for(let batida in batidas) {
-      filas += `<tr>
-                  <td>${batidas[batida].claveBatida}</td>
-                  <td>${batidas[batida].claveProducto}</td>
-                  <td>${batidas[batida].nombreProducto}</td>
-                  <td>${batidas[batida].numBatidas}</td>
-                  <td>${batidas[batida].fechaCaptura}</td>
-                  <td class="text-center"><button onclick="abrirModalEditar('${batida}')" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></td>
-                  <td class="text-center"><button onclick="abrirModalFinalizar('${batida}')" class="btn btn-success btn-sm"><i class="fa fa-check" aria-hidden="true"></i></button></td>
-                </tr>`;
+      if(i%2 == 0) {
+        filas += `<tr class="info">
+                    <td>${batidas[batida].claveBatida}</td>
+                    <td>${batidas[batida].claveProducto}</td>
+                    <td>${batidas[batida].nombreProducto}</td>
+                    <td>${batidas[batida].numBatidas}</td>
+                    <td>${batidas[batida].fechaCaptura}</td>
+                    <td class="text-center"><button onclick="abrirModalEditar('${batida}')" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></td>
+                    <td class="text-center"><button onclick="abrirModalFinalizar('${batida}')" class="btn btn-success btn-sm"><i class="fa fa-check" aria-hidden="true"></i></button></td>
+                  </tr>`;
+      }
+      else {
+        filas += `<tr>
+                    <td>${batidas[batida].claveBatida}</td>
+                    <td>${batidas[batida].claveProducto}</td>
+                    <td>${batidas[batida].nombreProducto}</td>
+                    <td>${batidas[batida].numBatidas}</td>
+                    <td>${batidas[batida].fechaCaptura}</td>
+                    <td class="text-center"><button onclick="abrirModalEditar('${batida}')" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></td>
+                    <td class="text-center"><button onclick="abrirModalFinalizar('${batida}')" class="btn btn-success btn-sm"><i class="fa fa-check" aria-hidden="true"></i></button></td>
+                  </tr>`;
+      }
+      i++;
     }
     // $('#loader1').remove();
     // $('#tabla-batidasRegistradas tbody').html(filas)
@@ -436,6 +455,7 @@ function mostrarBatidas() {
 
 function abrirModalEditar(idBatida){
   $('#modalEditar').modal('show');
+  $('#kilos').attr('data-idBatida', idBatida);
   mostrarSubProductos(idBatida);
   $('#btnGuardarCambios').attr('onclick', `guardarCambiosBatida('${idBatida}')`);
 }
@@ -458,13 +478,26 @@ function mostrarSubProductos(idBatida) {
     let subProductos = snap.val();
     let filas = "";
     //tabla.clear();
+    let i = 0;
 
     for(let subProducto in subProductos) {
-      filas += `<tr>
-                  <td>${subProducto}</td>
-                  <td>${subProductos[subProducto].nombre}</td>
-                  <td><input class="form-control" value="${subProductos[subProducto].valorConstante}"></td>
-                </tr>`;
+      if(i%2 == 0) {
+        filas += `<tr class="info">
+                    <td>${subProducto}</td>
+                    <td>${subProductos[subProducto].nombre}</td>
+                    <td><input class="form-control" value="${subProductos[subProducto].valorConstante}"></td>
+                    <td class="hidden">${subProductos[subProducto].precio}</td>
+                  </tr>`;
+      }
+      else {
+        filas += `<tr>
+                    <td>${subProducto}</td>
+                    <td>${subProductos[subProducto].nombre}</td>
+                    <td><input class="form-control" value="${subProductos[subProducto].valorConstante}"></td>
+                    <td class="hidden">${subProductos[subProducto].precio}</td>
+                  </tr>`;
+      }
+      i++;
     }
 
     $('#tablaModalEditar tbody').html(filas);
@@ -472,36 +505,116 @@ function mostrarSubProductos(idBatida) {
   });
 }
 
-function guardarCambiosBatida(idBatida){
-  let listaValoresConstantes = [], listaClaves = [];
-  let claveSubProducto, valorConstante;
+function guardarCambiosBatida(idBatida) {
+  let kilos = $('#kilos').val();
+  let piezas = $('#piezas').val();
+  let merma = $('#merma').val();
 
-  $("#tablaModalEditar tbody tr").each(function (i)
-  {
-    $(this).children("td").each(function (j)
+  if(kilos.length > 0 && piezas.length > 0) {
+    let listaValoresConstantes = [], listaClaves = [];
+    let claveSubProducto, valorConstante, precio, costo = 0;
+
+    $("#tablaModalEditar tbody tr").each(function (i)
     {
-      if(j==0) {
-        claveSubProducto = $(this).text();
-      }
-      if(j==2) {
-        valorConstante = $(this).children().val()
-      }
+      $(this).children("td").each(function (j)
+      {
+        if(j==0) {
+          claveSubProducto = $(this).text();
+        }
+        if(j==2) {
+          valorConstante = $(this).children().val()
+        }
+        /*if(j==3) {
+          precio = Number($(this).text());
+        }*/
+      });
+
+      listaClaves.push(claveSubProducto);
+      listaValoresConstantes.push(valorConstante);
+      //costo += precio;
     });
 
-    listaClaves.push(claveSubProducto);
-    listaValoresConstantes.push(valorConstante);
-  });
-
-  for(let i in listaClaves){
-    let ruta = db.ref(`batidas/${idBatida}/subProductos/${listaClaves[i]}`);
-    ruta.update({
-      valorConstante: listaValoresConstantes[i]
+    let rutaBatida = db.ref(`batidas/${idBatida}`);
+    rutaBatida.update({
+      kilos: Number(kilos),
+      piezas: Number(piezas),
+      merma: Number(merma)
     });
+
+    for(let i in listaClaves) {
+      let ruta = db.ref(`batidas/${idBatida}/subProductos/${listaClaves[i]}`);
+      ruta.update({
+        valorConstante: listaValoresConstantes[i]
+      });
+      let rutaSubProducto = db.ref(`subProductos/${listaClaves[i]}`);
+      rutaSubProducto.once('value', function(snap) {
+        let precio = snap.val().precio;
+        costo += Number(precio);
+
+        if(i==listaClaves.length-1) {
+          costo = costo.toFixed(4);
+          db.ref(`batidas/${idBatida}`).update({ costo: costo })
+        }
+      });
+    }
+    $.toaster({priority: 'info', title: 'Info:', message: `Se actualizó la batida correctamente`});
+    $('#modalEditar').modal('hide');
   }
-  $.toaster({priority: 'info', title: 'Info:', message: `Se actualizó la batida correctamente`});
-  $('#modalEditar').modal('hide');
-
+  else {
+    if(kilos.length < 1) {
+      $('#kilos').parent().addClass('has-error');
+      $('#helpBlockKilos').removeClass('hidden');
+    }
+    else {
+      $('#kilos').parent().removeClass('has-error');
+      $('#helpBlockKilos').addClass('hidden');
+    }
+    if(piezas.length < 1) {
+      $('#piezas').parent().addClass('has-error');
+      $('#helpBlockPiezas').removeClass('hidden');
+    }
+    else {
+      $('#piezas').parent().removeClass('has-error');
+      $('#helpBlockPiezas').addClass('hidden');
+    }
+  }
 }
+
+$('#kilos').keyup(function() {
+  let kilos = $(this).val();
+
+  if(kilos.length < 1) {
+    $('#kilos').parent().addClass('has-error');
+    $('#helpBlockKilos').removeClass('hidden');
+
+    $('#merma').val('');
+  }
+  else {
+    let idBatida = $(this).attr('data-idBatida');
+    let rutaBatida = db.ref(`batidas/${idBatida}`);
+    rutaBatida.once('value', function(snap) {
+      let kilosProduccion = snap.val().kilosProduccion;
+      let merma = ((kilosProduccion - kilos) / kilosProduccion) * 100;
+      $('#merma').val(merma.toFixed(4));
+    });
+
+    $('#kilos').parent().removeClass('has-error');
+    $('#helpBlockKilos').addClass('hidden');
+  }
+});
+
+$('#piezas').keyup(function() {
+  let piezas = $(this).val();
+
+  if(piezas.length < 1) {
+    $('#piezas').parent().addClass('has-error');
+    $('#helpBlockPiezas').removeClass('hidden');
+  }
+  else {
+    $('#piezas').parent().removeClass('has-error');
+    $('#helpBlockPiezas').addClass('hidden');
+  }
+});
 
 function finalizarBatida(idBatida) {
   //let rutaBatidas = db.ref('batidas');
@@ -545,14 +658,27 @@ function mostrarBatidasFinalizadas() {
     let batidasFinalizadas = snapshot.val();
     let filas = "";
     tabla.clear();
+    let i = 0;
     for(let batida in batidasFinalizadas) {
-      filas += `<tr>
+      if(i%2 == 0) {
+        filas += `<tr class="info">
+                    <td>${batidasFinalizadas[batida].claveBatida}</td>
+                    <td>${batidasFinalizadas[batida].claveProducto}</td>
+                    <td>${batidasFinalizadas[batida].nombreProducto}</td>
+                    <td>${batidasFinalizadas[batida].numBatidas}</td>
+                    <td>${batidasFinalizadas[batida].fechaCaptura}</td>
+                  </tr>`;
+      }
+      else {
+        filas += `<tr>
                   <td>${batidasFinalizadas[batida].claveBatida}</td>
                   <td>${batidasFinalizadas[batida].claveProducto}</td>
                   <td>${batidasFinalizadas[batida].nombreProducto}</td>
                   <td>${batidasFinalizadas[batida].numBatidas}</td>
                   <td>${batidasFinalizadas[batida].fechaCaptura}</td>
                 </tr>`;
+      }
+      i++;
     }
 
     // $('#loader2').remove();
