@@ -456,11 +456,11 @@ function mostrarBatidas() {
 function abrirModalEditar(idBatida){
   $('#modalEditar').modal('show');
   $('#kilos').attr('data-idBatida', idBatida);
-  mostrarSubProductos(idBatida);
+  mostrarDatosBatida(idBatida);
   $('#btnGuardarCambios').attr('onclick', `guardarCambiosBatida('${idBatida}')`);
 }
 
-function mostrarSubProductos(idBatida) {
+function mostrarDatosBatida(idBatida) {
   /*let tabla = $(`#tablaModalEditar`).DataTable({
     destroy: true,
     "lengthChange": false,
@@ -473,9 +473,21 @@ function mostrarSubProductos(idBatida) {
     "paging": false,
     "bInfo" : false
   });*/
-  let rutaSubProductos = db.ref(`batidas/${idBatida}/subProductos`);
+  let rutaSubProductos = db.ref(`batidas/${idBatida}`);
   rutaSubProductos.on('value', function(snap){
-    let subProductos = snap.val();
+    let kilos = snap.val().kilos;
+    let piezas = snap.val().piezas;
+    let merma = snap.val().merma;
+    if (kilos != undefined && piezas != undefined && merma != undefined) {
+      $('#kilos').val(kilos);
+      $('#piezas').val(piezas);
+      $('#merma').val(merma);
+    }else{
+      $('#kilos').val("");
+      $('#piezas').val("");
+      $('#merma').val("")
+    }
+    let subProductos = snap.val().subProductos;
     let filas = "";
     //tabla.clear();
     let i = 0;
@@ -549,10 +561,10 @@ function guardarCambiosBatida(idBatida) {
       let rutaSubProducto = db.ref(`subProductos/${listaClaves[i]}`);
       rutaSubProducto.once('value', function(snap) {
         let precio = snap.val().precio;
-        costo += Number(precio);
+        costo += Number(precio*listaValoresConstantes[i]);
 
         if(i==listaClaves.length-1) {
-          costo = costo.toFixed(4);
+          costo = (costo/kilos).toFixed(4);
           db.ref(`batidas/${idBatida}`).update({ costo: costo })
         }
       });
