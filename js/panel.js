@@ -461,7 +461,7 @@ function abrirModalEditar(idBatida){
 }
 
 function mostrarDatosBatida(idBatida) {
-  /*let tabla = $(`#tablaModalEditar`).DataTable({
+  let tabla = $(`#tablaModalEditar`).DataTable({
     destroy: true,
     "lengthChange": false,
     "scrollY": "300px",
@@ -469,10 +469,10 @@ function mostrarDatosBatida(idBatida) {
     "language": {
       "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
     },
-    "searching": false,
     "paging": false,
-    "bInfo" : false
-  });*/
+    "bInfo" : false,
+  });
+
   let rutaSubProductos = db.ref(`batidas/${idBatida}`);
   rutaSubProductos.on('value', function(snap){
     let kilos = snap.val().kilos;
@@ -489,7 +489,7 @@ function mostrarDatosBatida(idBatida) {
     }
     let subProductos = snap.val().subProductos;
     let filas = "";
-    //tabla.clear();
+    tabla.clear();
     let i = 0;
 
     for(let subProducto in subProductos) {
@@ -512,10 +512,14 @@ function mostrarDatosBatida(idBatida) {
       i++;
     }
 
-    $('#tablaModalEditar tbody').html(filas);
-    //tabla.rows.add($(filas)).columns.adjust().draw();
+    //$('#tablaModalEditar tbody').html(filas);
+    tabla.rows.add($(filas)).columns.adjust().draw();
   });
 }
+
+$('#modalEditar').on('shown.bs.modal', function() {
+  $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+});
 
 function guardarCambiosBatida(idBatida) {
   let kilos = $('#kilos').val();
