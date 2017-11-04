@@ -464,7 +464,7 @@ function mostrarDatosBatida(idBatida) {
   let tabla = $(`#tablaModalEditar`).DataTable({
     destroy: true,
     "lengthChange": false,
-    "scrollY": "300px",
+    "scrollY": "200px",
     "scrollCollapse": true,
     "language": {
       "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
