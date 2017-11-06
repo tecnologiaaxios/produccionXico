@@ -511,8 +511,6 @@ function mostrarDatosBatida(idBatida) {
       }
       i++;
     }
-
-    //$('#tablaModalEditar tbody').html(filas);
     tabla.rows.add($(filas)).columns.adjust().draw();
   });
 }
