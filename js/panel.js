@@ -562,12 +562,12 @@ function guardarCambiosBatida(idBatida) {
       });
       let rutaSubProducto = db.ref(`subProductos/${listaClaves[i]}`);
       rutaSubProducto.once('value', function(snap) {
-        let precio = snap.val().precio;
+        let precio = snap.val().precioPesos;
         costo += Number(precio*listaValoresConstantes[i]);
 
         if(i==listaClaves.length-1) {
           costo = (costo/kilos).toFixed(4);
-          db.ref(`batidas/${idBatida}`).update({ costo: costo })
+          rutaBatida.update({ costo: costo })
         }
       });
     }
@@ -630,20 +630,38 @@ $('#piezas').keyup(function() {
   }
 });
 
-function finalizarBatida(idBatida) {
-  //let rutaBatidas = db.ref('batidas');
-  let rutaBatida = db.ref(`batidas/${idBatida}`);
+function actualizarProductoDashboard(idBatida) {
+  let ruta = db.ref(`batidas/${idBatida}`);
 
-  /*rutaBatida.once('value', function (snapshot) {
-    let batida = snapshot.val();
-    let rutaBatidaFinalizada = db.ref(`batidasFinalizadas/${idBatida}`);
-    rutaBatidaFinalizada.set(batida);
-    rutaBatidas.child(idBatida).remove();
-  });*/
+  ruta.once('value', function(snapshot){
+    let claveProducto = snapshot.val().claveProducto;
+    let costo = snapshot.val().costo;
+    let kilos = snapshot.val().kilos;
+    let merma = snapshot.val().merma;
+    let piezas = snapshot.val().piezas;
+    let kilosProduccion = snapshot.val().kilosProduccion;
+
+    let costosProduccion = db.ref(`costosProduccion/${claveProducto}`);
+    costosProduccion.update({
+      costo: costo,
+      kilos: kilos,
+      merma: merma,
+      piezas: piezas,
+      kilosProduccion: kilosProduccion
+    });
+
+  });
+
+}
+
+function finalizarBatida(idBatida) {
+  let rutaBatida = db.ref(`batidas/${idBatida}`);
 
   rutaBatida.update({
     estado: "Finalizada"
   });
+
+  actualizarProductoDashboard(idBatida);
 
   $('#modalFinalizar').modal('hide');
 }
