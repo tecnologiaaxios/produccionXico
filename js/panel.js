@@ -640,6 +640,7 @@ function actualizarProductoDashboard(idBatida) {
     let merma = snapshot.val().merma;
     let piezas = snapshot.val().piezas;
     let kilosProduccion = snapshot.val().kilosProduccion;
+    let subProductos = snapshot.val().subProductos;
 
     let costosProduccion = db.ref(`costosProduccion/${claveProducto}`);
     costosProduccion.update({
@@ -647,7 +648,8 @@ function actualizarProductoDashboard(idBatida) {
       kilos: kilos,
       merma: merma,
       piezas: piezas,
-      kilosProduccion: kilosProduccion
+      kilosProduccion: kilosProduccion,
+      subProductos: subProductos
     });
 
   });
