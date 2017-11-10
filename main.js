@@ -117,7 +117,11 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
-      width: 1200, height: 850,
+      minHeight: 720,
+      minWidth: 1024,
+      width: 1024,
+      height: 720,
+      center: true,
       icon: path.join(__dirname, 'assets/icons/mac/icon.icns'),
       'node-integration': false
     });

@@ -48,7 +48,7 @@ $('#cbAgregarSustitutos').on('switchChange.bootstrapSwitch', function(event, sta
 });
 
 $('#producto').keypress(function(e) {
-  let claveProducto = $(this).val();
+  let claveProducto = $(this).val(); "<script"
 
   if (e.which == 13) {
     if(claveProducto.length > 0) {
@@ -60,7 +60,10 @@ $('#producto').keypress(function(e) {
           //$('#btnGenerarFormula').attr('disabled', false);
 
           $('#tabla-subProductos tbody').html('');
+          $('#tabla-sustitutos tbody').html('');
           $('#numBatidas').val('');
+          $('#kilosProduccion').val('');
+          $('#cbAgregarSustitutos').bootstrapSwitch('state', false);
           $('#cbAgregarSustitutos').bootstrapSwitch('readonly', true, true);
         }else{
           $.toaster({priority: 'danger', title: 'Error', message: `El producto con la clave ${claveProducto} no existe`});
