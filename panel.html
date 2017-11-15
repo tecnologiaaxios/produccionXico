@@ -129,7 +129,10 @@
                           <div class="col-md-3">
                             <div class="form-group">
                               <label for="producto">Clave producto:</label>
-                              <input type="text" name="producto" id="producto" class="form-control" placeholder="">
+                              <input list="sugerenciasProductos" type="text" name="producto" id="producto" class="form-control" placeholder="">
+                              <datalist id="sugerenciasProductos">
+
+                              </datalist>
                               <span id="helpBlockProducto" class="hidden help-block">Ingresa una clave</span>
                             </div>
                           </div>
@@ -255,11 +258,14 @@
                   <!-- <div id="loader2" class="loader"></div> -->
                   <table id="tabla-batidasFinalizadas" class="table table-striped table-condensed table-hover table-bordered">
                     <thead>
-                      <th>Clave</th>
-                      <th>Clave producto</th>
-                      <th>Nombre producto</th>
-                      <th>Núm. de batidas</th>
-                      <th>Fecha de captura</th>
+                      <tr>
+                        <th>Clave</th>
+                        <th>Clave producto</th>
+                        <th>Nombre producto</th>
+                        <th>Núm. de batidas</th>
+                        <th>Fecha de captura</th>
+                        <th>Detalles</th>
+                      </tr>
                     </thead>
                     <tbody>
 
@@ -279,7 +285,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Lista de subproductos</h4>
+          <h4 class="modal-title">Editar batida</h4>
         </div>
         <div class="modal-body">
           <form>
@@ -309,9 +315,18 @@
                 </div>
               </div>
             </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="comentarios">Comentarios:</label>
+                  <textarea style="resize: none;" class="form-control" name="comentarios" id="comentarios" cols="30" rows="4"></textarea>
+                  <span id="helpBlockMerma" class="hidden help-block">Campo obligatorio</span>
+                </div>
+              </div>
+            </div>
           </form>
-          <label for="">SubProductos:</label>
           <table id="tablaModalEditar"class="table table-hover table-striped table-condensed table-bordered">
+            <caption class="text-center"><strong>SubProductos:</strong></caption>
             <thead>
               <tr>
                 <th>Clave</th>
@@ -330,7 +345,6 @@
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
-
   <div id="modalFinalizar"class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -348,7 +362,6 @@
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
-
   <div id="modalConfirmarGuardar"class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -366,9 +379,69 @@
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
+  <div id="modalVerDetalles"class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Detalles de la batida</h4>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="kilosVer">Kilos:</label>
+                  <input type="number" class="form-control" name="kilosVer" id="kilosVer" readonly>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="piezasVer">Piezas:</label>
+                  <input type="number" class="form-control" name="piezasVer" id="piezasVer" readonly>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="mermaVer">Merma:</label>
+                  <div class="input-group">
+                    <input type="number" class="form-control" name="mermaVer" id="mermaVer" readonly>
+                    <span class="input-group-addon">%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="comentariosVer">Comentarios:</label>
+                  <textarea style="resize: none;" class="form-control" name="comentariosVer" id="comentariosVer" cols="30" rows="4" readonly></textarea>
+                </div>
+              </div>
+            </div>
+          </form>
+          <table id="tablaModalVer"class="table table-hover table-striped table-condensed table-bordered">
+            <caption class="text-center"><strong>SubProductos:</strong></caption>
+            <thead>
+              <tr>
+                <th>Clave</th>
+                <th>SubProducto</th>
+                <th>Valor Constante</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
   <!-- jQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
-  <!--<script src="js/jquery-3.2.1.min.js"></script>-->
+  <!-- <script src="js/jquery-3.2.1.min.js"></script> -->
   <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script>window.$ = window.jQuery = require('jquery');</script>-->
   <!-- If the require doesn't work, include first the jQuery file

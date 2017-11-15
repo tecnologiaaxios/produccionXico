@@ -1,9 +1,20 @@
 const db = firebase.database();
 const auth = firebase.auth();
 
-
 function logout() {
   auth.signOut();
+}
+
+function llenarSugerenciasProductos() {
+  let formulasRef = db.ref(`formulaciones`);
+  formulasRef.on('value', function(snap) {
+    let productos = snap.val();
+    let options = "";
+    for(let producto in productos) {
+      options += `<option value="${producto}">`;
+    }
+    $('#sugerenciasProductos').html(options);
+  });
 }
 
 function obtenerClaveBatida(){
@@ -481,14 +492,17 @@ function mostrarDatosBatida(idBatida) {
     let kilos = snap.val().kilos;
     let piezas = snap.val().piezas;
     let merma = snap.val().merma;
-    if (kilos != undefined && piezas != undefined && merma != undefined) {
+    let comentarios = snap.val().comentarios;
+    if (kilos != undefined && piezas != undefined && merma != undefined && comentarios != undefined) {
       $('#kilos').val(kilos);
       $('#piezas').val(piezas);
       $('#merma').val(merma);
+      $('#comentarios').val(comentarios);
     }else{
       $('#kilos').val("");
       $('#piezas').val("");
       $('#merma').val("")
+      $('#comentarios').val("");
     }
     let subProductos = snap.val().subProductos;
     let filas = "";
@@ -500,7 +514,7 @@ function mostrarDatosBatida(idBatida) {
         filas += `<tr class="info">
                     <td>${subProducto}</td>
                     <td>${subProductos[subProducto].nombre}</td>
-                    <td><input class="form-control" value="${subProductos[subProducto].valorConstante}"></td>
+                    <td class="text-center"><input class="form-control input-sm" value="${subProductos[subProducto].valorConstante}"></td>
                     <td class="hidden">${subProductos[subProducto].precio}</td>
                   </tr>`;
       }
@@ -508,7 +522,7 @@ function mostrarDatosBatida(idBatida) {
         filas += `<tr>
                     <td>${subProducto}</td>
                     <td>${subProductos[subProducto].nombre}</td>
-                    <td><input class="form-control" value="${subProductos[subProducto].valorConstante}"></td>
+                    <td class="text-center"><input class="form-control input-sm" value="${subProductos[subProducto].valorConstante}"></td>
                     <td class="hidden">${subProductos[subProducto].precio}</td>
                   </tr>`;
       }
@@ -522,10 +536,68 @@ $('#modalEditar').on('shown.bs.modal', function() {
   $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
 });
 
+$('#modalVerDetalles').on('shown.bs.modal', function() {
+  $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+});
+
+function verDetalles(idBatida) {
+  let tabla = $(`#tablaModalVer`).DataTable({
+    destroy: true,
+    "lengthChange": false,
+    "scrollY": "200px",
+    "scrollCollapse": true,
+    "language": {
+      "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
+    },
+    "paging": false,
+    "bInfo" : false,
+  });
+
+  let rutaSubProductos = db.ref(`batidas/${idBatida}`);
+  rutaSubProductos.on('value', function(snap){
+    let kilos = snap.val().kilos;
+    let piezas = snap.val().piezas;
+    let merma = snap.val().merma;
+    let comentarios = snap.val().comentarios;
+
+    $('#kilosVer').val(kilos);
+    $('#piezasVer').val(piezas);
+    $('#mermaVer').val(merma);
+    $('#comentariosVer').val(comentarios);
+
+    let subProductos = snap.val().subProductos;
+    let filas = "";
+    tabla.clear();
+    let i = 0;
+
+    for(let subProducto in subProductos) {
+      if(i%2 == 0) {
+        filas += `<tr class="info">
+                    <td>${subProducto}</td>
+                    <td>${subProductos[subProducto].nombre}</td>
+                    <td class="text-right">${subProductos[subProducto].valorConstante}</td>
+                  </tr>`;
+      }
+      else {
+        filas += `<tr>
+                    <td>${subProducto}</td>
+                    <td>${subProductos[subProducto].nombre}</td>
+                    <td class="text-right">${subProductos[subProducto].valorConstante}</td>
+                  </tr>`;
+      }
+      i++;
+    }
+    tabla.rows.add($(filas)).columns.adjust().draw();
+  });
+
+  $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+}
+
 function guardarCambiosBatida(idBatida) {
   let kilos = $('#kilos').val();
   let piezas = $('#piezas').val();
   let merma = $('#merma').val();
+  let comentarios = $('#comentarios').val();
 
   if(kilos.length > 0 && piezas.length > 0) {
     let listaValoresConstantes = [], listaClaves = [];
@@ -555,7 +627,8 @@ function guardarCambiosBatida(idBatida) {
     rutaBatida.update({
       kilos: Number(kilos),
       piezas: Number(piezas),
-      merma: Number(merma)
+      merma: Number(merma),
+      comentarios: comentarios
     });
 
     for(let i in listaClaves) {
@@ -613,12 +686,27 @@ $('#kilos').keyup(function() {
       let kilosProduccion = snap.val().kilosProduccion;
       let merma = ((kilosProduccion - kilos) / kilosProduccion) * 100;
       $('#merma').val(merma.toFixed(4));
+
+      if(merma > 4) {
+        console.log("Hola")
+        $('#merma').parent().parent().removeClass('has-success');
+        $('#merma').parent().parent().addClass('has-error');
+      }
+      else {
+        $('#merma').parent().parent().removeClass('has-error');
+        $('#merma').parent().parent().addClass('has-success');
+      }
     });
 
     $('#kilos').parent().removeClass('has-error');
     $('#helpBlockKilos').addClass('hidden');
   }
 });
+
+function abrirModalVerDetalles(idBatida) {
+  $('#modalVerDetalles').modal('show');
+  verDetalles(idBatida);
+}
 
 $('#piezas').keyup(function() {
   let piezas = $(this).val();
@@ -654,16 +742,16 @@ function actualizarProductoDashboard(idBatida) {
       kilosProduccion: kilosProduccion,
       subProductos: subProductos
     });
-
   });
-
 }
 
 function finalizarBatida(idBatida) {
   let rutaBatida = db.ref(`batidas/${idBatida}`);
+  let fechaFinalizada = moment().format('DD/MM/YYYY');
 
   rutaBatida.update({
-    estado: "Finalizada"
+    estado: "Finalizada",
+    fechaFinalizada: fechaFinalizada
   });
 
   actualizarProductoDashboard(idBatida);
@@ -684,12 +772,11 @@ function mostrarBatidasFinalizadas() {
     "scrollCollapse": true,
     "language": {
       "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
-    },
-    //"searching": false,
+    }
+    //"searching": false
     //"paging": false,
     //"bInfo" : false
   });
-  // let rutaBatidasFinalizadas = db.ref('batidasFinalizadas');
   let rutaBatidas = db.ref('batidas');
   rutaBatidas.orderByChild("estado").equalTo("Finalizada").on('value', function (snapshot) {
     let batidasFinalizadas = snapshot.val();
@@ -704,6 +791,7 @@ function mostrarBatidasFinalizadas() {
                     <td>${batidasFinalizadas[batida].nombreProducto}</td>
                     <td>${batidasFinalizadas[batida].numBatidas}</td>
                     <td>${batidasFinalizadas[batida].fechaCaptura}</td>
+                    <td class="text-center"><button type="button" onclick="abrirModalVerDetalles('${batida}')" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="Ver más"><i class="glyphicon glyphicon-eye-open"></i></button></td>
                   </tr>`;
       }
       else {
@@ -713,6 +801,7 @@ function mostrarBatidasFinalizadas() {
                   <td>${batidasFinalizadas[batida].nombreProducto}</td>
                   <td>${batidasFinalizadas[batida].numBatidas}</td>
                   <td>${batidasFinalizadas[batida].fechaCaptura}</td>
+                  <td class="text-center"><button type="button" onclick="abrirModalVerDetalles('${batida}')" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="Ver más"><i class="glyphicon glyphicon-eye-open"></i></button></td>
                 </tr>`;
       }
       i++;
@@ -722,6 +811,7 @@ function mostrarBatidasFinalizadas() {
     // $('#tabla-batidasFinalizadas tbody').html(filas);
     // $('#tabla-batidasFinalizadas').removeClass('hidden');
     tabla.rows.add($(filas)).columns.adjust().draw();
+    $('[data-toggle="tooltip"]').tooltip();
   })
 
 }
@@ -803,6 +893,7 @@ $(document).ready(function() {
   $('[data-toggle="tooltip"]').tooltip();
 
   obtenerClaveBatida();
+  llenarSugerenciasProductos();
 
   $("#cbAgregarSustitutos").bootstrapSwitch();
 
