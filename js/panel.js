@@ -36,10 +36,6 @@ function obtenerClaveBatida(){
   });
 }
 
-$('#producto').keyup(function() {
-  $(this).val($(this).val().toUpperCase());
-});
-
 /*$('#cbAgregarSustitutos').change(function() {
   if($(this).prop('checked')) {
     $('#collapseSustitutos').collapse('show')
@@ -52,14 +48,13 @@ $('#producto').keyup(function() {
 $('#cbAgregarSustitutos').on('switchChange.bootstrapSwitch', function(event, state) {
   if(state) {
     $('#collapseSustitutos').collapse('show');
-
   }else {
     $('#collapseSustitutos').collapse('hide');
   }
 });
 
-$('#producto').keypress(function(e) {
-  let claveProducto = $(this).val(); "<script"
+$('#claveProducto').keypress(function(e) {
+  let claveProducto = $(this).val().toUpperCase();
 
   if (e.which == 13) {
     if(claveProducto.length > 0) {
@@ -109,7 +104,7 @@ $("#numBatidas").keyup(function() {
 });
 
 function calcularKilos() {
-  let claveProducto = $('#producto').val();
+  let claveProducto = $('#claveProducto').val();
 
   let rutaFormula = db.ref(`formulaciones/${claveProducto}`);
   rutaFormula.once('value', function(snap) {
@@ -136,7 +131,7 @@ function obtenerFormulaBase() {
     "bInfo" : false
   });
 
-  let claveProducto = $('#producto').val();
+  let claveProducto = $('#claveProducto').val();
   let numBatidas = $('#numBatidas').val();
   let rutaFormulaciones = db.ref(`formulaciones/${claveProducto}/subProductos`);
   rutaFormulaciones.once('value', function(snapshot){
@@ -193,7 +188,7 @@ function mostrarSustitutos() {
   //   "bInfo" : false
   // });
 
-  let claveProducto = $('#producto').val();
+  let claveProducto = $('#claveProducto').val();
   let numBatidas = $('#numBatidas').val();
   let rutaFormulaciones = db.ref(`formulaciones/${claveProducto}/subProductos`);
   rutaFormulaciones.on('value', function(snapshot) {
@@ -245,7 +240,7 @@ function guardarBatida() {
     let numBatidas = Number($('#numBatidas').val());
     let clave = Number($('#clave').val());
     let fechaCaptura = moment().format('DD/MM/YYYY');
-    let claveProducto = $('#producto').val();
+    let claveProducto = $('#claveProducto').val();
     let nombreProducto = $('#nombreProducto').val();
     let kilosProduccion = Number($('#kilosProduccion').val());
 
@@ -331,7 +326,7 @@ function guardarBatida() {
       rutaBatida.set(listaSubProductos[i]);
     }
 
-    $('#producto').val('');
+    $('#claveProducto').val('');
     $('#nombreProducto').val('');
     $('#numBatidas').val('');
     $('#kilosProduccion').val('');
@@ -347,7 +342,7 @@ function guardarBatida() {
     let numBatidas = Number($('#numBatidas').val());
     let clave = Number($('#clave').val());
     let fechaCaptura = moment().format('DD/MM/YYYY');
-    let claveProducto = $('#producto').val();
+    let claveProducto = $('#claveProducto').val();
     let nombreProducto = $('#nombreProducto').val();
     let kilosProduccion = Number($('#kilosProduccion').val());
 
@@ -399,7 +394,7 @@ function guardarBatida() {
       rutaBatida.set(listaSubProductos[i]);
     }
 
-    $('#producto').val('');
+    $('#claveProducto').val('');
     $('#nombreProducto').val('');
     $('#numBatidas').val('');
     $('#kilosProduccion').val('');
