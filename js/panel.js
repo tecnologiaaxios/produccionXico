@@ -54,9 +54,9 @@ $('#cbAgregarSustitutos').on('switchChange.bootstrapSwitch', function(event, sta
 });
 
 $('#claveProducto').keypress(function(e) {
-  let claveProducto = $(this).val().toUpperCase();
-
   if (e.which == 13) {
+    let claveProducto = $(this).val().toUpperCase();
+
     if(claveProducto.length > 0) {
       let rutaFormulaciones = db.ref(`formulaciones/${claveProducto}`);
       rutaFormulaciones.once('value', function(snapshot){
@@ -73,7 +73,14 @@ $('#claveProducto').keypress(function(e) {
           $('#cbAgregarSustitutos').bootstrapSwitch('readonly', true, true);
         }else{
           $.toaster({priority: 'danger', title: 'Error', message: `El producto con la clave ${claveProducto} no existe`});
-          $('#nombreProducto').val("");
+          $('#nombreProducto').val('');
+          $('#numBatidas').attr('readonly', false);
+          $('#tabla-subProductos tbody').html('');
+          $('#tabla-sustitutos tbody').html('');
+          $('#numBatidas').val('');
+          $('#kilosProduccion').val('');
+          $('#cbAgregarSustitutos').bootstrapSwitch('state', false);
+          $('#cbAgregarSustitutos').bootstrapSwitch('readonly', true, true);
         }
       });
       $(this).parent().removeClass('has-error');
@@ -87,9 +94,24 @@ $('#claveProducto').keypress(function(e) {
 });
 
 $('#btnGenerarFormula').click(function() {
-  obtenerFormulaBase();
-  calcularKilos();
-  mostrarSustitutos();
+  let numBatidas = Number($('#numBatidas').val());
+  if(numBatidas > 0) {
+    $('#numBatidas').parent().parent().removeClass('has-error');
+    $('#helpBlockNumBatidas').addClass('hidden');
+
+    obtenerFormulaBase();
+    calcularKilos();
+    mostrarSustitutos();
+  }
+  else {
+    $('#numBatidas').parent().parent().addClass('has-error');
+    $('#helpBlockNumBatidas').removeClass('hidden');
+    $('#tabla-subProductos tbody').html('');
+    $('#tabla-sustitutos tbody').html('');
+    $('#kilosProduccion').val('');
+    $('#cbAgregarSustitutos').bootstrapSwitch('state', false);
+    $('#cbAgregarSustitutos').bootstrapSwitch('readonly', true, true);
+  }
 });
 
 $("#numBatidas").keyup(function() {
@@ -98,13 +120,12 @@ $("#numBatidas").keyup(function() {
     $('#btnGenerarFormula').attr('disabled', false);
   }
   else {
-    console.log('else')
     $('#btnGenerarFormula').attr('disabled', true);
   }
 });
 
 function calcularKilos() {
-  let claveProducto = $('#claveProducto').val();
+  let claveProducto = $('#claveProducto').val().toUpperCase();
 
   let rutaFormula = db.ref(`formulaciones/${claveProducto}`);
   rutaFormula.once('value', function(snap) {
@@ -124,14 +145,14 @@ function obtenerFormulaBase() {
     "scrollY": "200px",
     "scrollCollapse": true,
     "language": {
-      "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
+      "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
     },
     "searching": false,
     "paging": false,
     "bInfo" : false
   });
 
-  let claveProducto = $('#claveProducto').val();
+  let claveProducto = $('#claveProducto').val().toUpperCase();
   let numBatidas = $('#numBatidas').val();
   let rutaFormulaciones = db.ref(`formulaciones/${claveProducto}/subProductos`);
   rutaFormulaciones.once('value', function(snapshot){
@@ -149,7 +170,6 @@ function obtenerFormulaBase() {
                       <td>${(subProductos[subProducto].valorConstante*numBatidas).toFixed(4)}</td>
                     </tr>`;
                       //<td class="text-center"><button onclick="quitarSubProducto('fila-${subProducto}')" type="button" class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button></td>
-
         }
         else {
           filas += `<tr id="fila-${subProducto}" >
@@ -181,7 +201,7 @@ function mostrarSustitutos() {
   //   "scrollY": "200px",
   //   "scrollCollapse": true,
   //   "language": {
-  //     "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
+  //     "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
   //   },
   //   "searching": false,
   //   "paging": false,
@@ -240,7 +260,7 @@ function guardarBatida() {
     let numBatidas = Number($('#numBatidas').val());
     let clave = Number($('#clave').val());
     let fechaCaptura = moment().format('DD/MM/YYYY');
-    let claveProducto = $('#claveProducto').val();
+    let claveProducto = $('#claveProducto').val().toUpperCase();
     let nombreProducto = $('#nombreProducto').val();
     let kilosProduccion = Number($('#kilosProduccion').val());
 
@@ -312,6 +332,7 @@ function guardarBatida() {
       kilosProduccion: kilosProduccion,
       kilos: 0,
       piezas: 0,
+      costo: 0,
       claveBatida: clave,
       fechaCaptura: fechaCaptura,
       claveProducto: claveProducto,
@@ -342,7 +363,7 @@ function guardarBatida() {
     let numBatidas = Number($('#numBatidas').val());
     let clave = Number($('#clave').val());
     let fechaCaptura = moment().format('DD/MM/YYYY');
-    let claveProducto = $('#claveProducto').val();
+    let claveProducto = $('#claveProducto').val().toUpperCase();
     let nombreProducto = $('#nombreProducto').val();
     let kilosProduccion = Number($('#kilosProduccion').val());
 
@@ -384,6 +405,7 @@ function guardarBatida() {
       kilosProduccion: kilosProduccion,
       kilos: 0,
       piezas: 0,
+      costo: 0,
       estado: "En proceso"
     };
 
@@ -406,8 +428,6 @@ function guardarBatida() {
 
     obtenerClaveBatida();
   }
-
-
 }
 
 function mostrarBatidas() {
@@ -417,7 +437,7 @@ function mostrarBatidas() {
     "scrollY": "500px",
     "scrollCollapse": true,
     "language": {
-      "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
+      "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
     },
     "searching": false,
     "paging": false,
@@ -476,7 +496,7 @@ function mostrarDatosBatida(idBatida) {
     "scrollY": "200px",
     "scrollCollapse": true,
     "language": {
-      "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
+      "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
     },
     "paging": false,
     "bInfo" : false,
@@ -542,7 +562,7 @@ function verDetalles(idBatida) {
     "scrollY": "200px",
     "scrollCollapse": true,
     "language": {
-      "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
+      "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
     },
     "paging": false,
     "bInfo" : false,
@@ -629,16 +649,17 @@ function guardarCambiosBatida(idBatida) {
     for(let i in listaClaves) {
       let ruta = db.ref(`batidas/${idBatida}/subProductos/${listaClaves[i]}`);
       ruta.update({
-        valorConstante: listaValoresConstantes[i]
+        valorConstante: Number(listaValoresConstantes[i])
       });
       let rutaSubProducto = db.ref(`subProductos/${listaClaves[i]}`);
       rutaSubProducto.once('value', function(snap) {
         let precio = snap.val().precioPesos;
-        costo += Number(precio*listaValoresConstantes[i]);
+        costo += precio*Number(listaValoresConstantes[i]);
 
         if(i==listaClaves.length-1) {
           costo = (costo/kilos).toFixed(4);
-          rutaBatida.update({ costo: costo })
+
+          rutaBatida.update({ costo: Number(costo)})
         }
       });
     }
@@ -683,7 +704,6 @@ $('#kilos').keyup(function() {
       $('#merma').val(merma.toFixed(4));
 
       if(merma > 4) {
-        console.log("Hola")
         $('#merma').parent().parent().removeClass('has-success');
         $('#merma').parent().parent().addClass('has-error');
       }
@@ -721,21 +741,27 @@ function actualizarProductoDashboard(idBatida) {
 
   ruta.once('value', function(snapshot){
     let claveProducto = snapshot.val().claveProducto;
+    let nombreProducto = snapshot.val().nombreProducto;
     let costo = snapshot.val().costo;
     let kilos = snapshot.val().kilos;
     let merma = snapshot.val().merma;
     let piezas = snapshot.val().piezas;
     let kilosProduccion = snapshot.val().kilosProduccion;
     let subProductos = snapshot.val().subProductos;
+    let fechaCaptura = snapshot.val().fechaCaptura;
+    let fechaFinalizada = snapshot.val().fechaFinalizada;
 
     let costosProduccion = db.ref(`costosProduccion/${claveProducto}`);
     costosProduccion.update({
       costo: costo,
+      nombre: nombreProducto,
       kilos: kilos,
       merma: merma,
       piezas: piezas,
       kilosProduccion: kilosProduccion,
-      subProductos: subProductos
+      subProductos: subProductos,
+      fechaCaptura: fechaCaptura,
+      fechaFinalizada: fechaFinalizada
     });
   });
 }
@@ -766,7 +792,7 @@ function mostrarBatidasFinalizadas() {
     "scrollY": "500px",
     "scrollCollapse": true,
     "language": {
-      "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
+      "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
     }
     //"searching": false
     //"paging": false,
@@ -786,6 +812,7 @@ function mostrarBatidasFinalizadas() {
                     <td>${batidasFinalizadas[batida].nombreProducto}</td>
                     <td>${batidasFinalizadas[batida].numBatidas}</td>
                     <td>${batidasFinalizadas[batida].fechaCaptura}</td>
+                    <td>${batidasFinalizadas[batida].fechaFinalizada}</td>
                     <td class="text-center"><button type="button" onclick="abrirModalVerDetalles('${batida}')" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="Ver más"><i class="glyphicon glyphicon-eye-open"></i></button></td>
                   </tr>`;
       }
@@ -796,6 +823,7 @@ function mostrarBatidasFinalizadas() {
                   <td>${batidasFinalizadas[batida].nombreProducto}</td>
                   <td>${batidasFinalizadas[batida].numBatidas}</td>
                   <td>${batidasFinalizadas[batida].fechaCaptura}</td>
+                  <td>${batidasFinalizadas[batida].fechaFinalizada}</td>
                   <td class="text-center"><button type="button" onclick="abrirModalVerDetalles('${batida}')" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="Ver más"><i class="glyphicon glyphicon-eye-open"></i></button></td>
                 </tr>`;
       }
@@ -808,7 +836,6 @@ function mostrarBatidasFinalizadas() {
     tabla.rows.add($(filas)).columns.adjust().draw();
     $('[data-toggle="tooltip"]').tooltip();
   })
-
 }
 
 function haySesion() {

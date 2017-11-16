@@ -74,7 +74,8 @@
             <i class="fa fa-caret-down"></i>
           </a>
           <ul class="dropdown-menu dropdown-alerts">
-            <li class="divider"></li>
+            <li class="dropdown-header">Ajustes</li>
+            <li role="separator" class="divider"></li>
             <li>
               <a onclick="logout()"><span class="glyphicon glyphicon-off"></span> Cerrar sesión</a>
             </li>
@@ -164,6 +165,7 @@
                                   <button id="btnGenerarFormula" title="Generar fórmula" data-toggle="tooltip" data-placement="bottom" type="button" class="btn btn-primary" disabled="disabled"><i class="fa fa-flask" aria-hidden="true"></i></button>
                                 </span>
                               </div>
+                              <span id="helpBlockNumBatidas" class="hidden help-block">El número debe ser mayor a 0</span>
                             </div>
                           </div>
                           <div class="col-md-3">
@@ -264,6 +266,7 @@
                         <th>Nombre producto</th>
                         <th>Núm. de batidas</th>
                         <th>Fecha de captura</th>
+                        <th>Fecha de finalización</th>
                         <th>Detalles</th>
                       </tr>
                     </thead>
