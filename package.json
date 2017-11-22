@@ -29,5 +29,9 @@
     "jquery": "^3.2.1",
     "jspdf": "^1.3.3",
     "jspdf-autotable": "^2.3.2"
+  },
+  "scripts": {
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . ProduccionXico --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Producción Xico\""
   }
 }
