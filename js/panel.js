@@ -259,7 +259,13 @@ function guardarBatida() {
   if(seUsaronSustitutos) {
     let numBatidas = Number($('#numBatidas').val());
     let clave = Number($('#clave').val());
-    let fechaCaptura = moment().format('DD/MM/YYYY');
+    let fechaString = $('#fecha').val();
+    let date = fechaString.split("-");
+    let dia = date[2];
+    let mes = date[1];
+    let año = date[0];
+    let dateObj = new Date(`${mes}/${dia}/${año}`);
+    let fechaCaptura = moment(dateObj).format('DD/MM/YYYY');
     let claveProducto = $('#claveProducto').val().toUpperCase();
     let nombreProducto = $('#nombreProducto').val();
     let kilosProduccion = Number($('#kilosProduccion').val());
@@ -763,6 +769,26 @@ function actualizarProductoDashboard(idBatida) {
       fechaCaptura: fechaCaptura,
       fechaFinalizada: fechaFinalizada
     });
+
+    // costosProduccion.once('value', function(snapshot) {
+    //   let datos = snapshot.val();
+    //   let historialCostos = datos.historialCostos;
+    //
+    //   let nuevoHistorialCostos = [
+    //     {
+    //       fecha: fechaCaptura,
+    //       costo: costo
+    //     },
+    //     historialCostos[0],
+    //     historialCostos[1],
+    //     historialCostos[2],
+    //     historialCostos[3]
+    //   ]
+    //
+    //   costosProduccion.update({
+    //     historialCostos: nuevoHistorialCostos
+    //   })
+    // })
   });
 }
 
