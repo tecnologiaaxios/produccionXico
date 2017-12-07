@@ -148,7 +148,7 @@
                           <div class="col-md-3">
                             <div class="form-group">
                               <label for="fechaCaptura">Fecha:</label>
-                              <input type="date" class="form-control" name="fechaCaptura" id="fechaCaptura" readonly>
+                              <input type="date" class="form-control" name="fechaCaptura" id="fechaCaptura">
                             </div>
                           </div>
                         </div>
@@ -160,7 +160,7 @@
                             <div class="form-group">
                               <label for="numBatidas">Batidas:</label>
                               <div class="input-group">
-                                <input type="number" name="numBatidas" id="numBatidas" min="1" class="form-control" readonly>
+                                <input type="number" name="numBatidas" id="numBatidas" min="1" class="form-control">
                                 <span class="input-group-btn">
                                   <button id="btnGenerarFormula" title="Generar fórmula" data-toggle="tooltip" data-placement="bottom" type="button" class="btn btn-primary" disabled="disabled"><i class="fa fa-flask" aria-hidden="true"></i></button>
                                 </span>
@@ -171,7 +171,7 @@
                           <div class="col-md-3">
                             <div class="form-group">
                               <label for="kilosProduccion">Kilos producción:</label>
-                              <input type="number" class="form-control" name="kilosProduccion" id="kilosProduccion" readonly>
+                              <input type="number" class="form-control" name="kilosProduccion" id="kilosProduccion">
                             </div>
                           </div>
                         </div>
@@ -216,6 +216,22 @@
                       <button disabled="disabled" type="button" data-toggle="modal" data-target="#modalConfirmarGuardar" class="btn btn-success pull-right" id="btnGuardarBatida" name="btnGuardarBatida">Guardar batida <!--<i class="fa fa-floppy-o" aria-hidden="true"></i>--></button>
                     </div>
                   </div>
+                  <!-- <div>
+                    <ul class="nav nav-tabs" role="tablist">
+                      <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Jamones</a></li>
+                      <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Salchichas</a></li>
+                      <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Chorizos</a></li>
+                      <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Delicatessen</a></li>
+                    </ul>
+                    <div class="tab-content">
+                      <div role="tabpanel" class="tab-pane active" id="home">
+
+                      </div>
+                      <div role="tabpanel" class="tab-pane" id="profile">Salchichas</div>
+                      <div role="tabpanel" class="tab-pane" id="messages">Chorizos</div>
+                      <div role="tabpanel" class="tab-pane" id="settings">Delicatessen</div>
+                    </div>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -443,8 +459,9 @@
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
   <!-- jQuery -->
-  <script>window.$ = window.jQuery = require('./js/jquery-3.2.1.min.js')</script>
-  <!-- <script src="js/jquery-3.2.1.min.js"></script> -->
+  <!-- <script src="./node_modules/jquery/dist/jquery.min.js"></script> -->
+  <!-- <script>window.$ = window.jQuery = require('./js/jquery-3.2.1.min.js')</script> -->
+  <script src="js/jquery-3.2.1.min.js"></script>
 
   <!-- Bootstrap Core JavaScript -->
   <script src="vendor/bootstrap/js/bootstrap.min.js"></script>

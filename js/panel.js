@@ -945,7 +945,6 @@ $(document).ready(function() {
 
   $("#cbAgregarSustitutos").bootstrapSwitch();
 
-
   $('#fechaCaptura').val(moment().format('YYYY-MM-DD'));
 
   $.toaster({
