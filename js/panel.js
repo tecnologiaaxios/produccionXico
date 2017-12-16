@@ -208,12 +208,12 @@ function mostrarSustitutos() {
   //   "bInfo" : false
   // });
 
-  let claveProducto = $('#claveProducto').val();
+  let claveProducto = $('#claveProducto').val().toUpperCase();
   let numBatidas = $('#numBatidas').val();
   let rutaFormulaciones = db.ref(`formulaciones/${claveProducto}/subProductos`);
   rutaFormulaciones.on('value', function(snapshot) {
     let subProductos = snapshot.val();
-    //tabla.clear();
+    // tabla.clear();
     let filas = "";
     let i = 0;
 
@@ -245,7 +245,7 @@ function mostrarSustitutos() {
       }
     }
     $('#tabla-sustitutos tbody').html(filas)
-    //tabla.rows.add($(filas)).columns.adjust().draw();
+    // tabla.rows.add($(filas)).columns.adjust().draw();
     $('.toggle-checkbox').bootstrapSwitch();
   });
 }
@@ -488,7 +488,7 @@ function mostrarBatidas() {
   });
 }
 
-function abrirModalEditar(idBatida){
+function abrirModalEditar(idBatida) {
   $('#modalEditar').modal('show');
   $('#kilos').attr('data-idBatida', idBatida);
   mostrarDatosBatida(idBatida);
@@ -575,7 +575,7 @@ function verDetalles(idBatida) {
   });
 
   let rutaSubProductos = db.ref(`batidas/${idBatida}`);
-  rutaSubProductos.on('value', function(snap){
+  rutaSubProductos.on('value', function(snap) {
     let kilos = snap.val().kilos;
     let piezas = snap.val().piezas;
     let merma = snap.val().merma;
