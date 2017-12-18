@@ -1,3 +1,5 @@
+"use strict";
+
 var config = {
   apiKey: "AIzaSyA19j6-VLNcXLJfBkfd_lZfFFbzg6z0Imc",
   authDomain: "xico-netcontrol.firebaseapp.com",
@@ -8,28 +10,26 @@ var config = {
 };
 firebase.initializeApp(config);
 
-const db = firebase.database();
-const auth = firebase.auth();
+var db = firebase.database();
+var auth = firebase.auth();
 
 $('#username').keyup(function () {
-  let username = $('#username').val();
-  if(username.length < 1) {
+  var username = $('#username').val();
+  if (username.length < 1) {
     $('#username').parent().addClass('has-error');
     $('#helpblockUserName').html("Campo obligatorio").show();
-  }
-  else {
+  } else {
     $('#username').parent().removeClass('has-error');
     $('#helpblockUserName').hide();
   }
 });
 
 $('#contraseña').keyup(function () {
-  let contraseña = $('#contraseña').val();
-  if(contraseña.length < 1) {
+  var contraseña = $('#contraseña').val();
+  if (contraseña.length < 1) {
     $('#contraseña').parent().addClass('has-error');
     $('#helpblockContraseña').html("Campo obligatorio").show();
-  }
-  else {
+  } else {
     $('#contraseña').parent().removeClass('has-error');
     $('#helpblockContraseña').hide();
   }
@@ -48,47 +48,44 @@ $('#contraseña').keypress(function (e) {
 });
 
 function login() {
-  let username = $('#username').val();
-  let contraseña = $('#contraseña').val();
+  var username = $('#username').val();
+  var contraseña = $('#contraseña').val();
 
-  if(username.length > 0 && contraseña.length > 0) {
+  if (username.length > 0 && contraseña.length > 0) {
 
-    let usuarios = db.ref('usuarios/planta/produccion/');
-    usuarios.orderByChild("username").equalTo(username).on("child_added", function(snapshot) {
-      let email = snapshot.val().email;
+    var usuarios = db.ref('usuarios/planta/produccion/');
+    usuarios.orderByChild("username").equalTo(username).on("child_added", function (snapshot) {
+      var email = snapshot.val().email;
 
-      if(email != null) {
-        auth.signInWithEmailAndPassword(email, contraseña)
-        .then(function() { //en caso de exito
+      if (email != null) {
+        auth.signInWithEmailAndPassword(email, contraseña).then(function () {
+          //en caso de exito
           obtenerUsuario();
-        })
-        .catch(function(error) { //en caso de error
-          if(error.code === 'auth/wrong-password') { //imprime un error si te equivocaste en la contraseña
+        }).catch(function (error) {
+          //en caso de error
+          if (error.code === 'auth/wrong-password') {
+            //imprime un error si te equivocaste en la contraseña
             $('#contrasena').parent().addClass('has-error');
             $('#helpblockContraseña').html("La contraseña es incorrecta").show();
           }
         });
-      }
-      else {
+      } else {
         $('#username').parent().addClass('has-error');
         $('#helpblockUserName').html("El nombre de usuario es incorrecto").show();
       }
     });
-  }
-  else {
-    if(username == "") {
+  } else {
+    if (username == "") {
       $('#username').parent().addClass('has-error');
       $('#helpblockUserName').html("Campo obligatorio").show();
-    }
-    else {
+    } else {
       $('#username').parent().removeClass('has-error');
       $('#helpblockUserName').hide();
     }
-    if(contraseña == "") {
+    if (contraseña == "") {
       $('#contraseña').parent().addClass('has-error');
       $('#helpblockContraseña').html("Campo obligatorio").show();
-    }
-    else {
+    } else {
       $('#contraseña').parent().removeClass('has-error');
       $('#helpblockContraseña').hide();
     }
@@ -120,6 +117,6 @@ obtenerUsuario();
   }
 }*/
 
-$(document).ready(function() {
+$(document).ready(function () {
   $('[data-toggle="tooltip"]').tooltip();
 });
