@@ -141,6 +141,8 @@ function calcularKilos() {
       var kilosProduccion = snap.val().kilosProduccion;
       var numBatidas = $('#numBatidas').val();
 
+      console.log(kilosProduccion);
+
       $('#kilosProduccion').val((kilosProduccion * numBatidas).toFixed(4));
     }
   });

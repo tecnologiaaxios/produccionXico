@@ -143,6 +143,8 @@ function calcularKilos() {
       let kilosProduccion = snap.val().kilosProduccion;
       let numBatidas = $('#numBatidas').val();
 
+      console.log(kilosProduccion)
+
       $('#kilosProduccion').val((kilosProduccion*numBatidas).toFixed(4));
     }
   });
@@ -269,7 +271,7 @@ function guardarBatida() {
   if(seUsaronSustitutos) {
     let numBatidas = Number($('#numBatidas').val());
     let clave = Number($('#clave').val());
-    let fechaString = $('#fecha').val();
+    let fechaString = $('#fechaCaptura').val();
     let date = fechaString.split("-");
     let dia = date[2];
     let mes = date[1];
@@ -378,7 +380,13 @@ function guardarBatida() {
   else {
     let numBatidas = Number($('#numBatidas').val());
     let clave = Number($('#clave').val());
-    let fechaCaptura = moment().format('DD/MM/YYYY');
+    let fechaString = $('#fechaCaptura').val();
+    let date = fechaString.split("-");
+    let dia = date[2];
+    let mes = date[1];
+    let año = date[0];
+    let dateObj = new Date(`${mes}/${dia}/${año}`);
+    let fechaCaptura = moment(dateObj).format('DD/MM/YYYY');
     let claveProducto = $('#claveProducto').val().toUpperCase();
     let nombreProducto = $('#nombreProducto').val();
     let kilosProduccion = Number($('#kilosProduccion').val());
