@@ -464,7 +464,7 @@ function mostrarBatidas() {
       "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
     },
     "searching": false,
-    "paging": false,
+    "paging": true,
     "bInfo" : false
   });
   let rutaBatidas = db.ref('batidas');
@@ -679,9 +679,13 @@ function guardarCambiosBatida(idBatida) {
       rutaSubProducto.once('value', function(snap) {
         let precio = snap.val().precioPesos;
         costo += precio*Number(listaValoresConstantes[i]);
+        console.log("Precio: " + precio);
+        console.log("Valor constante: " + listaValoresConstantes[i]);
 
         if(i==listaClaves.length-1) {
+          console.log("Costo antes: " +costo);
           costo = (costo/kilos).toFixed(4);
+          console.log("Costo despues: " + costo);
 
           rutaBatida.update({ costo: Number(costo)})
         }
