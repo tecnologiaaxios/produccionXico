@@ -596,3 +596,11 @@ display: table-cell;
  -moz-transform: rotate(360deg);
  transform: rotate(360deg);
 }
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus{
+    color: white;
+    background-color: #3A96FF;
+    border: 1px solid #A9A9A9;
+}
