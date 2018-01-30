@@ -36,7 +36,7 @@ function mostrarPedidosVerificados() {
 				filas += `<tr>
 										<td>${pedido.clave}</td>
 										<td>${fechaMostrar}</td>
-										<td class="text-center"><button class="btn btn-default btn-sm" type="button"><i class="fa fa-eye" aria-hidden="true"></i> Ver más</button></td>
+										<td class="text-center"><a href="pedidoPadre.html?id=${pedidoPadre}" class="btn btn-default btn-sm" type="button"><i class="fa fa-eye" aria-hidden="true"></i> Ver más</a></td>
 									</tr>`;
 			}
 		}

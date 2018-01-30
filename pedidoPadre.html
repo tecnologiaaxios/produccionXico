@@ -40,24 +40,14 @@
           <img class="navbar-brand" id="logo" src="logo.png"></img>
         </div>
         <ul class="nav navbar-top-links navbar-right no-padding ">
-          <li id="campana" onclick="mostrarNotificaciones()" class="dropdown no-padding">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-              <!--<i class="fa fa-bell fa-fw"></i>-->
-              <i class="fa fa-bell-o" style="font-size: 25px;" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Notificaciones"></i>
-              <span id="spanNotificaciones" style="background-color: red; display: none;" class="badge"></span>
-              <i class="fa fa-caret-down"></i>
-            </a>
-            <ul id="contenedorNotificaciones" class="dropdown-menu dropdown-alerts">
-
-            </ul>
-          </li>
-          <li><img src="http://lorempixel.com/40/40/" alt="..." class="img-circle"> </li>
           <li class="dropdown no-padding">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+              <i class="fa fa-cog rotateMe" style="font-size: 25px;" aria-hidden="true"></i>
               <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-alerts">
-              <li class="divider"></li>
+              <li class="dropdown-header">Ajustes</li>
+              <li role="separator" class="divider"></li>
               <li>
                 <a onclick="logout()"><span class="glyphicon glyphicon-off"></span> Cerrar sesión</a>
               </li>
