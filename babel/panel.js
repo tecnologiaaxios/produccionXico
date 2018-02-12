@@ -245,7 +245,7 @@ function guardarBatida() {
   if (seUsaronSustitutos) {
     var numBatidas = Number($('#numBatidas').val());
     var clave = Number($('#clave').val());
-    var fechaString = $('#fecha').val();
+    var fechaString = $('#fechaCaptura').val();
     var date = fechaString.split("-");
     var dia = date[2];
     var mes = date[1];
@@ -360,7 +360,13 @@ function guardarBatida() {
   } else {
     var _numBatidas = Number($('#numBatidas').val());
     var _clave = Number($('#clave').val());
-    var _fechaCaptura = moment().format('DD/MM/YYYY');
+    var _fechaString = $('#fechaCaptura').val();
+    var _date = _fechaString.split("-");
+    var _dia = _date[2];
+    var _mes = _date[1];
+    var _aO = _date[0];
+    var _dateObj = new Date(_mes + "/" + _dia + "/" + _aO);
+    var _fechaCaptura = moment(_dateObj).format('DD/MM/YYYY');
     var _claveProducto = $('#claveProducto').val().toUpperCase();
     var _nombreProducto = $('#nombreProducto').val();
     var _kilosProduccion = Number($('#kilosProduccion').val());
@@ -441,7 +447,7 @@ function mostrarBatidas() {
       "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
     },
     "searching": false,
-    "paging": false,
+    "paging": true,
     "bInfo": false
   });
   var rutaBatidas = db.ref('batidas');
@@ -622,9 +628,13 @@ function guardarCambiosBatida(idBatida) {
         rutaSubProducto.once('value', function (snap) {
           var precio = snap.val().precioPesos;
           costo += precio * Number(listaValoresConstantes[i]);
+          console.log("Precio: " + precio);
+          console.log("Valor constante: " + listaValoresConstantes[i]);
 
           if (i == listaClaves.length - 1) {
+            console.log("Costo antes: " + costo);
             costo = (costo / kilos).toFixed(4);
+            console.log("Costo despues: " + costo);
 
             rutaBatida.update({ costo: Number(costo) });
           }

@@ -24,7 +24,7 @@ function mostrarPedidosVerificados() {
 		for(let pedidoPadre in pedidosPadre) {
 			let pedido = pedidosPadre[pedidoPadre];
 
-			if(pedido.verificado) {
+			if(pedido.verificado && (pedido.estado == "En proceso")) {
 				let dia = pedido.fechaCreacionPadre.substr(0,2),
 	        	mes = pedido.fechaCreacionPadre.substr(3,2),
 	        	año = pedido.fechaCreacionPadre.substr(6,4),
@@ -36,7 +36,7 @@ function mostrarPedidosVerificados() {
 				filas += `<tr>
 										<td>${pedido.clave}</td>
 										<td>${fechaMostrar}</td>
-										<td class="text-center"><a href="pedidoPadre.html?id=${pedidoPadre}" class="btn btn-default btn-sm" type="button"><i class="fa fa-eye" aria-hidden="true"></i> Ver más</a></td>
+										<td class="text-center"><a href="pedidoPadre.html?id=${pedidoPadre}" class="btn btn-default btn-sm" type="button"><span class="glyphicon glyphicon-eye-open"></span> Ver más</a></td>
 									</tr>`;
 			}
 		}
