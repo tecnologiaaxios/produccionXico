@@ -6,81 +6,107 @@ function logout() {
 }
  
 function mostrarPedidosVerificados() {
-	let tabla = $(`#tablaPedidosVerificados`).DataTable({
+	let pedidosVerificados = JSON.parse(localStorage.getItem('pedidosVerificados'));
+
+	let datatable = $('#tablaPedidosVerificados').DataTable({
+    data: pedidosVerificados,
+    pageLength: 10,
+    columns: [
+      { data: 'clave' },
+      {
+        data: 'fechaCreacionPadre',
+        render: (fechaCreacionPadre) => {
+          moment.locale('es');
+          return moment(`${fechaCreacionPadre.substr(3,2)}/${fechaCreacionPadre.substr(0,2)}/${fechaCreacionPadre.substr(6,4)}`).format('LL')
+        }
+      },
+      { data: 'id',
+        className: 'text-center', 
+        render: (id) => {
+          return `<a href="pedidoPadre.html?id=${id}" class="btn btn-default btn-sm" type="button"><span class="glyphicon glyphicon-eye-open"></span> Ver más</a>`
+        }
+      }
+    ],
     destroy: true,
-    "language": {
-      "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
-    },
-    "searching": false,
-    "ordering": false
+		ordering: false,
+		searching: false,
+    language: {
+      sProcessing: 'Procesando...',
+      sLengthMenu: 'Mostrar _MENU_ registros',
+      sZeroRecords: 'No se encontraron resultados',
+      sEmptyTable: 'Ningún dato disponible en esta tabla',
+      sInfo: 'Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros',
+      sInfoEmpty: 'Mostrando registros del 0 al 0 de un total de 0 registros',
+      sInfoFiltered: '(filtrado de un total de _MAX_ registros)',
+      sInfoPostFix: '',   
+      sSearch: '<i style="color: #4388E5;" class="glyphicon glyphicon-search"></i>',
+      sUrl: '',
+      sInfoThousands: ',',
+      sLoadingRecords: 'Cargando...',
+      oPaginate: {
+        sFirst: 'Primero',
+        sLast: 'Último',
+        sNext: 'Siguiente',
+        sPrevious: 'Anterior'
+      },
+      oAria: {
+        sSortAscending: ': Activar para ordenar la columna de manera ascendente',
+        sSortDescending: ': Activar para ordenar la columna de manera descendente'
+      }
+    }
   });
-
-	let rutaPedidosPadre = db.ref(`pedidoPadre`);
-	rutaPedidosPadre.on('value', function(snapshot) {
-		let pedidosPadre = snapshot.val();
-
-		let filas = "";
-		tabla.clear();
-		for(let pedidoPadre in pedidosPadre) {
-			let pedido = pedidosPadre[pedidoPadre];
-
-			if(pedido.verificado && (pedido.estado == "En proceso")) {
-				let dia = pedido.fechaCreacionPadre.substr(0,2),
-	        	mes = pedido.fechaCreacionPadre.substr(3,2),
-	        	año = pedido.fechaCreacionPadre.substr(6,4),
-	        	fechaCaptura = `${mes}/${dia}/${año}`;
-	        	
-	      moment.locale('es');
-	      let fechaMostrar = moment(fechaCaptura).format('LL');
-
-				filas += `<tr>
-										<td>${pedido.clave}</td>
-										<td>${fechaMostrar}</td>
-										<td class="text-center"><a href="pedidoPadre.html?id=${pedidoPadre}" class="btn btn-default btn-sm" type="button"><span class="glyphicon glyphicon-eye-open"></span> Ver más</a></td>
-									</tr>`;
-			}
-		}
-		tabla.rows.add($(filas)).columns.adjust().draw();
-	});
 }
 
 function mostrarPedidosFinalizados() {
-	let tabla = $(`#tablaPedidosFinalizados`).DataTable({
+	let pedidosFinalizados = JSON.parse(localStorage.getItem('pedidosFinalizados'));
+
+	let datatable = $('#tablaPedidosFinalizados').DataTable({
+    data: pedidosFinalizados,
+    pageLength: 10,
+    columns: [
+      { data: 'clave' },
+      {
+        data: 'fechaCreacionPadre',
+        render: (fechaCreacionPadre) => {
+          moment.locale('es');
+          return moment(`${fechaCreacionPadre.substr(3,2)}/${fechaCreacionPadre.substr(0,2)}/${fechaCreacionPadre.substr(6,4)}`).format('LL')
+        }
+      },
+      { data: 'id',
+        className: 'text-center', 
+        render: (id) => {
+          return `<a href="pedidoPadre.html?id=${id}" class="btn btn-default btn-sm" type="button"><span class="glyphicon glyphicon-eye-open"></span> Ver más</a>`
+        }
+      }
+    ],
     destroy: true,
-    "language": {
-      "url": "//cdn.datatables.net/plug-ins/a5734b29083/i18n/Spanish.json"
-    },
-    "searching": false,
-    "ordering": false
+		ordering: false,
+		searching: false,
+    language: {
+      sProcessing: 'Procesando...',
+      sLengthMenu: 'Mostrar _MENU_ registros',
+      sZeroRecords: 'No se encontraron resultados',
+      sEmptyTable: 'Ningún dato disponible en esta tabla',
+      sInfo: 'Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros',
+      sInfoEmpty: 'Mostrando registros del 0 al 0 de un total de 0 registros',
+      sInfoFiltered: '(filtrado de un total de _MAX_ registros)',
+      sInfoPostFix: '',   
+      sSearch: '<i style="color: #4388E5;" class="glyphicon glyphicon-search"></i>',
+      sUrl: '',
+      sInfoThousands: ',',
+      sLoadingRecords: 'Cargando...',
+      oPaginate: {
+        sFirst: 'Primero',
+        sLast: 'Último',
+        sNext: 'Siguiente',
+        sPrevious: 'Anterior'
+      },
+      oAria: {
+        sSortAscending: ': Activar para ordenar la columna de manera ascendente',
+        sSortDescending: ': Activar para ordenar la columna de manera descendente'
+      }
+    }
   });
-
-	let rutaPedidosPadre = db.ref(`pedidoPadre`);
-	rutaPedidosPadre.on('value', function(snapshot) {
-		let pedidosPadre = snapshot.val();
-
-		let filas = "";
-		tabla.clear();
-		for(let pedidoPadre in pedidosPadre) {
-			let pedido = pedidosPadre[pedidoPadre];
-			
-			if(pedido.estado == "Finalizado") {
-				let dia = pedido.fechaCreacionPadre.substr(0,2),
-	        	mes = pedido.fechaCreacionPadre.substr(3,2),
-	        	año = pedido.fechaCreacionPadre.substr(6,4),
-	        	fechaCaptura = `${mes}/${dia}/${año}`;
-	        	
-	      moment.locale('es');
-	      let fechaMostrar = moment(fechaCaptura).format('LL');
-
-				filas += `<tr>
-										<td>${pedido.clave}</td>
-										<td>${fechaMostrar}</td>
-										<td class="text-center"><a class="btn btn-default btn-sm" href="pedidoPadre.html?id=${pedidoPadre}"><span class="glyphicon glyphicon-eye-open"></span> Ver más</a></td>
-									</tr>`;
-			}
-		}
-		tabla.rows.add($(filas)).columns.adjust().draw();
-	});
 }
 
 $('#tabPedidosVerificados').on('shown.bs.tab', function (e) {
@@ -93,15 +119,15 @@ $('#tabPedidosFinalizados').on('shown.bs.tab', function (e) {
 
 function haySesion() {
   auth.onAuthStateChanged(function (user) {
-	//si hay un usuario
-	if (user) {
-	  mostrarContador();
-	  mostrarPedidosVerificados();
-	  mostrarPedidosFinalizados();
-	}
-	else {
-	  $(location).attr("href", "index.html");
-	}
+    //si hay un usuario
+    if (user) {
+      mostrarContador();
+      mostrarPedidosVerificados();
+      mostrarPedidosFinalizados();
+    }
+    else {
+      $(location).attr("href", "index.html");
+    }
   });
 }
 
@@ -109,41 +135,40 @@ haySesion();
 
 function mostrarNotificaciones() {
   let usuario = auth.currentUser.uid;
-  let notificacionesRef = db.ref('notificaciones/almacen/'+usuario+'/lista');
+  let notificacionesRef = db.ref(`notificaciones/almacen/${usuario}/lista`);
   notificacionesRef.on('value', function(snapshot) {
-	let lista = snapshot.val();
-	let lis = "";
+    let lista = snapshot.val();
+    let lis = '<li class="dropdown-header">Notificaciones</li><li class="divider"></li>';
 
-	let arrayNotificaciones = [];
-	for(let notificacion in lista) {
-	  arrayNotificaciones.push(lista[notificacion]);
-	}
+    let arrayNotificaciones = [];
+    for(let notificacion in lista) {
+      arrayNotificaciones.push(lista[notificacion]);
+    }
 
-	arrayNotificaciones.reverse();
+    arrayNotificaciones.reverse();
 
-	for(let i in arrayNotificaciones) {
-	  let date = arrayNotificaciones[i].fecha;
-	  moment.locale('es');
-	  let fecha = moment(date, "MMMM DD YYYY, HH:mm:ss").fromNow();
+    for(let i in arrayNotificaciones) {
+      let date = arrayNotificaciones[i].fecha;
+      moment.locale('es');
+      let fecha = moment(date, "MMMM DD YYYY, HH:mm:ss").fromNow();
 
-	  lis += '<li>' +
-			   '<a>' +
-				'<div>' +
-				  '<i class="fa fa-comment fa-fw"></i> ' + arrayNotificaciones[i].mensaje +
-					'<span class="pull-right text-muted small">'+fecha+'</span>' +
-				'</div>' +
-			   '</a>' +
-			 '</li>';
-	}
+      lis += `<li>
+                <a>
+                  <div>
+                    <i class="fa fa-comment fa-fw"></i>${arrayNotificaciones[i].mensaje}
+                    <span class="pull-right text-muted small">${fecha}</span>
+                  </div>
+                </a>
+              </li>`;
+    }
 
-	$('#contenedorNotificaciones').empty().append('<li class="dropdown-header">Notificaciones</li><li class="divider"></li>');
-	$('#contenedorNotificaciones').append(lis);
+    $('#contenedorNotificaciones').html(lis);
   });
 }
 
 function mostrarContador() {
   let uid = auth.currentUser.uid;
-  let notificacionesRef = db.ref('notificaciones/almacen/'+uid);
+  let notificacionesRef = db.ref(`notificaciones/almacen/${uid}`);
   notificacionesRef.on('value', function(snapshot) {
 	let cont = snapshot.val().cont;
 
@@ -158,7 +183,7 @@ function mostrarContador() {
 
 function verNotificaciones() {
   let uid = auth.currentUser.uid;
-  let notificacionesRef = db.ref('notificaciones/almacen/'+uid);
+  let notificacionesRef = db.ref(`notificaciones/almacen/${uid}`);
   notificacionesRef.update({cont: 0});
 }
 

@@ -15,6 +15,83 @@ function logout() {
   auth.signOut();
 }
 
+$(document).ready(function() {
+  $('[data-toggle="tooltip"]').tooltip();
+
+  obtenerClaveBatida();
+  llenarSugerenciasProductos();
+
+  $("#cbAgregarSustitutos").bootstrapSwitch();
+
+  $('#fechaCaptura').val(moment().format('YYYY-MM-DD'));
+
+  $.toaster({
+    settings: {
+      'timeout': 3000
+    }
+  });
+
+  let arrBatidas = [];
+  db.ref('batidas').orderByChild("estado").equalTo("En proceso").on('value', (batidas) => {
+    batidas.forEach((batida) => {
+      arrBatidas.push({
+        id: batida.key,
+        ...batida.val()
+      });
+    })
+    localStorage.setItem('batidas', JSON.stringify(arrBatidas));
+    mostrarBatidas();
+  });
+
+  let arrBatidasFinalizadas = [];
+  db.ref('batidas').orderByChild("estado").equalTo("Finalizada").on('value', (batidas) => {
+    batidas.forEach((batida) => {
+      arrBatidasFinalizadas.push({
+        id: batida.key,
+        ...batida.val()
+      });
+    });
+    localStorage.setItem('batidasFinalizadas', JSON.stringify(arrBatidasFinalizadas));
+    mostrarBatidasFinalizadas();
+  });
+});
+
+$('#batidasEnProceso').on('shown.bs.tab', () => {
+  $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+});
+
+$('#batidasFinalizadas').on('shown.bs.tab', () => {
+  $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
+});
+
+$('#linkPedidos').on('click', (e) => {
+  e.preventDefault();
+
+  let arrPedidosVerificados = [], arrPedidosFinalizados = [];
+  db.ref(`pedidoPadre`).on('value', (pedidosVerificados) => { 
+    pedidosVerificados.forEach(pedidoVerificado => {
+      let pedido = pedidoVerificado.val();
+
+      if(pedido.verificado && (pedido.estado == "En proceso")) {
+        arrPedidosVerificados.push({
+          id: pedidoVerificado.key,
+          ...pedidoVerificado.val()
+        });
+      }
+      if(pedido.estado == "Finalizado") {
+        arrPedidosFinalizados.push({
+          id: pedidoVerificado.key,
+          ...pedidoVerificado.val()
+        });
+      }
+    });
+
+    localStorage.setItem('pedidosVerificados', JSON.stringify(arrPedidosVerificados));
+    localStorage.setItem('pedidosFinalizados', JSON.stringify(arrPedidosFinalizados));
+    $(location).attr("href", "pedidos.html");
+  });
+});
+
 function llenarSugerenciasProductos() {
   let formulasRef = db.ref(`formulaciones`);
   formulasRef.on('value', function(snap) {
@@ -455,55 +532,66 @@ function guardarBatida() {
 }
 
 function mostrarBatidas() {
-  let tabla = $(`#tabla-batidasRegistradas`).DataTable({
-    destroy: true,
-    "lengthChange": false,
-    "scrollY": "500px",
-    "scrollCollapse": true,
-    "language": {
-      "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
-    },
-    "searching": false,
-    "paging": true,
-    "bInfo" : false
-  });
-  let rutaBatidas = db.ref('batidas');
-  rutaBatidas.orderByChild("estado") .equalTo("En proceso").on('value', function(snap) {
-    let batidas = snap.val();
-    let filas = "";
-    tabla.clear();
-    let i = 0;
+  let batidas = JSON.parse(localStorage.getItem('batidas'));
 
-    for(let batida in batidas) {
-      if(i%2 == 0) {
-        filas += `<tr class="info">
-                    <td>${batidas[batida].claveBatida}</td>
-                    <td>${batidas[batida].claveProducto}</td>
-                    <td>${batidas[batida].nombreProducto}</td>
-                    <td>${batidas[batida].numBatidas}</td>
-                    <td>${batidas[batida].fechaCaptura}</td>
-                    <td class="text-center"><button onclick="abrirModalEditar('${batida}')" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></td>
-                    <td class="text-center"><button onclick="abrirModalFinalizar('${batida}')" class="btn btn-success btn-sm"><i class="fa fa-check" aria-hidden="true"></i></button></td>
-                  </tr>`;
+  let datatable = $('#tabla-batidasRegistradas').DataTable({
+    data: batidas,
+    pageLength: 10,
+    destroy: true,
+    //"searching": false
+    //"paging": false,
+    //"bInfo" : false
+    lengthChange: false,
+    scrollY: "500px",
+    scrollCollapse: true,
+    stripeClasses: ['info', ''],
+    columns: [
+      { data: 'claveBatida' },
+      { data: 'claveProducto' },
+      { data: 'nombreProducto' },
+      { data: 'numBatidas' },
+      { data: 'fechaCaptura' },
+      { data: 'id',
+        className: 'text-center',
+        render: (id) => {
+          return `<button onclick="abrirModalEditar('${id}')" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>`;
+        }
+      },
+      { data: 'id', 
+        className: 'text-center', 
+        render: (id) => { 
+          return `<button onclick="abrirModalFinalizar('${id}')" class="btn btn-success btn-sm"><i class="fa fa-check" aria-hidden="true"></i></button>`
+        } 
       }
-      else {
-        filas += `<tr>
-                    <td>${batidas[batida].claveBatida}</td>
-                    <td>${batidas[batida].claveProducto}</td>
-                    <td>${batidas[batida].nombreProducto}</td>
-                    <td>${batidas[batida].numBatidas}</td>
-                    <td>${batidas[batida].fechaCaptura}</td>
-                    <td class="text-center"><button onclick="abrirModalEditar('${batida}')" class="btn btn-warning btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></td>
-                    <td class="text-center"><button onclick="abrirModalFinalizar('${batida}')" class="btn btn-success btn-sm"><i class="fa fa-check" aria-hidden="true"></i></button></td>
-                  </tr>`;
+    ],
+    language: {
+      searchPlaceholder: "Buscar batida",
+      sProcessing: 'Procesando...',
+      sLengthMenu: 'Mostrar _MENU_ registros',
+      sZeroRecords: 'No se encontraron resultados',
+      sEmptyTable: 'Ningún dato disponible en esta tabla',
+      sInfo: 'Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros',
+      sInfoEmpty: 'Mostrando registros del 0 al 0 de un total de 0 registros',
+      sInfoFiltered: '(filtrado de un total de _MAX_ registros)',
+      sInfoPostFix: '',   
+      sSearch: '<i style="color: #4388E5;" class="glyphicon glyphicon-search"></i>',
+      sUrl: '',
+      sInfoThousands: ',',
+      sLoadingRecords: 'Cargando...',
+      oPaginate: {
+        sFirst: 'Primero',
+        sLast: 'Último',
+        sNext: 'Siguiente',
+        sPrevious: 'Anterior'
+      },
+      oAria: {
+        sSortAscending: ': Activar para ordenar la columna de manera ascendente',
+        sSortDescending: ': Activar para ordenar la columna de manera descendente'
       }
-      i++;
     }
-    // $('#loader1').remove();
-    // $('#tabla-batidasRegistradas tbody').html(filas)
-    // $('#tabla-batidasRegistradas').removeClass('hidden');
-    tabla.rows.add($(filas)).columns.adjust().draw();
   });
+
+  $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
 }
 
 function abrirModalEditar(idBatida) {
@@ -679,14 +767,9 @@ function guardarCambiosBatida(idBatida) {
       rutaSubProducto.once('value', function(snap) {
         let precio = snap.val().precioPesos;
         costo += precio*Number(listaValoresConstantes[i]);
-        console.log("Precio: " + precio);
-        console.log("Valor constante: " + listaValoresConstantes[i]);
 
         if(i==listaClaves.length-1) {
-          console.log("Costo antes: " +costo);
           costo = (costo/kilos).toFixed(4);
-          console.log("Costo despues: " + costo);
-
           rutaBatida.update({ costo: Number(costo)})
         }
       });
@@ -834,56 +917,61 @@ function abrirModalFinalizar(idBatida) {
 }
 
 function mostrarBatidasFinalizadas() {
-  let tabla = $(`#tabla-batidasFinalizadas`).DataTable({
+  let batidasFinalizadas = JSON.parse(localStorage.getItem('batidasFinalizadas'));
+
+  let datatable = $('#tabla-batidasFinalizadas').DataTable({
+    data: batidasFinalizadas,
+    pageLength: 10,
     destroy: true,
-    "lengthChange": false,
-    "scrollY": "500px",
-    "scrollCollapse": true,
-    "language": {
-      "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Spanish.json"
-    }
     //"searching": false
     //"paging": false,
     //"bInfo" : false
-  });
-  let rutaBatidas = db.ref('batidas');
-  rutaBatidas.orderByChild("estado").equalTo("Finalizada").on('value', function (snapshot) {
-    let batidasFinalizadas = snapshot.val();
-    let filas = "";
-    tabla.clear();
-    let i = 0;
-    for(let batida in batidasFinalizadas) {
-      if(i%2 == 0) {
-        filas += `<tr class="info">
-                    <td>${batidasFinalizadas[batida].claveBatida}</td>
-                    <td>${batidasFinalizadas[batida].claveProducto}</td>
-                    <td>${batidasFinalizadas[batida].nombreProducto}</td>
-                    <td>${batidasFinalizadas[batida].numBatidas}</td>
-                    <td>${batidasFinalizadas[batida].fechaCaptura}</td>
-                    <td>${batidasFinalizadas[batida].fechaFinalizada}</td>
-                    <td class="text-center"><button type="button" onclick="abrirModalVerDetalles('${batida}')" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="Ver más"><i class="glyphicon glyphicon-eye-open"></i></button></td>
-                  </tr>`;
+    lengthChange: false,
+    scrollY: "500px",
+    scrollCollapse: true,
+    stripeClasses: ['info', ''],
+    columns: [
+      { data: 'claveBatida' },
+      { data: 'claveProducto' },
+      { data: 'nombreProducto' },
+      { data: 'numBatidas' },
+      { data: 'fechaCaptura' },
+      { data: 'fechaFinalizada' },
+      { data: 'id', 
+        className: 'text-center', 
+        render: (id) => { 
+          return `<button type="button" onclick="abrirModalVerDetalles('${id}')" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="right" title="Ver más"><i class="glyphicon glyphicon-eye-open"></i></button>`
+        } 
       }
-      else {
-        filas += `<tr>
-                  <td>${batidasFinalizadas[batida].claveBatida}</td>
-                  <td>${batidasFinalizadas[batida].claveProducto}</td>
-                  <td>${batidasFinalizadas[batida].nombreProducto}</td>
-                  <td>${batidasFinalizadas[batida].numBatidas}</td>
-                  <td>${batidasFinalizadas[batida].fechaCaptura}</td>
-                  <td>${batidasFinalizadas[batida].fechaFinalizada}</td>
-                  <td class="text-center"><button type="button" onclick="abrirModalVerDetalles('${batida}')" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="right" title="Ver más"><i class="glyphicon glyphicon-eye-open"></i></button></td>
-                </tr>`;
+    ],
+    language: {
+      searchPlaceholder: "Buscar batida",
+      sProcessing: 'Procesando...',
+      sLengthMenu: 'Mostrar _MENU_ registros',
+      sZeroRecords: 'No se encontraron resultados',
+      sEmptyTable: 'Ningún dato disponible en esta tabla',
+      sInfo: 'Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros',
+      sInfoEmpty: 'Mostrando registros del 0 al 0 de un total de 0 registros',
+      sInfoFiltered: '(filtrado de un total de _MAX_ registros)',
+      sInfoPostFix: '',   
+      sSearch: '<i style="color: #4388E5;" class="glyphicon glyphicon-search"></i>',
+      sUrl: '',
+      sInfoThousands: ',',
+      sLoadingRecords: 'Cargando...',
+      oPaginate: {
+        sFirst: 'Primero',
+        sLast: 'Último',
+        sNext: 'Siguiente',
+        sPrevious: 'Anterior'
+      },
+      oAria: {
+        sSortAscending: ': Activar para ordenar la columna de manera ascendente',
+        sSortDescending: ': Activar para ordenar la columna de manera descendente'
       }
-      i++;
     }
+  });
 
-    // $('#loader2').remove();
-    // $('#tabla-batidasFinalizadas tbody').html(filas);
-    // $('#tabla-batidasFinalizadas').removeClass('hidden');
-    tabla.rows.add($(filas)).columns.adjust().draw();
-    $('[data-toggle="tooltip"]').tooltip();
-  })
+  $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
 }
 
 function haySesion() {
@@ -902,7 +990,7 @@ haySesion();
 
 function mostrarNotificaciones() {
   let usuario = auth.currentUser.uid;
-  let notificacionesRef = db.ref('notificaciones/almacen/'+usuario+'/lista');
+  let notificacionesRef = db.ref(`notificaciones/almacen/${usuario}/lista`);
   notificacionesRef.on('value', function(snapshot) {
     let lista = snapshot.val();
     let lis = "";
@@ -919,14 +1007,14 @@ function mostrarNotificaciones() {
       moment.locale('es');
       let fecha = moment(date, "MMMM DD YYYY, HH:mm:ss").fromNow();
 
-      lis += '<li>' +
-               '<a>' +
-                '<div>' +
-                  '<i class="fa fa-comment fa-fw"></i> ' + arrayNotificaciones[i].mensaje +
-                    '<span class="pull-right text-muted small">'+fecha+'</span>' +
-                '</div>' +
-               '</a>' +
-             '</li>';
+      lis += `<li>
+                <a>
+                  <div>
+                    <i class="fa fa-comment fa-fw"></i>${arrayNotificaciones[i].mensaje}
+                      <span class="pull-right text-muted small">${fecha}</span>
+                  </div>
+                </a>
+              </li>`;
     }
 
     $('#contenedorNotificaciones').empty().append('<li class="dropdown-header">Notificaciones</li><li class="divider"></li>');
@@ -957,21 +1045,4 @@ function verNotificaciones() {
 
 $('#campana').click(function() {
   verNotificaciones();
-});
-
-$(document).ready(function() {
-  $('[data-toggle="tooltip"]').tooltip();
-
-  obtenerClaveBatida();
-  llenarSugerenciasProductos();
-
-  $("#cbAgregarSustitutos").bootstrapSwitch();
-
-  $('#fechaCaptura').val(moment().format('YYYY-MM-DD'));
-
-  $.toaster({
-    settings: {
-      'timeout': 3000
-    }
-  });
 });

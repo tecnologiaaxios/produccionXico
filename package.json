@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "browser-sync": "^2.13.0",
     "electron": "^1.7.5",
@@ -39,6 +40,7 @@
     "jspdf-autotable": "^2.3.2"
   },
   "scripts": {
+    "gulp": "gulp es6 && gulp paneljs",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
     "package-win": "electron-packager . ProduccionXico --overwrite --asar=true --platform=win32 --arch=x64 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Producción Xico\"",
     "build": "npm run package-mac && npm run package-win"
