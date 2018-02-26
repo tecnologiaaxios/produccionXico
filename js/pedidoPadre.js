@@ -57,7 +57,7 @@ function llenarSelectTiendas() {
     let pedidosHijos = snapshot.val();
     let options = `<option value="Todas">Todas las tiendas</option>`;
     let optionsChecado = "";
-    for(pedidoHijo in pedidosHijos) {
+    for(let pedidoHijo in pedidosHijos) {
       options += `<option value="${pedidoHijo}">${pedidosHijos[pedidoHijo].encabezado.tienda}</option>`;
       optionsChecado += `<option value="${pedidoHijo}">${pedidosHijos[pedidoHijo].encabezado.tienda}</option>`;
     }
@@ -136,7 +136,7 @@ function mostrarTodas() {
     let TotalPz, TotalKg;
     let TotalPzs = 0, TotalKgs = 0, TotalPrecUni = 0, TotalImporte = 0;
 
-    for(producto in productos) {
+    for(let producto in productos) {
       let importe = 0;
       if(productos[producto].unidad == "PZA") {
         importe = productos[producto].totalPz * productos[producto].precioUnitario;

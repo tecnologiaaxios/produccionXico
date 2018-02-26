@@ -64,7 +64,7 @@ $('#batidasFinalizadas').on('shown.bs.tab', () => {
   $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
 });
 
-$('#linkPedidos').on('click', (e) => {
+$('#linkPedidosVerificados').on('click', (e) => {
   e.preventDefault();
 
   let arrPedidosVerificados = [], arrPedidosFinalizados = [];
@@ -88,8 +88,28 @@ $('#linkPedidos').on('click', (e) => {
 
     localStorage.setItem('pedidosVerificados', JSON.stringify(arrPedidosVerificados));
     localStorage.setItem('pedidosFinalizados', JSON.stringify(arrPedidosFinalizados));
-    $(location).attr("href", "pedidos.html");
+    $(location).attr("href", "pedidosVerificados.html");
   });
+});
+
+$('#linkPedidos').on('click', (e) => {
+  e.preventDefault();
+  
+  let arrPedidos = [];
+  db.ref('pedidoEntrada').on('value', (pedidos) => {
+    pedidos.forEach((pedido) => {
+      arrPedidos.unshift({
+        id: pedido.key,
+        ...pedido.val()
+      });
+    });
+
+    let datosPedidos = pedidos.val();
+
+    localStorage.setItem('pedidos', JSON.stringify(arrPedidos));
+    localStorage.setItem('pedidosEntrada', JSON.stringify(datosPedidos));
+    $(location).attr('href', 'pedidos.html');
+  })
 });
 
 function llenarSugerenciasProductos() {

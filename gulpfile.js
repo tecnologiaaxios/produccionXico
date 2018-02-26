@@ -9,6 +9,9 @@ var autoprefixer = require('gulp-autoprefixer');
 gulp.task('es6', function() {
   gulp.src([
     'js/panel.js',
+    'js/pedidos.js',
+    'js/pedidosVerificados.js',
+    'js/pedidoPadre.js',
     'js/login.js'
   ])
 		.pipe( babel({presets : ['es2015'], plugins: ["transform-object-rest-spread"]}))

@@ -1,38 +1,31 @@
-const db = firebase.database();
-const auth = firebase.auth();
+'use strict';
+
+var db = firebase.database();
+var auth = firebase.auth();
 
 function logout() {
   auth.signOut();
 }
 
 function mostrarPedidos() {
-  let pedidos = JSON.parse(localStorage.getItem('pedidos'));
-  let datatable = $('#tablaPedidos').DataTable({
+  var pedidos = JSON.parse(localStorage.getItem('pedidos'));
+  var datatable = $('#tablaPedidos').DataTable({
     data: pedidos,
     pageLength: 10,
     lengthMenu: [[10, 20, 30, 40, 50, -1], [10, 20, 30, 40, 50, "Todos"]],
-    columns: [
-      { data: 'id' },
-      { data: 'encabezado.clave', className: 'text-center' },
-      { data: 'encabezado.numOrden', defaultContent: '' },
-      {
-        data: 'encabezado.fechaCaptura',
-        render: (fechaCaptura) => {
-          moment.locale('es');
-          return moment(`${fechaCaptura.substr(3, 2)}/${fechaCaptura.substr(0, 2)}/${fechaCaptura.substr(6, 4)}`).format('LL')
-        }
-      },
-      { data: 'encabezado.tienda' },
-      { data: 'encabezado.ruta', className: 'text-center' },
-      {
-        data: 'id',
-        className: 'text-center',
-        render: (id) => {
-          return `<a type="button" href="pedido.html?id=${id}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-eye-open"></span> Ver más</a>`
-        }
-      },
-      { className: 'text-center', defaultContent: '<span style="background-color:#d50000; color:#FFFFFF;" class="badge">Pendiente</span>' }
-    ],
+    columns: [{ data: 'id' }, { data: 'encabezado.clave', className: 'text-center' }, { data: 'encabezado.numOrden', defaultContent: '' }, {
+      data: 'encabezado.fechaCaptura',
+      render: function render(fechaCaptura) {
+        moment.locale('es');
+        return moment(fechaCaptura.substr(3, 2) + '/' + fechaCaptura.substr(0, 2) + '/' + fechaCaptura.substr(6, 4)).format('LL');
+      }
+    }, { data: 'encabezado.tienda' }, { data: 'encabezado.ruta', className: 'text-center' }, {
+      data: 'id',
+      className: 'text-center',
+      render: function render(id) {
+        return '<a type="button" href="pedido.html?id=' + id + '" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-eye-open"></span> Ver m\xE1s</a>';
+      }
+    }, { className: 'text-center', defaultContent: '<span style="background-color:#d50000; color:#FFFFFF;" class="badge">Pendiente</span>' }],
     destroy: true,
     ordering: false,
     language: {
@@ -69,8 +62,7 @@ function haySesion() {
     if (user) {
       mostrarContador();
       mostrarPedidos();
-    }
-    else {
+    } else {
       $(location).attr("href", "index.html");
     }
   });
@@ -79,32 +71,25 @@ function haySesion() {
 haySesion();
 
 function mostrarNotificaciones() {
-  let usuario = auth.currentUser.uid;
-  let notificacionesRef = db.ref(`notificaciones/almacen/${usuario}/lista`);
+  var usuario = auth.currentUser.uid;
+  var notificacionesRef = db.ref('notificaciones/almacen/' + usuario + '/lista');
   notificacionesRef.on('value', function (snapshot) {
-    let lista = snapshot.val();
-    let lis = '<li class="dropdown-header">Notificaciones</li><li class="divider"></li>';
+    var lista = snapshot.val();
+    var lis = '<li class="dropdown-header">Notificaciones</li><li class="divider"></li>';
 
-    let arrayNotificaciones = [];
-    for (let notificacion in lista) {
+    var arrayNotificaciones = [];
+    for (var notificacion in lista) {
       arrayNotificaciones.push(lista[notificacion]);
     }
 
     arrayNotificaciones.reverse();
 
-    for (let i in arrayNotificaciones) {
-      let date = arrayNotificaciones[i].fecha;
+    for (var i in arrayNotificaciones) {
+      var date = arrayNotificaciones[i].fecha;
       moment.locale('es');
-      let fecha = moment(date, "MMMM DD YYYY, HH:mm:ss").fromNow();
+      var fecha = moment(date, "MMMM DD YYYY, HH:mm:ss").fromNow();
 
-      lis += `<li>
-                <a>
-                  <div>
-                    <i class="fa fa-comment fa-fw"></i>${arrayNotificaciones[i].mensaje}
-                    <span class="pull-right text-muted small">${fecha}</span>
-                  </div>
-                </a>
-              </li>`;
+      lis += '<li>\n                <a>\n                  <div>\n                    <i class="fa fa-comment fa-fw"></i>' + arrayNotificaciones[i].mensaje + '\n                    <span class="pull-right text-muted small">' + fecha + '</span>\n                  </div>\n                </a>\n              </li>';
     }
 
     $('#contenedorNotificaciones').html(lis);
@@ -112,23 +97,22 @@ function mostrarNotificaciones() {
 }
 
 function mostrarContador() {
-  let uid = auth.currentUser.uid;
-  let notificacionesRef = db.ref(`notificaciones/almacen/${uid}`);
+  var uid = auth.currentUser.uid;
+  var notificacionesRef = db.ref('notificaciones/almacen/' + uid);
   notificacionesRef.on('value', function (snapshot) {
-    let cont = snapshot.val().cont;
+    var cont = snapshot.val().cont;
 
     if (cont > 0) {
       $('#spanNotificaciones').html(cont).show();
-    }
-    else {
+    } else {
       $('#spanNotificaciones').hide();
     }
   });
 }
 
 function verNotificaciones() {
-  let uid = auth.currentUser.uid;
-  let notificacionesRef = db.ref(`notificaciones/almacen/${uid}`);
+  var uid = auth.currentUser.uid;
+  var notificacionesRef = db.ref('notificaciones/almacen/' + uid);
   notificacionesRef.update({ cont: 0 });
 }
 

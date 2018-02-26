@@ -66,7 +66,7 @@ $('#batidasFinalizadas').on('shown.bs.tab', function () {
   $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
 });
 
-$('#linkPedidos').on('click', function (e) {
+$('#linkPedidosVerificados').on('click', function (e) {
   e.preventDefault();
 
   var arrPedidosVerificados = [],
@@ -89,7 +89,26 @@ $('#linkPedidos').on('click', function (e) {
 
     localStorage.setItem('pedidosVerificados', JSON.stringify(arrPedidosVerificados));
     localStorage.setItem('pedidosFinalizados', JSON.stringify(arrPedidosFinalizados));
-    $(location).attr("href", "pedidos.html");
+    $(location).attr("href", "pedidosVerificados.html");
+  });
+});
+
+$('#linkPedidos').on('click', function (e) {
+  e.preventDefault();
+
+  var arrPedidos = [];
+  db.ref('pedidoEntrada').on('value', function (pedidos) {
+    pedidos.forEach(function (pedido) {
+      arrPedidos.unshift(_extends({
+        id: pedido.key
+      }, pedido.val()));
+    });
+
+    var datosPedidos = pedidos.val();
+
+    localStorage.setItem('pedidos', JSON.stringify(arrPedidos));
+    localStorage.setItem('pedidosEntrada', JSON.stringify(datosPedidos));
+    $(location).attr('href', 'pedidos.html');
   });
 });
 

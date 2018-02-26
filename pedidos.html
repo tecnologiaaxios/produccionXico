@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link href='logo.ico' rel='shortcut icon' type='image/x-icon'/>
+    <link href='logo.ico' rel='shortcut icon' type='image/x-icon' />
     <title>Pedidos</title>
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
@@ -23,10 +23,11 @@
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
   </head>
+
   <body>
     <div id="wrapper">
       <nav class="navbar navbar-default navbar-static-top fixed" role="navigation" style="margin-bottom: 0">
@@ -49,7 +50,8 @@
               <li class="dropdown-header">Ajustes</li>
               <li role="separator" class="divider"></li>
               <li>
-                <a onclick="logout()"><span class="glyphicon glyphicon-off"></span> Cerrar sesión</a>
+                <a onclick="logout()">
+                  <span class="glyphicon glyphicon-off"></span> Cerrar sesión</a>
               </li>
             </ul>
           </li>
@@ -59,94 +61,81 @@
         <img class="navbar-brand" id="logo" src="logo.png"></img>
         <ul style="margin-top:50px; list-style:none; font-size:50px; color:white; padding:28px;">
           <li>
-            <a style="color:white; text-decoration: none;" href="panel.html" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            <a style="color:white; text-decoration: none;" href="panel.html" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false"
+              aria-controls="collapseExample">
               <span style="font-size:50px;" class="material-icons no-padding">dvr</span>
               <p style="white; font-size:11px; width:200px; margin-left:-14px; margin-top:-15px;">Volver al panel</p>
             </a>
           </li>
         </ul>
       </div>
-      <div id="page-wrapper">
-        <div class="row">
-          <div class="col-lg-12"><br>
-            <ul class="nav nav-tabs" role="tablist">
-              <li role="presentation" class="active"><a id="tabPedidosVerificados" href="#pedidosVerificados" aria-controls="pedidosVerificados" role="tab" data-toggle="tab">Verificados</a></li>
-              <li role="presentation"><a id="tabPedidosFinalizados" href="#pedidosFinalizados" aria-controls="pedidosFinalizados" role="tab" data-toggle="tab">Finalizados</a></li>
-            </ul>
-            <div class="tab-content">
-              <div role="tabpanel" class="tab-pane active" id="pedidosVerificados">
-                <div class="panel panel-default">
-                  <div class="panel-body">
-                    <table width="100%" id="tablaPedidosVerificados" class="table table-striped table-hover table-bordered table-condensed">
-                      <thead>
-                        <tr>
-                          <th>Clave</th>
-                          <th>Fecha de captura</th>
-                          <th class="text-center">Ver detalles</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        
-                      </tbody>
-                    </table>
+      <div id="page-wrapper"><br>
+        <div class="container-fluid">
+          <div class="row">
+            <div role="tabpanel" class="tab-pane active" id="pedidosRecibidos">
+              <div class="container-fluid">
+                <div id="loaderPedidos" class="loader"></div>
+                <div class="panel panel-primary">
+                  <div class="panel-heading">
+                    <h2 class="panel-title">Pedidos</h2>
                   </div>
-                </div>     
-              </div>
-              <div role="tabpanel" class="tab-pane" id="pedidosFinalizados">
-                <div class="panel panel-default">
-                  <div class="panel-body">
-                    <table width="100%" id="tablaPedidosFinalizados" class="table table-striped table-hover table-bordered table-condensed">
+                  <div class="panel-body">  
+                    <table id="tablaPedidos" class="table-hover table table-condensed table-bordered table-striped" style="margin-top:15px;">
                       <thead>
                         <tr>
+                          <th>Id</th>
                           <th>Clave</th>
+                          <th>Núm. de orden</th>
                           <th>Fecha de captura</th>
-                          <th class="text-center">Ver detalles</th>
+                          <th>Tienda</th>
+                          <th>Ruta</th>
+                          <th class="text-center">Detalles</th>
+                          <th class="text-center">Estado</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        
-                      </tbody>
+                      <tbody id="tbodyTablaPedidos"></tbody>
                     </table>
                   </div>
                 </div>
               </div>
             </div>
-          </div><!-- /.col-lg-12 -->
-        </div><!-- /.row -->
-      </div><!-- /#page-wrapper -->
-    </div><!-- /#wrapper -->
-    <!-- jQuery -->
-    <!-- <script src="js/jquery-3.2.1.min.js"></script> -->
-    <script>window.$ = window.jQuery = require('./js/jquery-3.2.1.min.js')</script>
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-    <!--<script src="vendor/bootstrap/js/bootstrap.min.js"></script>-->
-    <script src="vendor/metisMenu/metisMenu.min.js"></script>
-    <!-- <script src="vendor/raphael/raphael.min.js"></script>
-    <script src="vendor/morrisjs/morris.min.js"></script>
-    <script src="data/morris-data.js"></script> -->
-    <script src="vendor/datatables/js/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
-    <script src="vendor/datatables-responsive/dataTables.responsive.js"></script>
-    <script src="js/dataTables.buttons.min.js"></script>
-    <script src="dist/js/sb-admin-2.js"></script>
-    <script src="js/bootstrap-tooltip.js"></script>
-    <script src="jspdf.min.js"></script>
-    <script src="jspdf.plugin.autotable.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyA19j6-VLNcXLJfBkfd_lZfFFbzg6z0Imc",
-        authDomain: "xico-netcontrol.firebaseapp.com",
-        databaseURL: "https://xico-netcontrol.firebaseio.com",
-        projectId: "xico-netcontrol",
-        storageBucket: "xico-netcontrol.appspot.com",
-        messagingSenderId: "248615705793"
-      };
-      firebase.initializeApp(config);
-    </script>
-    <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/$VERSION/dragula.min.js'></script>-->
-    <script src="js/pedidos.js"></script>
-    <script src="js/moment-with-locales.js"></script>
+          </div><!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+      </div>
+      <!-- /#wrapper -->
+      <!-- jQuery -->
+      <script src="js/jquery-3.2.1.min.js"></script>
+      <!-- <script>window.$ = window.jQuery = require('./js/jquery-3.2.1.min.js')</script> -->
+      <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+      <!--<script src="vendor/bootstrap/js/bootstrap.min.js"></script>-->
+      <script src="vendor/metisMenu/metisMenu.min.js"></script>
+      <!-- <script src="vendor/raphael/raphael.min.js"></script>
+      <script src="vendor/morrisjs/morris.min.js"></script>
+      <script src="data/morris-data.js"></script> -->
+      <script src="vendor/datatables/js/jquery.dataTables.min.js"></script>
+      <script src="vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+      <script src="vendor/datatables-responsive/dataTables.responsive.js"></script>
+      <script src="js/dataTables.buttons.min.js"></script>
+      <script src="dist/js/sb-admin-2.js"></script>
+      <script src="js/bootstrap-tooltip.js"></script>
+      <script src="jspdf.min.js"></script>
+      <script src="jspdf.plugin.autotable.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
+      <script>
+        // Initialize Firebase
+        var config = {
+          apiKey: "AIzaSyA19j6-VLNcXLJfBkfd_lZfFFbzg6z0Imc",
+          authDomain: "xico-netcontrol.firebaseapp.com",
+          databaseURL: "https://xico-netcontrol.firebaseio.com",
+          projectId: "xico-netcontrol",
+          storageBucket: "xico-netcontrol.appspot.com",
+          messagingSenderId: "248615705793"
+        };
+        firebase.initializeApp(config);
+      </script>
+      <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/$VERSION/dragula.min.js'></script>-->
+      <script src="babel/pedidos.js"></script>
+      <script src="js/moment-with-locales.js"></script>
   </body>
 </html>
