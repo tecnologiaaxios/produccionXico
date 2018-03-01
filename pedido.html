@@ -43,19 +43,23 @@
             <img style="max-width: 50px; margin-top: -7px;" src="logo.png"></img>
           </a>
           <a class="navbar-brand" href="#">Sistema de producción</a>
+          <a class="navbar-brand" href="pedidos.html">
+            <span class="fa fa-chevron-left no-padding" data-toggle="tooltip" data-placement="bottom" title="Volver a pedidos"></span>
+          </a>
           <a class="navbar-brand" href="panel.html">
-            <span class="material-icons no-padding" data-toggle="tooltip" data-placement="bottom" title="Volver al panel">dvr</span>
+            <span class="fa fa-desktop no-padding" data-toggle="tooltip" data-placement="bottom" title="Volver al panel"></span>
           </a>
           <div class="navbar-brand dropdown">
             <a class="links-panel dropdown-toggle" data-toggle="dropdown" href="#">
-              <i class="fa fa-sign-out" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Cerrar sesión"></i>
+              <i class="fa fa-cog rotateMe" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Ajustes"></i>
               <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-alerts">
-              <li class="divider"></li>
+              <li class="dropdown-header">Ajustes</li>
+              <li role="separator" class="divider"></li>
               <li>
                 <a onclick="logout()">
-                  <span class="glyphicon glyphicon-off"></span> Cerrar sesión</a>
+                <span class="glyphicon glyphicon-off"></span> Cerrar sesión</a>
               </li>
             </ul>
           </div>

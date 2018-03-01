@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link href='logo.ico' rel='shortcut icon' type='image/x-icon'/>
+    <link href='logo.ico' rel='shortcut icon' type='image/x-icon' />
     <title>Pedidos verificados</title>
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
@@ -23,55 +23,54 @@
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
   </head>
   <body>
-    <div id="wrapper">
-      <nav class="navbar navbar-default navbar-static-top fixed" role="navigation" style="margin-bottom: 0">
+    <nav class="navbar">
+      <div class="container-fluid">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <img class="navbar-brand" id="logo" src="logo.png"></img>
-        </div>
-        <ul class="nav navbar-top-links navbar-right no-padding ">
-          <li class="dropdown no-padding">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-              <i class="fa fa-cog rotateMe" style="font-size: 25px;" aria-hidden="true"></i>
+          <a class="navbar-brand" href="#">
+            <img style="max-width: 50px; margin-top: -7px;" src="logo.png"></img>
+          </a>
+          <a class="navbar-brand" href="#">Sistema de producción</a>
+          <a class="navbar-brand" href="panel.html">
+            <span class="fa fa-desktop no-padding" data-toggle="tooltip" data-placement="bottom" title="Volver al panel"></span>
+          </a>
+          <div class="navbar-brand dropdown">
+            <a class="links-panel dropdown-toggle" data-toggle="dropdown" href="#">
+              <i class="fa fa-cog rotateMe" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Ajustes"></i>
               <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-alerts">
               <li class="dropdown-header">Ajustes</li>
               <li role="separator" class="divider"></li>
               <li>
-                <a onclick="logout()"><span class="glyphicon glyphicon-off"></span> Cerrar sesión</a>
+                <a onclick="logout()">
+                  <span class="glyphicon glyphicon-off"></span> Cerrar sesión</a>
               </li>
             </ul>
-          </li>
-        </ul>
-      </nav>
-      <div class="barside">
-        <img class="navbar-brand" id="logo" src="logo.png"></img>
-        <ul style="margin-top:50px; list-style:none; font-size:50px; color:white; padding:28px;">
-          <li>
-            <a style="color:white; text-decoration: none;" href="panel.html" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-              <span style="font-size:50px;" class="material-icons no-padding">dvr</span>
-              <p style="white; font-size:11px; width:200px; margin-left:-14px; margin-top:-15px;">Volver al panel</p>
-            </a>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
-      <div id="page-wrapper">
+    </nav>
+    <div id="wrapper">
+      <div class="container-fluid">
         <div class="row">
-          <div class="col-lg-12"><br>
+          <div class="col-lg-10 col-md-10 col-lg-offset-1 col-md-offset-1">
             <ul class="nav nav-tabs" role="tablist">
-              <li role="presentation" class="active"><a id="tabPedidosVerificados" href="#pedidosVerificados" aria-controls="pedidosVerificados" role="tab" data-toggle="tab">Verificados</a></li>
-              <li role="presentation"><a id="tabPedidosFinalizados" href="#pedidosFinalizados" aria-controls="pedidosFinalizados" role="tab" data-toggle="tab">Finalizados</a></li>
+              <li role="presentation" class="active">
+                <a id="tabPedidosVerificados" href="#pedidosVerificados" aria-controls="pedidosVerificados" role="tab" data-toggle="tab">Verificados</a>
+              </li>
+              <li role="presentation">
+                <a id="tabPedidosFinalizados" href="#pedidosFinalizados" aria-controls="pedidosFinalizados" role="tab" data-toggle="tab">Finalizados</a>
+              </li>
             </ul>
             <div class="tab-content">
               <div role="tabpanel" class="tab-pane active" id="pedidosVerificados">
@@ -86,11 +85,11 @@
                         </tr>
                       </thead>
                       <tbody>
-                        
+
                       </tbody>
                     </table>
                   </div>
-                </div>     
+                </div>
               </div>
               <div role="tabpanel" class="tab-pane" id="pedidosFinalizados">
                 <div class="panel panel-default">
@@ -104,7 +103,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        
+
                       </tbody>
                     </table>
                   </div>
@@ -114,16 +113,16 @@
           </div><!-- /.col-lg-12 -->
         </div><!-- /.row -->
       </div><!-- /#page-wrapper -->
-    </div><!-- /#wrapper -->
-    <!-- jQuery -->
+    </div>
+    <!-- /#wrapper -->
     <script src="js/jquery-3.2.1.min.js"></script>
     <!-- <script>window.$ = window.jQuery = require('./js/jquery-3.2.1.min.js')</script> -->
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
     <!--<script src="vendor/bootstrap/js/bootstrap.min.js"></script>-->
     <script src="vendor/metisMenu/metisMenu.min.js"></script>
     <!-- <script src="vendor/raphael/raphael.min.js"></script>
-    <script src="vendor/morrisjs/morris.min.js"></script>
-    <script src="data/morris-data.js"></script> -->
+      <script src="vendor/morrisjs/morris.min.js"></script>
+      <script src="data/morris-data.js"></script> -->
     <script src="vendor/datatables/js/jquery.dataTables.min.js"></script>
     <script src="vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
     <script src="vendor/datatables-responsive/dataTables.responsive.js"></script>
