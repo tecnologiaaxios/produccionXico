@@ -63,7 +63,7 @@
     <div id="wrapper">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-lg-10 col-md-10 col-lg-offset-1 col-md-offset-1">
+          <div class="col-lg-10 col-md-10 col-lg-offset-1 col-md-offset-1 col-sm-10 col-sm-offset-1">
             <ul class="nav nav-tabs" role="tablist">
               <li role="presentation" class="active">
                 <a id="tabPedidosVerificados" href="#pedidosVerificados" aria-controls="pedidosVerificados" role="tab" data-toggle="tab">Verificados</a>
@@ -82,6 +82,7 @@
                           <th>Clave</th>
                           <th>Fecha de captura</th>
                           <th class="text-center">Ver detalles</th>
+                          <th class="text-center">Cargar</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -115,8 +116,8 @@
       </div><!-- /#page-wrapper -->
     </div>
     <!-- /#wrapper -->
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <!-- <script>window.$ = window.jQuery = require('./js/jquery-3.2.1.min.js')</script> -->
+    <!-- <script src="js/jquery-3.2.1.min.js"></script> -->
+    <script>window.$ = window.jQuery = require('./js/jquery-3.2.1.min.js')</script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
     <!--<script src="vendor/bootstrap/js/bootstrap.min.js"></script>-->
     <script src="vendor/metisMenu/metisMenu.min.js"></script>
@@ -131,6 +132,7 @@
     <script src="js/bootstrap-tooltip.js"></script>
     <script src="jspdf.min.js"></script>
     <script src="jspdf.plugin.autotable.js"></script>
+    <script src="js/sweetalert.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
     <script>
       // Initialize Firebase

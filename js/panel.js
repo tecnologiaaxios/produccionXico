@@ -72,7 +72,7 @@ $('#linkPedidosVerificados').on('click', (e) => {
     pedidosVerificados.forEach(pedidoVerificado => {
       let pedido = pedidoVerificado.val();
 
-      if(pedido.verificado && (pedido.estado == "En proceso")) {
+      if(pedido.estado == "Verificado") {
         arrPedidosVerificados.push({
           id: pedidoVerificado.key,
           ...pedidoVerificado.val()

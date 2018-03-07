@@ -75,7 +75,7 @@ $('#linkPedidosVerificados').on('click', function (e) {
     pedidosVerificados.forEach(function (pedidoVerificado) {
       var pedido = pedidoVerificado.val();
 
-      if (pedido.verificado && pedido.estado == "En proceso") {
+      if (pedido.estado == "Verificado") {
         arrPedidosVerificados.push(_extends({
           id: pedidoVerificado.key
         }, pedidoVerificado.val()));
