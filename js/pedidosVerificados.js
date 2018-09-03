@@ -1,66 +1,70 @@
 const db = firebase.database();
 const auth = firebase.auth();
 
+const LANGUAGE = {
+  sProcessing: 'Procesando...',
+  sLengthMenu: 'Mostrar _MENU_ registros',
+  sZeroRecords: 'No se encontraron resultados',
+  sEmptyTable: 'Ningún dato disponible en esta tabla',
+  sInfo: 'Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros',
+  sInfoEmpty: 'Mostrando registros del 0 al 0 de un total de 0 registros',
+  sInfoFiltered: '(filtrado de un total de _MAX_ registros)',
+  sInfoPostFix: '',   
+  sSearch: '<i style="color: #4388E5;" class="glyphicon glyphicon-search"></i>',
+  sUrl: '',
+  sInfoThousands: ',',
+  sLoadingRecords: 'Cargando...',
+  oPaginate: {
+    sFirst: 'Primero',
+    sLast: 'Último',
+    sNext: 'Siguiente',
+    sPrevious: 'Anterior'
+  },
+  oAria: {
+    sSortAscending: ': Activar para ordenar la columna de manera ascendente',
+    sSortDescending: ': Activar para ordenar la columna de manera descendente'
+  }
+};
+
 function logout() {
   auth.signOut();
 }
  
 function mostrarPedidosVerificados() {
-  let pedidosVerificados = JSON.parse(localStorage.getItem('pedidosVerificados'));
+  $('#loaderPedidosVerificados').removeClass('hidden');
 
 	let datatable = $('#tablaPedidosVerificados').DataTable({
-    data: pedidosVerificados,
-    pageLength: 10,
-    columns: [
-      { data: 'clave' },
-      {
-        data: 'fechaCreacionPadre',
-        render: (fechaCreacionPadre) => {
-          moment.locale('es');
-          return moment(`${fechaCreacionPadre.substr(3,2)}/${fechaCreacionPadre.substr(0,2)}/${fechaCreacionPadre.substr(6,4)}`).format('LL')
-        }
-      },
-      { data: 'id',
-        className: 'text-center', 
-        render: (id) => {
-          return `<a href="pedidoPadre.html?id=${id}" class="btn btn-default btn-sm" type="button"><span class="glyphicon glyphicon-eye-open"></span> Ver más</a>`
-        }
-      },
-      {
-        data: 'id',
-        className: 'text-center',
-        render: (id) => {
-          return `<button onclick="cargarPedidoPadre('${id}')" class="btn btn-primary btn-sm" type="button"><span class="fa fa-truck" aria-control="true"></span></button>`
-        }
-      }
-    ],
     destroy: true,
+    pageLength: 10,
 		ordering: false,
 		searching: false,
-    language: {
-      sProcessing: 'Procesando...',
-      sLengthMenu: 'Mostrar _MENU_ registros',
-      sZeroRecords: 'No se encontraron resultados',
-      sEmptyTable: 'Ningún dato disponible en esta tabla',
-      sInfo: 'Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros',
-      sInfoEmpty: 'Mostrando registros del 0 al 0 de un total de 0 registros',
-      sInfoFiltered: '(filtrado de un total de _MAX_ registros)',
-      sInfoPostFix: '',   
-      sSearch: '<i style="color: #4388E5;" class="glyphicon glyphicon-search"></i>',
-      sUrl: '',
-      sInfoThousands: ',',
-      sLoadingRecords: 'Cargando...',
-      oPaginate: {
-        sFirst: 'Primero',
-        sLast: 'Último',
-        sNext: 'Siguiente',
-        sPrevious: 'Anterior'
-      },
-      oAria: {
-        sSortAscending: ': Activar para ordenar la columna de manera ascendente',
-        sSortDescending: ': Activar para ordenar la columna de manera descendente'
-      }
+    language: LANGUAGE
+  });
+
+  db.ref(`pedidoPadre`).orderByChild('estado').equalTo('Verificado').on('value', (pedidosVerificados) => {
+    let pedidos = pedidosVerificados.val();
+
+    datatable.clear();
+    moment.locale('es');
+    let filas = "";
+    for(let pedido in pedidos) {
+      let fecha = pedidos[pedido].fechaCreacionPadre.split('/');
+      let fecha2 = pedidos[pedido].fechaRuta.split('/');
+      let fechaCreacionPadre = moment(`${fecha[1]}/${fecha[0]}/${fecha[2]}`).format('LL');
+      let fechaRuta = moment(`${fecha2[1]}/${fecha2[0]}/${fecha2[2]}`).format('LL')
+
+      filas += `<tr>
+                  <td>${pedidos[pedido].clave}</td>
+                  <td>${fechaCreacionPadre}</td>
+                  <td>${fechaRuta}</td>
+                  <td>${pedidos[pedido].ruta}</td>
+                  <td class="text-center"><a href="pedidoPadre.html?id=${pedido}" class="btn btn-default btn-sm" type="button"><span class="glyphicon glyphicon-eye-open"></span> Ver más</a></td>
+                  <td class="text-center"><button onclick="cargarPedidoPadre('${pedido}')" class="btn btn-primary btn-sm" type="button"><span class="fa fa-truck" aria-control="true"></span></button></td>
+                </tr>`;
     }
+    $('#loaderPedidosVerificados').addClass('hidden');
+    $('#tablaPedidosVerificados').removeClass('hidden');
+    datatable.rows.add($(filas)).columns.adjust().draw();
   });
 }
 
@@ -86,54 +90,39 @@ function cargarPedidoPadre(idPedidoPadre) {
 }
 
 function mostrarPedidosFinalizados() {
-	let pedidosFinalizados = JSON.parse(localStorage.getItem('pedidosFinalizados'));
+	$('#loaderPedidosFinalizados').removeClass('hidden');
 
 	let datatable = $('#tablaPedidosFinalizados').DataTable({
-    data: pedidosFinalizados,
-    pageLength: 10,
-    columns: [
-      { data: 'clave' },
-      {
-        data: 'fechaCreacionPadre',
-        render: (fechaCreacionPadre) => {
-          moment.locale('es');
-          return moment(`${fechaCreacionPadre.substr(3,2)}/${fechaCreacionPadre.substr(0,2)}/${fechaCreacionPadre.substr(6,4)}`).format('LL')
-        }
-      },
-      { data: 'id',
-        className: 'text-center', 
-        render: (id) => {
-          return `<a href="pedidoPadre.html?id=${id}" class="btn btn-default btn-sm" type="button"><span class="glyphicon glyphicon-eye-open"></span> Ver más</a>`
-        }
-      }
-    ],
     destroy: true,
+    pageLength: 10,
 		ordering: false,
 		searching: false,
-    language: {
-      sProcessing: 'Procesando...',
-      sLengthMenu: 'Mostrar _MENU_ registros',
-      sZeroRecords: 'No se encontraron resultados',
-      sEmptyTable: 'Ningún dato disponible en esta tabla',
-      sInfo: 'Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros',
-      sInfoEmpty: 'Mostrando registros del 0 al 0 de un total de 0 registros',
-      sInfoFiltered: '(filtrado de un total de _MAX_ registros)',
-      sInfoPostFix: '',   
-      sSearch: '<i style="color: #4388E5;" class="glyphicon glyphicon-search"></i>',
-      sUrl: '',
-      sInfoThousands: ',',
-      sLoadingRecords: 'Cargando...',
-      oPaginate: {
-        sFirst: 'Primero',
-        sLast: 'Último',
-        sNext: 'Siguiente',
-        sPrevious: 'Anterior'
-      },
-      oAria: {
-        sSortAscending: ': Activar para ordenar la columna de manera ascendente',
-        sSortDescending: ': Activar para ordenar la columna de manera descendente'
-      }
+    language: LANGUAGE
+  });
+
+  db.ref(`pedidoPadre`).orderByChild('estado').equalTo('Finalizado').on('value', (pedidosVerificados) => {
+    let pedidos = pedidosVerificados.val();
+
+    datatable.clear();
+    moment.locale('es');
+    let filas = "";
+    for(let pedido in pedidos) {
+      let fecha = pedidos[pedido].fechaCreacionPadre.split('/');
+      let fecha2 = pedidos[pedido].fechaRuta.split('/');
+      let fechaCreacionPadre = moment(`${fecha[1]}/${fecha[0]}/${fecha[2]}`).format('LL');
+      let fechaRuta = moment(`${fecha2[1]}/${fecha2[0]}/${fecha2[2]}`).format('LL')
+
+      filas += `<tr>
+                  <td>${pedidos[pedido].clave}</td>
+                  <td>${fechaCreacionPadre}</td>
+                  <td>${fechaRuta}</td>
+                  <td>${pedidos[pedido].ruta}</td>
+                  <td class="text-center"><a href="pedidoPadre.html?id=${pedido}" class="btn btn-default btn-sm" type="button"><span class="glyphicon glyphicon-eye-open"></span> Ver más</a></td>
+                </tr>`;
     }
+    $('#loaderPedidosFinalizados').addClass('hidden');
+    $('#tablaPedidosFinalizados').removeClass('hidden');
+    datatable.rows.add($(filas)).columns.adjust().draw();
   });
 }
 
@@ -227,7 +216,7 @@ $(document).ready(function() {
   mostrarPedidosFinalizados();
 });
 
-function escucharPedidos() {
+/* function escucharPedidos() {
   db.ref(`pedidoPadre`).on('value', (pedidosVerificados) => {
     let arrPedidosVerificados = [], arrPedidosFinalizados = [];
     pedidosVerificados.forEach(pedidoVerificado => {
@@ -278,30 +267,7 @@ function escucharPedidos() {
       destroy: true,
       ordering: false,
       searching: false,
-      language: {
-        sProcessing: 'Procesando...',
-        sLengthMenu: 'Mostrar _MENU_ registros',
-        sZeroRecords: 'No se encontraron resultados',
-        sEmptyTable: 'Ningún dato disponible en esta tabla',
-        sInfo: 'Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros',
-        sInfoEmpty: 'Mostrando registros del 0 al 0 de un total de 0 registros',
-        sInfoFiltered: '(filtrado de un total de _MAX_ registros)',
-        sInfoPostFix: '',   
-        sSearch: '<i style="color: #4388E5;" class="glyphicon glyphicon-search"></i>',
-        sUrl: '',
-        sInfoThousands: ',',
-        sLoadingRecords: 'Cargando...',
-        oPaginate: {
-          sFirst: 'Primero',
-          sLast: 'Último',
-          sNext: 'Siguiente',
-          sPrevious: 'Anterior'
-        },
-        oAria: {
-          sSortAscending: ': Activar para ordenar la columna de manera ascendente',
-          sSortDescending: ': Activar para ordenar la columna de manera descendente'
-        }
-      }
+      language: LANGUAGE
     });
 
     let datatable2 = $('#tablaPedidosFinalizados').DataTable({
@@ -326,32 +292,9 @@ function escucharPedidos() {
       destroy: true,
       ordering: false,
       searching: false,
-      language: {
-        sProcessing: 'Procesando...',
-        sLengthMenu: 'Mostrar _MENU_ registros',
-        sZeroRecords: 'No se encontraron resultados',
-        sEmptyTable: 'Ningún dato disponible en esta tabla',
-        sInfo: 'Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros',
-        sInfoEmpty: 'Mostrando registros del 0 al 0 de un total de 0 registros',
-        sInfoFiltered: '(filtrado de un total de _MAX_ registros)',
-        sInfoPostFix: '',   
-        sSearch: '<i style="color: #4388E5;" class="glyphicon glyphicon-search"></i>',
-        sUrl: '',
-        sInfoThousands: ',',
-        sLoadingRecords: 'Cargando...',
-        oPaginate: {
-          sFirst: 'Primero',
-          sLast: 'Último',
-          sNext: 'Siguiente',
-          sPrevious: 'Anterior'
-        },
-        oAria: {
-          sSortAscending: ': Activar para ordenar la columna de manera ascendente',
-          sSortDescending: ': Activar para ordenar la columna de manera descendente'
-        }
-      }
+      language: LANGUAGE
     });
   });
 }
 
-escucharPedidos();
+escucharPedidos(); */

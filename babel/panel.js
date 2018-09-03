@@ -42,8 +42,11 @@ $(document).ready(function () {
         id: batida.key
       }, batida.val()));
     });
-    localStorage.setItem('batidas', JSON.stringify(arrBatidas));
-    mostrarBatidas();
+    // localStorage.setItem('batidas', JSON.stringify(arrBatidas));
+    localforage.setItem('batidas', arrBatidas, function (err) {
+      console.log(err ? err : 'Batidas guardadas en localforage');
+      mostrarBatidas();
+    });
   });
 
   var arrBatidasFinalizadas = [];
@@ -53,8 +56,11 @@ $(document).ready(function () {
         id: batida.key
       }, batida.val()));
     });
-    localStorage.setItem('batidasFinalizadas', JSON.stringify(arrBatidasFinalizadas));
-    mostrarBatidasFinalizadas();
+    //localStorage.setItem('batidasFinalizadas', JSON.stringify(arrBatidasFinalizadas));
+    localforage.setItem('batidasFinalizadas', arrBatidasFinalizadas, function (err) {
+      console.log(err ? err : 'Batidas finalizadas guardadas en localforage');
+      mostrarBatidasFinalizadas();
+    });
   });
 });
 
@@ -66,24 +72,25 @@ $('#batidasFinalizadas').on('shown.bs.tab', function () {
   $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
 });
 
-$('#linkPedidosVerificados').on('click', function (e) {
+/* $('#linkPedidosVerificados').on('click', (e) => {
   e.preventDefault();
 
-  var arrPedidosVerificados = [],
-      arrPedidosFinalizados = [];
-  db.ref("pedidoPadre").on('value', function (pedidosVerificados) {
-    pedidosVerificados.forEach(function (pedidoVerificado) {
-      var pedido = pedidoVerificado.val();
+  let arrPedidosVerificados = [], arrPedidosFinalizados = [];
+  db.ref(`pedidoPadre`).on('value', (pedidosVerificados) => { 
+    pedidosVerificados.forEach(pedidoVerificado => {
+      let pedido = pedidoVerificado.val();
 
-      if (pedido.estado == "Verificado") {
-        arrPedidosVerificados.push(_extends({
-          id: pedidoVerificado.key
-        }, pedidoVerificado.val()));
+      if(pedido.estado == "Verificado") {
+        arrPedidosVerificados.push({
+          id: pedidoVerificado.key,
+          ...pedidoVerificado.val()
+        });
       }
-      if (pedido.estado == "Finalizado") {
-        arrPedidosFinalizados.push(_extends({
-          id: pedidoVerificado.key
-        }, pedidoVerificado.val()));
+      if(pedido.estado == "Finalizado") {
+        arrPedidosFinalizados.push({
+          id: pedidoVerificado.key,
+          ...pedidoVerificado.val()
+        });
       }
     });
 
@@ -91,26 +98,36 @@ $('#linkPedidosVerificados').on('click', function (e) {
     localStorage.setItem('pedidosFinalizados', JSON.stringify(arrPedidosFinalizados));
     $(location).attr("href", "pedidosVerificados.html");
   });
-});
+}); */
 
-$('#linkPedidos').on('click', function (e) {
+/* $('#linkPedidos').on('click', (e) => {
   e.preventDefault();
-
-  var arrPedidos = [];
-  db.ref('pedidoEntrada').on('value', function (pedidos) {
-    pedidos.forEach(function (pedido) {
-      arrPedidos.unshift(_extends({
-        id: pedido.key
-      }, pedido.val()));
+  
+  let arrPedidos = [];
+  db.ref('pedidoEntrada').on('value', (pedidos) => {
+    pedidos.forEach((pedido) => {
+      arrPedidos.unshift({
+        id: pedido.key,
+        ...pedido.val()
+      });
     });
 
-    var datosPedidos = pedidos.val();
+    let datosPedidos = pedidos.val();
 
-    localStorage.setItem('pedidos', JSON.stringify(arrPedidos));
-    localStorage.setItem('pedidosEntrada', JSON.stringify(datosPedidos));
+   
+    localforage.setItem('pedidos', arrPedidos, err => {
+      console.log(err ? err : 'Pedidos guardadas en localforage')
+      mostrarBatidasFinalizadas();
+    });
+    
+    
+    localforage.setItem('pedidosEntrada', datosPedidos, err => {
+      console.log(err ? err : 'Pedidos entrada guardadas en localforage')
+      mostrarBatidasFinalizadas();
+    });
     $(location).attr('href', 'pedidos.html');
-  });
-});
+  })
+}); */
 
 function llenarSugerenciasProductos() {
   var formulasRef = db.ref("formulaciones");
@@ -533,58 +550,62 @@ function guardarBatida() {
 }
 
 function mostrarBatidas() {
-  var batidas = JSON.parse(localStorage.getItem('batidas'));
+  //let batidas = JSON.parse(localStorage.getItem('batidas'));
+  localforage.getItem('batidas', function (err, value) {
+    console.log('Obteniendo batidas de localforage');
+    var batidas = value;
 
-  var datatable = $('#tabla-batidasRegistradas').DataTable({
-    data: batidas,
-    pageLength: 10,
-    destroy: true,
-    //"searching": false
-    //"paging": false,
-    //"bInfo" : false
-    lengthChange: false,
-    scrollY: "500px",
-    scrollCollapse: true,
-    stripeClasses: ['info', ''],
-    columns: [{ data: 'claveBatida' }, { data: 'claveProducto' }, { data: 'nombreProducto' }, { data: 'numBatidas' }, { data: 'fechaCaptura' }, { data: 'id',
-      className: 'text-center',
-      render: function render(id) {
-        return "<button onclick=\"abrirModalEditar('" + id + "')\" class=\"btn btn-warning btn-sm\"><i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>";
+    var datatable = $('#tabla-batidasRegistradas').DataTable({
+      data: batidas,
+      pageLength: 10,
+      destroy: true,
+      //"searching": false
+      //"paging": false,
+      //"bInfo" : false
+      lengthChange: false,
+      scrollY: "500px",
+      scrollCollapse: true,
+      stripeClasses: ['info', ''],
+      columns: [{ data: 'claveBatida' }, { data: 'claveProducto' }, { data: 'nombreProducto' }, { data: 'numBatidas' }, { data: 'fechaCaptura' }, { data: 'id',
+        className: 'text-center',
+        render: function render(id) {
+          return "<button onclick=\"abrirModalEditar('" + id + "')\" class=\"btn btn-warning btn-sm\"><i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>";
+        }
+      }, { data: 'id',
+        className: 'text-center',
+        render: function render(id) {
+          return "<button onclick=\"abrirModalFinalizar('" + id + "')\" class=\"btn btn-success btn-sm\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button>";
+        }
+      }],
+      language: {
+        searchPlaceholder: "Buscar batida",
+        sProcessing: 'Procesando...',
+        sLengthMenu: 'Mostrar _MENU_ registros',
+        sZeroRecords: 'No se encontraron resultados',
+        sEmptyTable: 'Ningún dato disponible en esta tabla',
+        sInfo: 'Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros',
+        sInfoEmpty: 'Mostrando registros del 0 al 0 de un total de 0 registros',
+        sInfoFiltered: '(filtrado de un total de _MAX_ registros)',
+        sInfoPostFix: '',
+        sSearch: '<i style="color: #4388E5;" class="glyphicon glyphicon-search"></i>',
+        sUrl: '',
+        sInfoThousands: ',',
+        sLoadingRecords: 'Cargando...',
+        oPaginate: {
+          sFirst: 'Primero',
+          sLast: 'Último',
+          sNext: 'Siguiente',
+          sPrevious: 'Anterior'
+        },
+        oAria: {
+          sSortAscending: ': Activar para ordenar la columna de manera ascendente',
+          sSortDescending: ': Activar para ordenar la columna de manera descendente'
+        }
       }
-    }, { data: 'id',
-      className: 'text-center',
-      render: function render(id) {
-        return "<button onclick=\"abrirModalFinalizar('" + id + "')\" class=\"btn btn-success btn-sm\"><i class=\"fa fa-check\" aria-hidden=\"true\"></i></button>";
-      }
-    }],
-    language: {
-      searchPlaceholder: "Buscar batida",
-      sProcessing: 'Procesando...',
-      sLengthMenu: 'Mostrar _MENU_ registros',
-      sZeroRecords: 'No se encontraron resultados',
-      sEmptyTable: 'Ningún dato disponible en esta tabla',
-      sInfo: 'Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros',
-      sInfoEmpty: 'Mostrando registros del 0 al 0 de un total de 0 registros',
-      sInfoFiltered: '(filtrado de un total de _MAX_ registros)',
-      sInfoPostFix: '',
-      sSearch: '<i style="color: #4388E5;" class="glyphicon glyphicon-search"></i>',
-      sUrl: '',
-      sInfoThousands: ',',
-      sLoadingRecords: 'Cargando...',
-      oPaginate: {
-        sFirst: 'Primero',
-        sLast: 'Último',
-        sNext: 'Siguiente',
-        sPrevious: 'Anterior'
-      },
-      oAria: {
-        sSortAscending: ': Activar para ordenar la columna de manera ascendente',
-        sSortDescending: ': Activar para ordenar la columna de manera descendente'
-      }
-    }
+    });
+
+    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
   });
-
-  $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
 }
 
 function abrirModalEditar(idBatida) {
@@ -892,53 +913,57 @@ function abrirModalFinalizar(idBatida) {
 }
 
 function mostrarBatidasFinalizadas() {
-  var batidasFinalizadas = JSON.parse(localStorage.getItem('batidasFinalizadas'));
+  //let batidasFinalizadas = JSON.parse(localStorage.getItem('batidasFinalizadas'));
+  localforage.getItem('batidasFinalizadas', function (err, value) {
+    console.log('Obteniendo batidas finalizadas de localforage');
+    var batidasFinalizadas = value;
 
-  var datatable = $('#tabla-batidasFinalizadas').DataTable({
-    data: batidasFinalizadas,
-    pageLength: 10,
-    destroy: true,
-    //"searching": false
-    //"paging": false,
-    //"bInfo" : false
-    lengthChange: false,
-    scrollY: "500px",
-    scrollCollapse: true,
-    stripeClasses: ['info', ''],
-    columns: [{ data: 'claveBatida' }, { data: 'claveProducto' }, { data: 'nombreProducto' }, { data: 'numBatidas' }, { data: 'fechaCaptura' }, { data: 'fechaFinalizada' }, { data: 'id',
-      className: 'text-center',
-      render: function render(id) {
-        return "<button type=\"button\" onclick=\"abrirModalVerDetalles('" + id + "')\" class=\"btn btn-default btn-sm\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Ver m\xE1s\"><i class=\"glyphicon glyphicon-eye-open\"></i></button>";
+    var datatable = $('#tabla-batidasFinalizadas').DataTable({
+      data: batidasFinalizadas,
+      pageLength: 10,
+      destroy: true,
+      //"searching": false
+      //"paging": false,
+      //"bInfo" : false
+      lengthChange: false,
+      scrollY: "500px",
+      scrollCollapse: true,
+      stripeClasses: ['info', ''],
+      columns: [{ data: 'claveBatida' }, { data: 'claveProducto' }, { data: 'nombreProducto' }, { data: 'numBatidas' }, { data: 'fechaCaptura' }, { data: 'fechaFinalizada' }, { data: 'id',
+        className: 'text-center',
+        render: function render(id) {
+          return "<button type=\"button\" onclick=\"abrirModalVerDetalles('" + id + "')\" class=\"btn btn-default btn-sm\" data-toggle=\"tooltip\" data-placement=\"right\" title=\"Ver m\xE1s\"><i class=\"glyphicon glyphicon-eye-open\"></i></button>";
+        }
+      }],
+      language: {
+        searchPlaceholder: "Buscar batida",
+        sProcessing: 'Procesando...',
+        sLengthMenu: 'Mostrar _MENU_ registros',
+        sZeroRecords: 'No se encontraron resultados',
+        sEmptyTable: 'Ningún dato disponible en esta tabla',
+        sInfo: 'Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros',
+        sInfoEmpty: 'Mostrando registros del 0 al 0 de un total de 0 registros',
+        sInfoFiltered: '(filtrado de un total de _MAX_ registros)',
+        sInfoPostFix: '',
+        sSearch: '<i style="color: #4388E5;" class="glyphicon glyphicon-search"></i>',
+        sUrl: '',
+        sInfoThousands: ',',
+        sLoadingRecords: 'Cargando...',
+        oPaginate: {
+          sFirst: 'Primero',
+          sLast: 'Último',
+          sNext: 'Siguiente',
+          sPrevious: 'Anterior'
+        },
+        oAria: {
+          sSortAscending: ': Activar para ordenar la columna de manera ascendente',
+          sSortDescending: ': Activar para ordenar la columna de manera descendente'
+        }
       }
-    }],
-    language: {
-      searchPlaceholder: "Buscar batida",
-      sProcessing: 'Procesando...',
-      sLengthMenu: 'Mostrar _MENU_ registros',
-      sZeroRecords: 'No se encontraron resultados',
-      sEmptyTable: 'Ningún dato disponible en esta tabla',
-      sInfo: 'Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros',
-      sInfoEmpty: 'Mostrando registros del 0 al 0 de un total de 0 registros',
-      sInfoFiltered: '(filtrado de un total de _MAX_ registros)',
-      sInfoPostFix: '',
-      sSearch: '<i style="color: #4388E5;" class="glyphicon glyphicon-search"></i>',
-      sUrl: '',
-      sInfoThousands: ',',
-      sLoadingRecords: 'Cargando...',
-      oPaginate: {
-        sFirst: 'Primero',
-        sLast: 'Último',
-        sNext: 'Siguiente',
-        sPrevious: 'Anterior'
-      },
-      oAria: {
-        sSortAscending: ': Activar para ordenar la columna de manera ascendente',
-        sSortDescending: ': Activar para ordenar la columna de manera descendente'
-      }
-    }
+    });
+
+    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
   });
-
-  $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
 }
 
 function haySesion() {

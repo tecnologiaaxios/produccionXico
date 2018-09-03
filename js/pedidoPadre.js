@@ -1,3 +1,5 @@
+//import { DH_NOT_SUITABLE_GENERATOR } from 'constants';
+
 const db = firebase.database();
 const auth = firebase.auth();
 var Tpz, Tkg;
@@ -34,24 +36,24 @@ function getQueryVariable(variable) {
 function mostrarDatos() {
   let idPedidoPadre = getQueryVariable('id');
 
-  let pedidoPadreRef = db.ref('pedidoPadre/'+idPedidoPadre);
+  let pedidoPadreRef = db.ref(`pedidoPadre/${idPedidoPadre}`);
   pedidoPadreRef.on('value', function(snapshot) {
     let datos = snapshot.val();
-    $('#numPedido').html("Pedido: " + datos.clave);
+    $('#numPedido').html(`Pedido: ${datos.clave}`);
 
     let diaCaptura = datos.fechaCreacionPadre.substr(0,2);
     let mesCaptura = datos.fechaCreacionPadre.substr(3,2);
     let añoCaptura = datos.fechaCreacionPadre.substr(6,4);
-    let fechaCreacion = mesCaptura + '/' + diaCaptura + '/' + añoCaptura;
+    let fechaCreacion = `${mesCaptura}/${diaCaptura}/${añoCaptura}`;
     moment.locale('es');
     let fechaCreacionMostrar = moment(fechaCreacion).format('LL');
-    $('#fechaPedido').html("Recibido el " + fechaCreacionMostrar);
+    $('#fechaPedido').html(`Ruta: ${datos.ruta}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recibido el ${fechaCreacionMostrar}`);
   });
-}
+} 
 
 function llenarSelectTiendas() {
   let idPedidoPadre = getQueryVariable('id');
-  let tiendasRef = db.ref('pedidoPadre/'+idPedidoPadre+'/pedidosHijos');
+  let tiendasRef = db.ref(`pedidoPadre/${idPedidoPadre}/pedidosHijos`);
 
   tiendasRef.on('value', function(snapshot) {
     let pedidosHijos = snapshot.val();

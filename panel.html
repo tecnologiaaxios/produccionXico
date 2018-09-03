@@ -44,11 +44,11 @@
             <img style="max-width: 50px; margin-top: -7px;" src="logo.png"></img>
           </a>
           <a class="navbar-brand" href="#">Sistema de pedidos</a>
-          <a class="navbar-brand" id="linkPedidosVerificados" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false"
+          <a href="pedidosVerificados.html" class="navbar-brand" id="linkPedidosVerificados" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false"
             aria-controls="collapseExample">
             <span class="textnavbar fa fa-list-alt" data-toggle="tooltip" data-placement="bottom" title="Ver pedidos checados"></span>
           </a>
-          <a class="navbar-brand" id="linkPedidos">
+          <a href="pedidosEnProceso.html" class="navbar-brand" id="linkPedidos" data-toogle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
             <span class="textnavbar fa fa-tasks" data-toggle="tooltip" data-placement="bottom" title="Ver pedidos"></span>
           </a>
           <div class="navbar-brand dropdown">
@@ -76,16 +76,13 @@
               <div class="col-lg-10 col-md-10 col-lg-offset-1 col-md-offset-1">
                 <ul class="nav nav-pills nav-justified" style=" padding-top: 30px; ">
                   <li role="presentation" class="active">
-                    <a class="pills" id="iniciarBatidas" href="#iniciarBatidaTab" aria-controls="iniciarBatidaTab" role="tab"
-                      data-toggle="tab">Iniciar batida</a>
+                    <a class="pills" id="iniciarBatidas" href="#iniciarBatidaTab" aria-controls="iniciarBatidaTab" role="tab" data-toggle="tab">Iniciar batida</a>
                   </li>
                   <li role="presentation">
-                    <a onclick="mostrarBatidas()" class="pills" id="batidasEnProceso" href="#batidasEnProcesoTab" aria-controls="batidasEnProcesoTab"
-                      role="tab" data-toggle="tab">Batidas en proceso</a>
+                    <a onclick="mostrarBatidas()" class="pills" id="batidasEnProceso" href="#batidasEnProcesoTab" aria-controls="batidasEnProcesoTab" role="tab" data-toggle="tab">Batidas en proceso</a>
                   </li>
                   <li role="presentation">
-                    <a onclick="mostrarBatidasFinalizadas()" class="pills" id="batidasFinalizadas" href="#batidasFinalizadasTab"
-                      aria-controls="batidasFinalizadasTab" role="tab" data-toggle="tab">Batidas finalizadas</a>
+                    <a onclick="mostrarBatidasFinalizadas()" class="pills" id="batidasFinalizadas" href="#batidasFinalizadasTab" aria-controls="batidasFinalizadasTab" role="tab" data-toggle="tab">Batidas finalizadas</a>
                   </li>
                 </ul>
               </div>
@@ -442,8 +439,11 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     <!-- <script src="./node_modules/jquery/dist/jquery.min.js"></script> -->
-    <script>window.$ = window.jQuery = require('./js/jquery-3.2.1.min.js')</script>
+    <!-- <script>window.$ = window.jQuery = require('./js/jquery-3.2.1.min.js')</script> -->
     <!-- <script src="js/jquery-3.2.1.min.js"></script> -->
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script>if (window.module) module = window.module;</script>
     <script src="js/panel.min.js"></script>
     <!-- <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="dist/js/bootstrap-select.js"></script>

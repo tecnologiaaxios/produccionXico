@@ -63,6 +63,9 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-lg-10 col-md-10 col-lg-offset-1 col-md-offset-1">
+            <div id="loaderPedidos" class="alert alert-info" role="alert">
+              <i class="fa fa-refresh fa-spin"></i> Cargando...
+            </div>
             <div class="panel panel-primary">
               <div class="panel-heading">
                 <h2 class="panel-title">Pedidos</h2>
@@ -71,12 +74,11 @@
                 <table id="tablaPedidos" class="table-hover table table-condensed table-bordered table-striped" style="margin-top:15px;">
                   <thead>
                     <tr>
-                      <th>Id</th>
                       <th>Clave</th>
-                      <th>Núm. de orden</th>
                       <th>Fecha de captura</th>
-                      <th>Tienda</th>
+                      <th>Fecha de ruta</th>
                       <th>Ruta</th>
+                      <th class="text-center">Agente</th>
                       <th class="text-center">Detalles</th>
                       <th class="text-center">Estado</th>
                     </tr>
@@ -90,7 +92,10 @@
       </div>
     </div><!-- /#wrapper -->
     <!-- <script src="js/jquery-3.2.1.min.js"></script> -->
-    <script>window.$ = window.jQuery = require('./js/jquery-3.2.1.min.js')</script>
+    <!-- <script>window.$ = window.jQuery = require('./js/jquery-3.2.1.min.js')</script> -->
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script>if (window.module) module = window.module;</script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
     <!--<script src="vendor/bootstrap/js/bootstrap.min.js"></script>-->
     <script src="vendor/metisMenu/metisMenu.min.js"></script>
@@ -119,7 +124,7 @@
       firebase.initializeApp(config);
     </script>
     <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/$VERSION/dragula.min.js'></script>-->
-    <script src="babel/pedidos.js"></script>
+    <script src="babel/pedidosEnProceso.js"></script>
     <script src="js/moment-with-locales.js"></script>
   </body>
 </html>

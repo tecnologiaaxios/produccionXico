@@ -57,8 +57,11 @@
         </div>
       </div>
     </div>
-    <script>window.$ = window.jQuery = require('./js/jquery-3.2.1.min.js')</script>
+    <!-- <script>window.$ = window.jQuery = require('./js/jquery-3.2.1.min.js')</script> -->
     <!-- <script src="js/jquery-3.2.1.min.js"></script> -->
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script>if (window.module) module = window.module;</script>
     <script src="js/index.min.js"></script>
   </body>
 </html>

@@ -1,5 +1,7 @@
 "use strict";
 
+//import { DH_NOT_SUITABLE_GENERATOR } from 'constants';
+
 var db = firebase.database();
 var auth = firebase.auth();
 var Tpz, Tkg;
@@ -37,7 +39,7 @@ function getQueryVariable(variable) {
 function mostrarDatos() {
   var idPedidoPadre = getQueryVariable('id');
 
-  var pedidoPadreRef = db.ref('pedidoPadre/' + idPedidoPadre);
+  var pedidoPadreRef = db.ref("pedidoPadre/" + idPedidoPadre);
   pedidoPadreRef.on('value', function (snapshot) {
     var datos = snapshot.val();
     $('#numPedido').html("Pedido: " + datos.clave);
@@ -45,16 +47,16 @@ function mostrarDatos() {
     var diaCaptura = datos.fechaCreacionPadre.substr(0, 2);
     var mesCaptura = datos.fechaCreacionPadre.substr(3, 2);
     var añoCaptura = datos.fechaCreacionPadre.substr(6, 4);
-    var fechaCreacion = mesCaptura + '/' + diaCaptura + '/' + añoCaptura;
+    var fechaCreacion = mesCaptura + "/" + diaCaptura + "/" + añoCaptura;
     moment.locale('es');
     var fechaCreacionMostrar = moment(fechaCreacion).format('LL');
-    $('#fechaPedido').html("Recibido el " + fechaCreacionMostrar);
+    $('#fechaPedido').html("Ruta: " + datos.ruta + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Recibido el " + fechaCreacionMostrar);
   });
 }
 
 function llenarSelectTiendas() {
   var idPedidoPadre = getQueryVariable('id');
-  var tiendasRef = db.ref('pedidoPadre/' + idPedidoPadre + '/pedidosHijos');
+  var tiendasRef = db.ref("pedidoPadre/" + idPedidoPadre + "/pedidosHijos");
 
   tiendasRef.on('value', function (snapshot) {
     var pedidosHijos = snapshot.val();

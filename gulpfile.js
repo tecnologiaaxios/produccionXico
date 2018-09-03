@@ -9,7 +9,7 @@ var autoprefixer = require('gulp-autoprefixer');
 gulp.task('es6', function() {
   gulp.src([
     'js/panel.js',
-    'js/pedidos.js',
+    'js/pedidosEnProceso.js',
     'js/pedidosVerificados.js',
     'js/pedidoPadre.js',
     'js/login.js'
@@ -35,6 +35,7 @@ gulp.task('paneljs', function() {
     'js/mindmup-editabletable.js',
     'js/bootstrap-switch.min.js',
     'js/moment-with-locales.js',
+    'js/localforage.js',
     'babel/panel.js'
   ])
     .pipe(concat('panel.min.js'))
